@@ -19,6 +19,7 @@
 .phpunit.result.cache
 ###< phpunit/phpunit ###
 
-###nos ignores####
-.env
-migrations/*.php
+###> nos ignores ###
+/.env
+/migrations/*.php
+###< nos ignores ###
