@@ -56,6 +56,9 @@ class Game
     #[ORM\OneToMany(mappedBy: 'game', targetEntity: RoleGroupe::class)]
     private $roleGroupes;
 
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private $banner;
+
     public function __construct()
     {
         $this->tickets = new ArrayCollection();
@@ -291,6 +294,18 @@ class Game
                 $roleGroupe->setGame(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getBanner(): ?string
+    {
+        return $this->banner;
+    }
+
+    public function setBanner(?string $banner): self
+    {
+        $this->banner = $banner;
 
         return $this;
     }
