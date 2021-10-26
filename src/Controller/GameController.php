@@ -30,6 +30,36 @@ class GameController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager = $this->getDoctrine()->getManager();
+
+            // dossier du jeu dans le game.banner.directory
+            $directory = $this->getParameter('game.banner.directory').$game->getName().'/';
+
+            //récupération de la photo si il y a
+            $photo = $form->get('banner')->getData();
+            if ($photo) {
+                //si le dossier n'exist pas
+                if(!file_exists($directory)){
+                    //on le créer
+                    mkdir($directory);
+//                    die($directory);
+                }
+
+                //un do while pour etre sûr de l'unicité du nom
+                do {
+
+                    $newFileName = md5(time() . $game->getName() . uniqid()) . '.' . $photo->guessExtension();
+
+                } while (file_exists($directory.'/'.$newFileName));
+
+                // Déplacement de la photo dans le dossier que l'on avait paramétré dans le fichier services.yaml,
+                // avec le nouveau nom qu'on lui a généré
+                $photo->move(
+                    $directory,     // Emplacement de sauvegarde du fichier
+                    $newFileName    // Nouveau nom du fichier
+                );
+                $game->setBanner($newFileName);
+            }
+
             $entityManager->persist($game);
             $entityManager->flush();
 
