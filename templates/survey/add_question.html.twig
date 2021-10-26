@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    {{ form_start(form) }}
+    {{ form_row(form.content, {'label': 'Question :'}) }}
+    {{ form_row(form.select, {'label': 'Liste déroulante'}) }}
+    <button type="submit" class="btn btn-outline-primary">Ajouter la question</button>
+    {{ form_end(form) }}
+
+    <div class="container">
+        <h1>Questions pour "{{ survey.name }}"</h1>
+        {% for question in survey.question %}
+            <div class="row">
+
+                {{ question.content }}
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}
+
+{% block title %}Add Question{% endblock %}
+

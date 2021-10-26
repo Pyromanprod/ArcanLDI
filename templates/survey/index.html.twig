@@ -1,0 +1,28 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Questionnaires{% endblock %}
+
+{% block body %}
+
+    <div class="container">
+        {{ form_start(form) }}
+        {{ form_row(form.name, {'label': 'Nouveau Questionnaire'}) }}
+        <button type="submit" class="btn btn-outline-primary">Créer</button>
+        {{ form_end(form) }}
+        {% for survey in listeSurvey %}
+            <div class="row">
+                <div class="col-12 col-lg-6">
+
+                    {{ survey.name }}
+                </div>
+                <div class="col-12 col-lg-6">
+
+                    <a href="{{ path('survey_view', {'id': survey.id, }) }}">Voir</a>
+                </div>
+
+            </div>
+        {% else %}
+            Pas de survey
+        {% endfor %}
+    </div>
+{% endblock %}

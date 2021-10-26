@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Ajouter des choix a "{{ question.content }}"</h1>
+
+    <div class="container">
+        {{ form_start(form) }}
+        {{ form_row(form.content) }}
+        <button type="submit" class="btn btn-outline-primary">Ajouter</button>
+        {{ form_end(form) }}
+        {% for choix in question.choices %}
+            <div class="row">{{ choix.content }}</div>
+        {% else %}
+            Pas de encore choix
+        {% endfor %}
+    </div>
+{% endblock %}
+
+{% block title %}Ajouter des choix a {{ question.content }}{% endblock %}
+
+

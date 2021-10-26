@@ -30,14 +30,14 @@ class Ticket
     #[ORM\JoinColumn(nullable: false)]
     private $game;
 
-    #[ORM\OneToMany(mappedBy: 'ticket', targetEntity: Question::class, orphanRemoval: true)]
-    private $questions;
-
     #[ORM\Column(type: 'datetime_immutable')]
     private $createdAt;
 
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     private $updatedAt;
+
+    #[ORM\ManyToMany(targetEntity: Survey::class, mappedBy: 'ticket')]
+    private $surveys;
 
     public function __toString(): string
     {
@@ -47,7 +47,8 @@ class Ticket
     public function __construct()
     {
         $this->orders = new ArrayCollection();
-        $this->questions = new ArrayCollection();
+        $this->surveys = new ArrayCollection();
+        
     }
 
     public function getId(): ?int
@@ -121,35 +122,6 @@ class Ticket
         return $this;
     }
 
-    /**
-     * @return Collection|Question[]
-     */
-    public function getQuestions(): Collection
-    {
-        return $this->questions;
-    }
-
-    public function addQuestion(Question $question): self
-    {
-        if (!$this->questions->contains($question)) {
-            $this->questions[] = $question;
-            $question->setTicket($this);
-        }
-
-        return $this;
-    }
-
-    public function removeQuestion(Question $question): self
-    {
-        if ($this->questions->removeElement($question)) {
-            // set the owning side to null (unless already changed)
-            if ($question->getTicket() === $this) {
-                $question->setTicket(null);
-            }
-        }
-
-        return $this;
-    }
 
     public function getCreatedAt(): ?DateTimeImmutable
     {
@@ -171,5 +143,32 @@ class Ticket
     public function setUpdatedAt(): void
     {
         $this->updatedAt = new DateTimeImmutable();
+    }
+
+    /**
+     * @return Collection|Survey[]
+     */
+    public function getSurveys(): Collection
+    {
+        return $this->surveys;
+    }
+
+    public function addSurvey(Survey $survey): self
+    {
+        if (!$this->surveys->contains($survey)) {
+            $this->surveys[] = $survey;
+            $survey->addTicket($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSurvey(Survey $survey): self
+    {
+        if ($this->surveys->removeElement($survey)) {
+            $survey->removeTicket($this);
+        }
+
+        return $this;
     }
 }

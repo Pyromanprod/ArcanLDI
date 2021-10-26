@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="container">
+
+        <h1>{{ survey.name }}</h1>
+        <div class="row">
+            <h2>nombre de question : {{ survey.question.count }}</h2>
+        </div>
+        {% for question in survey.question %}
+
+            <div class="row">
+
+                {{ question.content }}
+                {% for choix in question.choices %}
+                {{ choix.content }}
+                {% else %}
+                    Réponse libre
+                {% endfor %}
+            </div>
+        {% else %}
+            Pas de questions a ce formulaire
+        {% endfor %}
+    </div>
+{% endblock %}
+
+{% block title %}
+    {{ survey.name }}
+{% endblock %}
+

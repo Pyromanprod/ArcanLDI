@@ -20,10 +20,6 @@ class Question
     #[ORM\Column(type: 'string', length: 255)]
     private $content;
 
-    #[ORM\ManyToOne(targetEntity: Ticket::class, inversedBy: 'questions')]
-    #[ORM\JoinColumn(nullable: false)]
-    private $ticket;
-
     #[ORM\OneToMany(mappedBy: 'question', targetEntity: Choice::class, orphanRemoval: true)]
     private $choices;
 
@@ -35,6 +31,10 @@ class Question
 
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     private $updatedAt;
+
+    #[ORM\ManyToOne(targetEntity: Survey::class, inversedBy: 'question')]
+    #[ORM\JoinColumn(nullable: false)]
+    private $survey;
 
     public function __construct()
     {
@@ -59,17 +59,6 @@ class Question
         return $this;
     }
 
-    public function getTicket(): ?Ticket
-    {
-        return $this->ticket;
-    }
-
-    public function setTicket(?Ticket $ticket): self
-    {
-        $this->ticket = $ticket;
-
-        return $this;
-    }
 
     /**
      * @return Collection|Choice[]
@@ -151,5 +140,17 @@ class Question
     public function setUpdatedAt(): void
     {
         $this->updatedAt = new DateTimeImmutable();
+    }
+
+    public function getSurvey(): ?Survey
+    {
+        return $this->survey;
+    }
+
+    public function setSurvey(?Survey $survey): self
+    {
+        $this->survey = $survey;
+
+        return $this;
     }
 }
