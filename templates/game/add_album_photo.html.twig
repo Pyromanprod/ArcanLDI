@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    {{ form_start(form) }}
+    {{ form_row(form.photos) }}
+    {{ form_errors(form) }}
+    <button type="submit" class="btn btn-outline-primary">Envoyer</button>
+    {{ form_end(form) }}
+{% endblock %}
+
+{% block title %}Ajouter Album Photo{% endblock %}
+
+

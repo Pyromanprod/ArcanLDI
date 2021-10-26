@@ -37,6 +37,8 @@
                 <td>
                     <a href="{{ path('game_show', {'id': game.id}) }}">show</a>
                     <a href="{{ path('game_edit', {'id': game.id}) }}">edit</a>
+
+                    <a href="{{ path('game_add_album_Photo', {'slug': game.slug}) }}">Album</a>
                 </td>
             </tr>
         {% else %}
