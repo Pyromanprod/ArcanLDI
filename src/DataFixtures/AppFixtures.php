@@ -37,7 +37,9 @@ class AppFixtures extends Fixture
         $gdn
             ->setName('Arcan')
             ->setDescription('je suis un jeu hey !')
+            ->setBanner('something')
         ;
+        $manager->persist($gdn);
 
 
         $manager->flush();
