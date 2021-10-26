@@ -48,8 +48,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'player', targetEntity: Answer::class, orphanRemoval: true)]
     private $answers;
 
-    #[ORM\ManyToOne(targetEntity: RoleGroupe::class, inversedBy: 'player')]
-    private $roleGroupe;
 
     #[ORM\OneToMany(mappedBy: 'author', targetEntity: Article::class)]
     private $articles;
@@ -63,12 +61,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     private $updatedAt;
 
+    #[ORM\ManyToMany(targetEntity: RoleGroupe::class, mappedBy: 'player')]
+    private $roleGroupes;
+
     public function __construct()
     {
         $this->orders = new ArrayCollection();
         $this->answers = new ArrayCollection();
         $this->articles = new ArrayCollection();
         $this->coments = new ArrayCollection();
+        $this->roleGroupes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -256,17 +258,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getRoleGroupe(): ?RoleGroupe
-    {
-        return $this->roleGroupe;
-    }
 
-    public function setRoleGroupe(?RoleGroupe $roleGroupe): self
-    {
-        $this->roleGroupe = $roleGroupe;
 
-        return $this;
-    }
 
     /**
      * @return Collection|Article[]
@@ -348,5 +341,32 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setUpdatedAt(): void
     {
         $this->updatedAt = new DateTimeImmutable();
+    }
+
+    /**
+     * @return Collection|RoleGroupe[]
+     */
+    public function getRoleGroupes(): Collection
+    {
+        return $this->roleGroupes;
+    }
+
+    public function addRoleGroupe(RoleGroupe $roleGroupe): self
+    {
+        if (!$this->roleGroupes->contains($roleGroupe)) {
+            $this->roleGroupes[] = $roleGroupe;
+            $roleGroupe->addPlayer($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRoleGroupe(RoleGroupe $roleGroupe): self
+    {
+        if ($this->roleGroupes->removeElement($roleGroupe)) {
+            $roleGroupe->removePlayer($this);
+        }
+
+        return $this;
     }
 }

@@ -24,9 +24,6 @@ class RoleGroupe
     #[ORM\JoinColumn(nullable: false)]
     private $game;
 
-    #[ORM\OneToMany(mappedBy: 'roleGroupe', targetEntity: User::class)]
-    private $player;
-
     #[ORM\OneToMany(mappedBy: 'roleGroupe', targetEntity: Article::class)]
     private $articles;
 
@@ -36,10 +33,13 @@ class RoleGroupe
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     private $updatedAt;
 
+    #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'roleGroupes')]
+    private $player;
+
     public function __construct()
     {
-        $this->player = new ArrayCollection();
         $this->articles = new ArrayCollection();
+        $this->player = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -71,35 +71,7 @@ class RoleGroupe
         return $this;
     }
 
-    /**
-     * @return Collection|User[]
-     */
-    public function getPlayer(): Collection
-    {
-        return $this->player;
-    }
 
-    public function addPlayer(User $player): self
-    {
-        if (!$this->player->contains($player)) {
-            $this->player[] = $player;
-            $player->setRoleGroupe($this);
-        }
-
-        return $this;
-    }
-
-    public function removePlayer(User $player): self
-    {
-        if ($this->player->removeElement($player)) {
-            // set the owning side to null (unless already changed)
-            if ($player->getRoleGroupe() === $this) {
-                $player->setRoleGroupe(null);
-            }
-        }
-
-        return $this;
-    }
 
     /**
      * @return Collection|Article[]
@@ -151,5 +123,29 @@ class RoleGroupe
     public function setUpdatedAt(): void
     {
         $this->updatedAt = new DateTimeImmutable();
+    }
+
+    /**
+     * @return Collection|User[]
+     */
+    public function getPlayer(): Collection
+    {
+        return $this->player;
+    }
+
+    public function addPlayer(User $player): self
+    {
+        if (!$this->player->contains($player)) {
+            $this->player[] = $player;
+        }
+
+        return $this;
+    }
+
+    public function removePlayer(User $player): self
+    {
+        $this->player->removeElement($player);
+
+        return $this;
     }
 }

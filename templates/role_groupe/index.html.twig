@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}RoleGroupe index{% endblock %}
+
+{% block body %}
+    <h1>RoleGroupe index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>CreatedAt</th>
+                <th>UpdatedAt</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for role_groupe in role_groupes %}
+            <tr>
+                <td>{{ role_groupe.id }}</td>
+                <td>{{ role_groupe.name }}</td>
+                <td>{{ role_groupe.createdAt ? role_groupe.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ role_groupe.updatedAt ? role_groupe.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>
+                    <a href="{{ path('role_groupe_show', {'id': role_groupe.id}) }}">show</a>
+                    <a href="{{ path('role_groupe_edit', {'id': role_groupe.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="5">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('role_groupe_new') }}">Create new</a>
+{% endblock %}
