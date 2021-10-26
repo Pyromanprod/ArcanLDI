@@ -16,6 +16,7 @@
                 <th>Firstname</th>
                 <th>Lastname</th>
                 <th>Pseudo</th>
+                <th>roles</th>
                 <th>actions</th>
             </tr>
         </thead>
@@ -28,7 +29,15 @@
                 <td>{{ user.lastname }}</td>
                 <td>{{ user.pseudo }}</td>
                 <td>
+                {% for role in user.roleGroupes%}
+                    {{ role.name }} <form method="post" action="{{ path('role_delete', {'pseudo': user.pseudo, 'id': role.id} ) }}" onsubmit="return confirm('etes vous sur de vouloir retirer ce role?');">
+                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ role.id) }}"><button class="btn">D</button>
+                </form>
+                {% endfor %}
+                </td>
+                <td>
                     <a href="{{ path('user_show', {'id': user.id}) }}">show</a>
+                    <a href="{{ path('role_groupe_add', {'id': user.id}) }}">ajouter un groupe</a>
                 </td>
             </tr>
         {% else %}
