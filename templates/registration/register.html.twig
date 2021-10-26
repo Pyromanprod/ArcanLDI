@@ -12,6 +12,7 @@
             <div class="col-12 mx-auto col-md-6">
 
                 {{ form_start(registrationForm) }}
+                {{ form_errors(registrationForm) }}
                 {{ form_row(registrationForm.lastname, {
                     label: 'Nom'
                 }) }}
@@ -35,6 +36,9 @@
                         <li>1 Caractère spécial</li>
                     </ul>
                 </div>
+                <div class="form-group">
+                    <div class="g-recaptcha" data-sitekey="{{ google_recaptcha_site_key }}"></div>
+                </div>
 
                 <button type="submit" class="btn btn-outline-light">S'inscrire</button>
                 {{ form_end(registrationForm) }}
@@ -42,3 +46,4 @@
         </div>
     </div>
 {% endblock %}
+{% block stylsheet %}<script src="https://www.google.com/recaptcha/api.js" async defer></script>{% endblock %}
