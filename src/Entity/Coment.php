@@ -7,6 +7,7 @@ use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ComentRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class Coment
 {
     #[ORM\Id]

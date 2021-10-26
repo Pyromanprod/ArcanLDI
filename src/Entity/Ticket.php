@@ -9,6 +9,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: TicketRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class Ticket
 {
     #[ORM\Id]

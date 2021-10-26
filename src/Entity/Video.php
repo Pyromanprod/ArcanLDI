@@ -7,6 +7,7 @@ use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: VideoRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class Video
 {
     #[ORM\Id]

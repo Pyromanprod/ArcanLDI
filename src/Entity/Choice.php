@@ -7,6 +7,7 @@ use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ChoiceRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class Choice
 {
     #[ORM\Id]
