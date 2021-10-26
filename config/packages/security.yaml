@@ -19,7 +19,7 @@ security:
             security: false
         main:
             login_throttling:
-                max_attempsts: 5
+                max_attempts: 5
                 interval: '15 minutes'
             lazy: true
             provider: app_user_provider
