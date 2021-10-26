@@ -39,6 +39,11 @@ class Ticket
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     private $updatedAt;
 
+    public function __toString(): string
+    {
+        return $this->getName().'-'.$this->getPrice().' euro';
+    }
+
     public function __construct()
     {
         $this->orders = new ArrayCollection();
