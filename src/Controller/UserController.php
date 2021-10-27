@@ -15,9 +15,19 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route('/user')]
 class UserController extends AbstractController
 {
+    #[Route('/', name: 'user_index', methods: ['GET'])]
+    public function index(UserRepository $userRepository,TicketRepository $ticketRepository): Response
+    {
+        $tickets = $ticketRepository->findAll();
 
-    #[Route('/{id}/ticket', name: 'user_index', methods: ['GET'])]
-    public function index(Ticket $ticket,UserRepository $userRepository,TicketRepository $ticketRepository): Response
+        return $this->render('user/index.html.twig', [
+            'users' => $userRepository->findAll(),
+            'tickets' => $tickets
+        ]);
+    }
+
+    #[Route('/{id}/ticket', name: 'user_index_ticket', methods: ['GET'])]
+    public function indexticket(Ticket $ticket,UserRepository $userRepository,TicketRepository $ticketRepository): Response
     {
         $tickets = $ticketRepository->findAll();
 
