@@ -2,9 +2,12 @@
 
 namespace App\Controller;
 
+use App\Entity\Game;
 use App\Entity\Order;
 use App\Form\OrderType;
 use App\Repository\OrderRepository;
+use App\Repository\TicketRepository;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -21,14 +24,24 @@ class OrderController extends AbstractController
         ]);
     }
 
-    #[Route('/new', name: 'order_new', methods: ['GET','POST'])]
-    public function new(Request $request): Response
+    #[Route('/new/{slug}', name: 'order_new', methods: ['GET', 'POST'])]
+    public function new(Request $request,Game $game): Response
     {
         $order = new Order();
-        $form = $this->createForm(OrderType::class, $order);
+        $form = $this->createFormBuilder($order)
+            ->add('ticket', EntityType::class, [
+                'class' => 'App\Entity\Ticket',
+                'query_builder' => function (TicketRepository $tr) use ($game) {
+                    return $tr->createQueryBuilder('u')
+                        ->where('u.game = :game')
+                        ->setParameter('game', $game);
+                },
+            ])->getForm()
+        ;
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            if ($order->getTicket()->getGame()->getDateEnd() > new \DateTime() || $order->getTicket()->getGame()->getDateEnd() == NULL ){
             $entityManager = $this->getDoctrine()->getManager();
             $order->setPlayer($this->getUser());
             $order->setTotal($order->getTicket()->getPrice());
@@ -38,6 +51,9 @@ class OrderController extends AbstractController
             return $this->redirectToRoute('checkout', [
                 'id' => $order->getId(),
             ], Response::HTTP_SEE_OTHER);
+            }else{
+                $this->addFlash('error', 'vous ne pouvez pas acheter un ticket pour un jeu terminé');
+            }
         }
 
         return $this->renderForm('order/new.html.twig', [
@@ -54,7 +70,7 @@ class OrderController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/edit', name: 'order_edit', methods: ['GET','POST'])]
+    #[Route('/{id}/edit', name: 'order_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Order $order): Response
     {
         $form = $this->createForm(OrderType::class, $order);
@@ -75,7 +91,7 @@ class OrderController extends AbstractController
     #[Route('/{id}', name: 'order_delete', methods: ['POST'])]
     public function delete(Request $request, Order $order): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$order->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $order->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($order);
             $entityManager->flush();
@@ -84,14 +100,14 @@ class OrderController extends AbstractController
         return $this->redirectToRoute('order_index', [], Response::HTTP_SEE_OTHER);
     }
 
-    #[Route('/{id}/paiement', name: 'checkout', methods: ['GET','POST'])]
+    #[Route('/{id}/paiement', name: 'checkout', methods: ['GET', 'POST'])]
     public function checkout(Request $request, Order $order): Response
     {
-        if ($this->isCsrfTokenValid('checkout'.$order->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('checkout' . $order->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($order);
             $entityManager->flush();
-            $this->addFlash('success','ticket acheter');
+            $this->addFlash('success', 'ticket acheter');
         }
 
         return $this->render('order/checkout.html.twig');

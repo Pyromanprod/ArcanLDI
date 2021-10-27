@@ -16,8 +16,7 @@
                 <th>Adress</th>
                 <th>Postcode</th>
                 <th>City</th>
-                <th>CreatedAt</th>
-                <th>UpdatedAt</th>
+                <th>ticket achat</th>
                 <th>actions</th>
             </tr>
         </thead>
@@ -32,8 +31,7 @@
                 <td>{{ game.adress }}</td>
                 <td>{{ game.postcode }}</td>
                 <td>{{ game.city }}</td>
-                <td>{{ game.createdAt ? game.createdAt|date('Y-m-d H:i:s') : '' }}</td>
-                <td>{{ game.updatedAt ? game.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td><a href="{{ path('order_new', {'slug': game.slug}) }}">Hache thé</a></td>
                 <td>
                     <a href="{{ path('game_show', {'id': game.id}) }}">show</a>
                     <a href="{{ path('game_edit', {'id': game.id}) }}">edit</a>

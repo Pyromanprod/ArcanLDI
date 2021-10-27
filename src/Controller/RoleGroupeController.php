@@ -9,6 +9,7 @@ use App\Form\RoleAddFormType;
 use App\Form\RoleGroupeType;
 use App\Repository\OrderRepository;
 use App\Repository\RoleGroupeRepository;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -16,6 +17,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 #[Route('/role')]
+#[IsGranted('ROLE_ADMIN')]
 class RoleGroupeController extends AbstractController
 {
     #[Route('/', name: 'role_groupe_index', methods: ['GET'])]
@@ -110,7 +112,6 @@ class RoleGroupeController extends AbstractController
 
 
     #[Route('/delete/{pseudo}-{id}', name: 'role_delete', methods: ['POST','GET'])]
-//    #[Entity('user', expr: 'repository.find(pseudo)')]
     #[ParamConverter('user', options: ['mapping' => ['pseudo' => 'pseudo']])]
     #[ParamConverter('roleGroupe', options: ['mapping' => ['id' => 'id']])]
     public function deleteRole(User $user,RoleGroupe $roleGroupe, Request $request): Response
