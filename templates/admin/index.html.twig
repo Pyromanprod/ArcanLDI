@@ -1,0 +1,20 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Administration {% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="row">
+            <h1>Administration</h1>
+        </div>
+        <div class="row">
+            <a href="{{ path('game_index') }}">Jeux</a>
+            <a href="{{ path('user_index') }}">Joueur</a>
+            <a href="{{ path('order_index') }}">order</a>
+            <a href="{{ path('ticket_index') }}">ticket</a>
+            <a href="{{ path('order_new') }}">acheter</a>
+            <a href="{{ path('role_groupe_index') }}">rolegroupe</a>
+            <a href="{{ path('survey_index') }}">questionnaire</a>
+        </div>
+    </div>
+{% endblock %}

@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\Game;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -16,8 +17,14 @@ class GameType extends AbstractType
         $builder
             ->add('name')
             ->add('description')
-            ->add('dateStart')
-            ->add('dateEnd')
+            ->add('dateStart', DateType::class, [
+                'widget'=>'single_text',
+
+            ])
+            ->add('dateEnd',DateType::class, [
+                'widget'=>'single_text',
+
+            ])
             ->add('adress')
             ->add('postcode')
             ->add('city')
