@@ -22,4 +22,5 @@
 ###> nos ignores ###
 /.env
 /migrations/*.php
+/public/img/*
 ###< nos ignores ###
