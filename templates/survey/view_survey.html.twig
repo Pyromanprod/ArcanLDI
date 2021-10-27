@@ -7,6 +7,9 @@
         <div class="row">
             <h2>nombre de question : {{ survey.question.count }}</h2>
         </div>
+        <div class="row">
+            <a href="{{ path('survey_add_question',{'id': survey.id}) }}">Ajouter une question</a>
+        </div>
         {% for question in survey.question %}
 
             <div class="row">

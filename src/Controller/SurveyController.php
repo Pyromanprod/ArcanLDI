@@ -8,7 +8,6 @@ use App\Entity\Survey;
 use App\Form\ChoiceFormType;
 use App\Form\QuestionFormType;
 use App\Form\SurveyFormType;
-use App\Repository\SurveyRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -27,14 +26,15 @@ class SurveyController extends AbstractController
         $form = $this->createForm(SurveyFormType::class, $newSurvey);
         $form->handleRequest($request);
         $em = $this->getDoctrine()->getManager();
+
         if ($form->isSubmitted()) {
             $em->persist($newSurvey);
             $em->flush();
-
-
+            $this->addFlash('success', 'Questionnaire Ajouté');
             return $this->redirectToRoute('survey_add_question', [
                 'id' => $newSurvey->getId()
             ]);
+
 
         }
 
@@ -56,6 +56,7 @@ class SurveyController extends AbstractController
             $em = $this->getDoctrine()->getManager();
             $em->persist($newQuestion);
             $em->flush();
+            $this->addFlash('success', 'Question Ajoutée');
             //si liste déroulante coché
             if ($form->get('select')->getData()) {
 
@@ -90,10 +91,11 @@ class SurveyController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
-            dump($question);
             $newChoice->setQuestion($question);
             $em->persist($newChoice);
             $em->flush();
+            $this->addFlash('success',
+                $newChoice->getContent()." ajouté à la question : ". $question->getContent());
         }
         return $this->renderForm('survey/add_choice_question.html.twig', [
             'question' => $question,

@@ -13,6 +13,7 @@
         {% else %}
             Pas de encore choix
         {% endfor %}
+        <a class="btn btn-outline-primary" href='{{ path('survey_add_question', {'id': question.survey.id}) }}'>Nouvelle Question</a>
     </div>
 {% endblock %}
 
