@@ -19,10 +19,12 @@ class GameType extends AbstractType
             ->add('description')
             ->add('dateStart', DateType::class, [
                 'widget'=>'single_text',
+                'required'=>false,
 
             ])
             ->add('dateEnd',DateType::class, [
                 'widget'=>'single_text',
+                'required'=>false,
 
             ])
             ->add('adress')

@@ -8,13 +8,27 @@
             <h1>Administration</h1>
         </div>
         <div class="row">
-            <a href="{{ path('game_index') }}">Jeux</a>
-            <a href="{{ path('user_index') }}">Joueur</a>
-            <a href="{{ path('order_index') }}">order</a>
-            <a href="{{ path('ticket_index') }}">ticket</a>
-            <a href="{{ path('order_new') }}">acheter</a>
-            <a href="{{ path('role_groupe_index') }}">rolegroupe</a>
-            <a href="{{ path('survey_index') }}">questionnaire</a>
+            <div class="col-4 col-md-3 mb-3">
+                <a href="{{ path('game_index') }}" class="btn btn-primary">Jeux</a>
+            </div>
+            <div class="col-4 col-md-3 mb-3">
+                <a href="{{ path('user_index') }}" class="btn btn-success">Joueur</a>
+            </div>
+            <div class="col-4 col-md-3 mb-3">
+                <a href="{{ path('order_index') }}" class="btn btn-secondary">Commande</a>
+            </div>
+            <div class="col-4 col-md-3 mb-3">
+                <a href="{{ path('ticket_index') }}" class="btn btn-dark">Tickete</a>
+            </div>
+            <div class="col-4 col-md-3 mb-3">
+                <a href="{{ path('order_new') }}" class="btn btn-warning">Acheter</a>
+            </div>
+            <div class="col-4 col-md-3 mb-3">
+                <a href="{{ path('role_groupe_index') }}" class="btn btn-danger">Groupe</a>
+            </div>
+            <div class="col-4 col-md-3 mb-3">
+                <a href="{{ path('survey_index') }}" class="btn btn-info">Questionnaire</a>
+            </div>
         </div>
     </div>
 {% endblock %}
