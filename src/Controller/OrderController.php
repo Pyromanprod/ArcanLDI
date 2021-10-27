@@ -40,7 +40,7 @@ class OrderController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($order->getTicket()->getGame()->getDateEnd() > new \DateTime() || $order->getTicket()->getGame()->getDateEnd() == NULL) {
-                $reservation = $orderRepository->findOneorder($game->getId(), $this->getUser()->getId());
+                $reservation = $orderRepository->findOneorder($game, $this->getUser());
                 dump($reservation);
                 if ($reservation !== null) {
                     //si la date de paiement est null on renvoie ver le questionnaire avec le message flash

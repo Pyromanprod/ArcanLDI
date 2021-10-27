@@ -2,7 +2,9 @@
 
 namespace App\Repository;
 
+use App\Entity\Game;
 use App\Entity\Order;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -19,15 +21,13 @@ class OrderRepository extends ServiceEntityRepository
         parent::__construct($registry, Order::class);
     }
 
-    public function findOneorder($game_id,$player_id){
+    public function findOneorder(Game $game, User $player){
         return $this->createQueryBuilder('a')
             ->innerJoin('a.ticket','b')
-            ->innerJoin('b.game','c')
-            ->innerJoin('a.player','d')
-            ->where('c.id = :id')
-            ->andWhere('d.id = :player')
-            ->setParameter(':player',$player_id)
-            ->setParameter(':id', $game_id)
+            ->where('b.game = :game')
+            ->andWhere('a.player = :player')
+            ->setParameter(':player',$player)
+            ->setParameter(':game', $game)
             ->getQuery()
             ->getOneOrNullResult()
             ;
