@@ -25,7 +25,7 @@ class OrderController extends AbstractController
     }
 
     #[Route('/new/{slug}', name: 'order_new', methods: ['GET', 'POST'])]
-    public function new(Request $request,Game $game): Response
+    public function new(Request $request, Game $game, OrderRepository $orderRepository): Response
     {
         $order = new Order();
         $form = $this->createFormBuilder($order)
@@ -36,31 +36,49 @@ class OrderController extends AbstractController
                         ->where('u.game = :game')
                         ->setParameter('game', $game);
                 },
-            ])->getForm()
-        ;
+            ])->getForm();
         $form->handleRequest($request);
-
         if ($form->isSubmitted() && $form->isValid()) {
-            if ($order->getTicket()->getGame()->getDateEnd() > new \DateTime() || $order->getTicket()->getGame()->getDateEnd() == NULL ){
-            $entityManager = $this->getDoctrine()->getManager();
-            $order->setPlayer($this->getUser());
-            $order->setTotal($order->getTicket()->getPrice());
-            $entityManager->persist($order);
-            $entityManager->flush();
+            if ($order->getTicket()->getGame()->getDateEnd() > new \DateTime() || $order->getTicket()->getGame()->getDateEnd() == NULL) {
+                $reservation = $orderRepository->findOneorder($game->getId(), $this->getUser()->getId());
+                dump($reservation);
+                if ($reservation !== null) {
+                    //si la date de paiement est null on renvoie ver le questionnaire avec le message flash
+                    if ($reservation->getDatePaid() == NULL) {
 
-            return $this->redirectToRoute('checkout', [
-                'id' => $order->getId(),
-            ], Response::HTTP_SEE_OTHER);
-            }else{
+                        $this->addFlash('error', 'vous devez finir le questionnaire pour acheter le ticket');
+
+                        //si la date de paiement est presente alors il ne pas acheter un autre ticket
+                        // renvoie sur home avec message d'erreur
+                    } else {
+
+                        $this->addFlash('error', 'vous ne pouvez acheter qu\'un seul ticket par jeu de role');
+                    }
+                    return $this->redirectToRoute('home');
+                    //si la reservation n'existe pas alors celle ci se
+                    // créer et est flush dans la base donées
+                } else {
+
+                    $entityManager = $this->getDoctrine()->getManager();
+                    $order->setPlayer($this->getUser());
+                    $order->setTotal($order->getTicket()->getPrice());
+                    $entityManager->persist($order);
+                    $entityManager->flush();
+                    //TODO: FAIRE LA REDIRECTION VER LE QUESTIONNAIRE
+                    return $this->redirectToRoute('checkout', [
+                        'id' => $order->getId(),
+                    ], Response::HTTP_SEE_OTHER);
+                }
+            } else {
                 $this->addFlash('error', 'vous ne pouvez pas acheter un ticket pour un jeu terminé');
             }
-        }
 
-        return $this->renderForm('order/new.html.twig', [
-            'order' => $order,
-            'form' => $form,
-        ]);
+
+        }
+        return $this->renderForm('order/new.html.twig', ['order' => $order,
+            'form' => $form,]);
     }
+
 
     #[Route('/{id}', name: 'order_show', methods: ['GET'])]
     public function show(Order $order): Response

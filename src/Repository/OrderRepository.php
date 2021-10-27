@@ -19,32 +19,17 @@ class OrderRepository extends ServiceEntityRepository
         parent::__construct($registry, Order::class);
     }
 
-    // /**
-    //  * @return Order[] Returns an array of Order objects
-    //  */
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('o')
-            ->andWhere('o.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('o.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
-
-    /*
-    public function findOneBySomeField($value): ?Order
-    {
-        return $this->createQueryBuilder('o')
-            ->andWhere('o.exampleField = :val')
-            ->setParameter('val', $value)
+    public function findOneorder($game_id,$player_id){
+        return $this->createQueryBuilder('a')
+            ->innerJoin('a.ticket','b')
+            ->innerJoin('b.game','c')
+            ->innerJoin('a.player','d')
+            ->where('c.id = :id')
+            ->andWhere('d.id = :player')
+            ->setParameter(':player',$player_id)
+            ->setParameter(':id', $game_id)
             ->getQuery()
             ->getOneOrNullResult()
-        ;
+            ;
     }
-    */
 }
