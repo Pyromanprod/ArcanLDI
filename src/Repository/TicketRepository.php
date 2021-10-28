@@ -52,8 +52,8 @@ class TicketRepository extends ServiceEntityRepository
     {
         return $this->createQueryBuilder('t')
             ->join('t.game','g')
-            ->andWhere('g.dateEnd > :date')
-            ->orWhere('g.dateEnd is NULL')
+            ->andWhere('g.dateStart > :date')
+            ->orWhere('g.dateStart is NULL')
             ->setParameter('date', $value)
             ->getQuery()
             ->getResult()

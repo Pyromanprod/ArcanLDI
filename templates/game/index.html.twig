@@ -7,18 +7,20 @@
 
     <table class="table">
         <thead>
-            <tr>
-                <th>Id</th>
-                <th>Name</th>
-                <th>Description</th>
-                <th>DateStart</th>
-                <th>DateEnd</th>
-                <th>Adress</th>
-                <th>Postcode</th>
-                <th>City</th>
-                <th>ticket achat</th>
+        <tr>
+            <th>Id</th>
+            <th>Nom du jeu</th>
+            <th>Description</th>
+            <th>Date de Début</th>
+            <th>Date de Fin</th>
+            <th>Ville</th>
+            <th>Code postal</th>
+            <th>Adresse</th>
+            <th>Acheter un ticket</th>
+            {% if is_granted('ROLE_ADMIN') %}
                 <th>actions</th>
-            </tr>
+            {% endif %}
+        </tr>
         </thead>
         <tbody>
         {% for game in games %}
@@ -26,18 +28,36 @@
                 <td>{{ game.id }}</td>
                 <td>{{ game.name }}</td>
                 <td>{{ game.description }}</td>
-                <td>{{ game.dateStart ? game.dateStart|date('Y-m-d H:i:s') : '' }}</td>
-                <td>{{ game.dateEnd ? game.dateEnd|date('Y-m-d H:i:s') : '' }}</td>
-                <td>{{ game.adress }}</td>
-                <td>{{ game.postcode }}</td>
-                <td>{{ game.city }}</td>
-                <td><a href="{{ path('order_new', {'slug': game.slug}) }}">Hache thé</a></td>
-                <td>
-                    <a href="{{ path('game_show', {'id': game.id}) }}">show</a>
-                    <a href="{{ path('game_edit', {'id': game.id}) }}">edit</a>
-
-                    <a href="{{ path('game_add_album_Photo', {'slug': game.slug}) }}">Album</a>
+                <td>{% if game.dateStart %}
+                        {{ game.dateStart ? game.dateStart|date('Y-m-d H:i:s') : '' }}
+                    {% else %}
+                        pas de date de début prévue a ce jour
+                    {% endif %}
                 </td>
+                <td>
+                    {% if game.dateEnd %}
+                    {{ game.dateEnd ? game.dateEnd|date('Y-m-d H:i:s') : '' }}
+                        {% else %}
+                        pas de date de fin prévue a ce jour
+                    {% endif %}
+                </td>
+                {% if game.city %}
+                <td>{{ game.city }}</td>
+                <td>{{ game.postcode }}</td>
+                <td>{{ game.adress }}</td>
+                {% else %}
+                    <td colspan="3">pas encore de localisation prévue</td>
+                {% endif %}
+                <td><a href="{{ path('order_new', {'slug': game.slug}) }}">Hache thé</a></td>
+                {% if is_granted('ROLE_ADMIN') %}
+
+                    <td>
+                        <a href="{{ path('game_show', {'id': game.id}) }}">show</a>
+                        <a href="{{ path('game_edit', {'id': game.id}) }}">edit</a>
+
+                        <a href="{{ path('game_add_album_Photo', {'slug': game.slug}) }}">Album</a>
+                    </td>
+                {% endif %}
             </tr>
         {% else %}
             <tr>
@@ -46,6 +66,11 @@
         {% endfor %}
         </tbody>
     </table>
+    {% if is_granted('ROLE_ADMIN') %}
+        <a class="btn btn-outline-primary" href="{{ path('game_new') }}">Create new</a>
 
-    <a href="{{ path('game_new') }}">Create new</a>
+    {% endif %}
+    <a class="btn btn-outline-primary" href="{{ path('home') }}"><i class="fas fa-arrow-rotate-backward"></i>Retour a
+        l'accueil</a>
+
 {% endblock %}
