@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\Game;
 use App\Entity\Ticket;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -47,4 +48,15 @@ class TicketRepository extends ServiceEntityRepository
         ;
     }
     */
+    public function findOneBydate($value)
+    {
+        return $this->createQueryBuilder('t')
+            ->join('t.game','g')
+            ->andWhere('g.dateEnd > :date')
+            ->orWhere('g.dateEnd is NULL')
+            ->setParameter('date', $value)
+            ->getQuery()
+            ->getResult()
+            ;
+    }
 }

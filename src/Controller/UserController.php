@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Ticket;
 use App\Entity\User;
 use App\Form\UserType;
+use App\Repository\GameRepository;
 use App\Repository\TicketRepository;
 use App\Repository\UserRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -20,9 +21,10 @@ class UserController extends AbstractController
 
     #[Route('/', name: 'user_index', methods: ['GET'])]
     #[IsGranted('ROLE_ADMIN')]
-    public function index(UserRepository $userRepository,TicketRepository $ticketRepository): Response
+    public function index(UserRepository $userRepository,TicketRepository $ticketRepository,GameRepository $gameRepository): Response
     {
-        $tickets = $ticketRepository->findAll();
+        $tickets = $ticketRepository->findOneBydate(new \DateTime());
+        dump($tickets);
 
         return $this->render('user/index.html.twig', [
             'users' => $userRepository->findAll(),
@@ -34,11 +36,10 @@ class UserController extends AbstractController
     #[IsGranted('ROLE_ADMIN')]
     public function indexticket(Ticket $ticket,UserRepository $userRepository,TicketRepository $ticketRepository): Response
     {
-        $tickets = $ticketRepository->findAll();
 
-        return $this->render('user/index.html.twig', [
+        return $this->render('user/inde_ticket.html.twig', [
             'users' => $userRepository->findplayer($ticket),
-            'tickets' => $tickets
+            'tickets' => $ticket
         ]);
     }
 

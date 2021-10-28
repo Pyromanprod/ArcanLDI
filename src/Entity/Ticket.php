@@ -39,6 +39,9 @@ class Ticket
     #[ORM\ManyToMany(targetEntity: Survey::class, mappedBy: 'ticket')]
     private $surveys;
 
+    #[ORM\Column(type: 'integer')]
+    private $stock;
+
     public function __toString(): string
     {
         return $this->getName().'-'.$this->getPrice().' euro';
@@ -168,6 +171,18 @@ class Ticket
         if ($this->surveys->removeElement($survey)) {
             $survey->removeTicket($this);
         }
+
+        return $this;
+    }
+
+    public function getStock(): ?int
+    {
+        return $this->stock;
+    }
+
+    public function setStock(int $stock): self
+    {
+        $this->stock = $stock;
 
         return $this;
     }

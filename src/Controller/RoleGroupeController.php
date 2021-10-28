@@ -128,7 +128,7 @@ class RoleGroupeController extends AbstractController
             $this->addFlash('error','role non retirer');
         }
 
-        return $this->redirectToRoute('user_index', [
+        return $this->redirectToRoute('user_index_ticket', [
             'id' => $id
 
         ], Response::HTTP_SEE_OTHER);

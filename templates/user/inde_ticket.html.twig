@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}User index{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <h1 class="text-center">Joueur ayant acheter le ticket {{ tickets.name }} du jeu {{ tickets.game.name }}</h1>
+        <div class="row">
+            {% for user in users %}
+                <div class="card mx-auto my-3" style="width: 18rem;">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ user.pseudo }}</h5>
+                        <h6 class="card-subtitle mb-2 text-muted">{{ user.firstname }}  {{ user.lastname }}</h6>
+                        <p class="card-text">email: user.email</p>
+                        <p class="card-text">
+                            {% if user.roleGroupes %}
+                            {% for role in user.roleGroupes %}
+                            {{ role.name }}</p>
+                        <form class="d-inline-block" method="post"
+                              action="{{ path('role_delete', {'pseudo': user.pseudo, 'id': role.id} ) }}"
+                              onsubmit="return confirm('etes vous sur de vouloir retirer ce role?');">
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ role.id) }}">
+                            <button class="btn"><i class="fas fa-trash"></i></button>
+                        </form>
+                        {% else %}
+                            <p>pas de groupe</p>
+                        {% endfor %}
+                        {% endif %}
+                        <a class="card-link" href="{{ path('role_groupe_add', {'id': user.id}) }}">Ajouter un
+                            groupe</a>
+                        <a class="card-link" href="{{ path('user_show', {'id': user.id}) }}">Détails</a>
+                    </div>
+                </div>
+
+            {% endfor %}
+        </div>
+    </div>
+
+{% endblock %}
