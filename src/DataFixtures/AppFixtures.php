@@ -45,6 +45,7 @@ class AppFixtures extends Fixture
                 ->setPassword(
                     $this->encoder->hashPassword($user, 'a'));
             $manager->persist($user);
+            $this->setReference('user',$admin);
         }
 
 

@@ -12,7 +12,6 @@ use App\Form\ChoiceFormType;
 use App\Form\QuestionFormType;
 use App\Form\SurveyFormType;
 use App\Repository\ChoiceRepository;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -24,7 +23,6 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route('/questionnaire', name: 'survey_')]
 class SurveyController extends AbstractController
 {
-    #[IsGranted('ROLE_ADMIN')]
     #[Route('/', name: 'index')]
     public function index(Request $request): Response
     {
@@ -52,7 +50,7 @@ class SurveyController extends AbstractController
             'form' => $form
         ]);
     }
-    #[IsGranted('ROLE_ADMIN')]
+
     #[Route('/ajouter-question/{id}', name: 'add_question')]
     public function addQuestion(Request $request, Survey $survey): Response
     {
@@ -91,7 +89,7 @@ class SurveyController extends AbstractController
         ]);
 
     }
-    #[IsGranted('ROLE_ADMIN')]
+
     #[Route('/ajouter-choix/{id}', name: 'add_choice')]
     public function addChoice(Request $request, Question $question): Response
     {
@@ -111,7 +109,7 @@ class SurveyController extends AbstractController
             'form' => $form,
         ]);
     }
-    #[IsGranted('ROLE_ADMIN')]
+
     #[Route('/voir-questionnaire/{id}', name: 'view')]
     public function viewSurvey(Request $request, Survey $survey): Response
     {
@@ -119,7 +117,7 @@ class SurveyController extends AbstractController
             'survey' => $survey,
         ]);
     }
-    #[IsGranted('ROLE_USER')]
+
     #[Route('/questionnaire-pour-le-ticket/{id}', name: 'suvey_for_ticket')]
     public function surveyForTicket(Request $request, Ticket $ticket): Response
     {
@@ -167,7 +165,6 @@ class SurveyController extends AbstractController
     }
 
 //question choix multiple
-    #[IsGranted('ROLE_USER')]
     #[Route('/question/{id}/{idTicket}/{hash}/multiple', name: 'answer_multiple_choice')]
     #[ParamConverter('ticket', options: ['mapping' => ['idTicket' => 'id']])]
     public function answer(Request $request, Question $question, Ticket $ticket, $hash): Response
@@ -217,7 +214,6 @@ class SurveyController extends AbstractController
     }
 
 //Question a choix libre
-    #[IsGranted('ROLE_USER')]
     #[Route('/question/{id}/{idTicket}/{hash}', name: 'answer')]
     #[ParamConverter('ticket', options: ['mapping' => ['idTicket' => 'id']])]
     public function answerSingle(Request $request, Question $question, Ticket $ticket, $hash): Response

@@ -7,7 +7,6 @@ use App\Entity\Order;
 use App\Form\OrderType;
 use App\Repository\OrderRepository;
 use App\Repository\TicketRepository;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -15,7 +14,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 #[Route('/order')]
-#[IsGranted('ROLE_USER')]
 class OrderController extends AbstractController
 {
     #[Route('/', name: 'order_index', methods: ['GET'])]
