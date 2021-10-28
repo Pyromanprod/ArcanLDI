@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\ChoiceRepository;
 use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
+use JetBrains\PhpStorm\Pure;
 
 #[ORM\Entity(repositoryClass: ChoiceRepository::class)]
 #[ORM\HasLifecycleCallbacks]
@@ -27,6 +28,7 @@ class Choice
 
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     private $updatedAt;
+
 
     public function getId(): ?int
     {
@@ -77,5 +79,11 @@ class Choice
     public function setUpdatedAt(): void
     {
         $this->updatedAt = new DateTimeImmutable();
+    }
+
+
+    #[Pure] public function __toString(): string
+    {
+        return $this->getContent();
     }
 }

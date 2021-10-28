@@ -12,6 +12,7 @@ use App\Form\ChoiceFormType;
 use App\Form\QuestionFormType;
 use App\Form\SurveyFormType;
 use App\Repository\ChoiceRepository;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -24,6 +25,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class SurveyController extends AbstractController
 {
     #[Route('/', name: 'index')]
+    #[isGranted('ROLE_ADMIN')]
     public function index(Request $request): Response
     {
         $reposSurvey = $this->getDoctrine()->getRepository(Survey::class);
@@ -52,6 +54,7 @@ class SurveyController extends AbstractController
     }
 
     #[Route('/ajouter-question/{id}', name: 'add_question')]
+    #[isGranted('ROLE_ADMIN')]
     public function addQuestion(Request $request, Survey $survey): Response
     {
 
@@ -91,6 +94,7 @@ class SurveyController extends AbstractController
     }
 
     #[Route('/ajouter-choix/{id}', name: 'add_choice')]
+    #[isGranted('ROLE_ADMIN')]
     public function addChoice(Request $request, Question $question): Response
     {
         $newChoice = new Choice();
@@ -111,6 +115,7 @@ class SurveyController extends AbstractController
     }
 
     #[Route('/voir-questionnaire/{id}', name: 'view')]
+    #[isGranted('ROLE_ADMIN')]
     public function viewSurvey(Request $request, Survey $survey): Response
     {
         return $this->render('survey/view_survey.html.twig', [
@@ -128,23 +133,12 @@ class SurveyController extends AbstractController
             $listeQuestion = $survey->getQuestion();
             foreach ($listeQuestion as $question) {
                 if (!$reposAnswer->findByUserQuestion($user, $question)) {
-
-                    if ($question->getChoices()->getValues()) {
-
-                        return $this->redirectToRoute('survey_answer_multiple_choice',
-                            [
-                                'id' => $question->getId(),
-                                'hash' => hash('md5',
-                                    $question->getContent() .
-                                    $question->getId() .
-                                    $this->getUser()->getId() .
-                                    $ticket->getId()
-                                ),
-                                'idTicket' => $ticket->getId(),
-                            ]);
-                    }
-
-                    //si question a champs input
+                // envoie d'un hash composer de
+                    // l'id de la question
+                    //l'id du user
+                    //le contenue de la question
+                    //et l'id du ticket
+                    // pour pouvoir vérifier par la suite si le user a trafiqué l'url
                     return $this->redirectToRoute('survey_answer',
                         [
                             'id' => $question->getId(),
@@ -164,80 +158,50 @@ class SurveyController extends AbstractController
         return $this->redirectToRoute('home');
     }
 
-//question choix multiple
-    #[Route('/question/{id}/{idTicket}/{hash}/multiple', name: 'answer_multiple_choice')]
-    #[ParamConverter('ticket', options: ['mapping' => ['idTicket' => 'id']])]
-    public function answer(Request $request, Question $question, Ticket $ticket, $hash): Response
-    {
-        //Si tu arrive sur la page sans y avoir était invité
-        if (!hash_equals($hash, hash('md5',
-            $question->getContent() .
-            $question->getId() .
-            $this->getUser()->getId() .
-            $ticket->getId()
-
-        ))) {
-            throw new AccessDeniedHttpException();
-        }
-
-        $answer = new Answer();
-        $form = $this->createFormBuilder()
-            ->add('content', EntityType::class, [
-                'class' => 'App\Entity\Choice',
-                'choice_label' => 'content',
-                'query_builder' => function (ChoiceRepository $tr) use ($question) {
-                    return $tr->createQueryBuilder('u')
-                        ->where('u.question = :question')
-                        ->setParameter('question', $question);
-                },
-            ])
-            ->getForm();
-
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $answer->setQuestion($question)
-                ->setContent($form->get('content')->getData()->getContent())
-                ->setPlayer($this->getUser()); //bug phpstorm
-            $entityManager->persist($answer);
-            $entityManager->flush();
-            return $this->redirectToRoute('survey_suvey_for_ticket', [
-                'id' => $ticket->getId(),
-            ], Response::HTTP_SEE_OTHER);
-
-        }
-        return $this->renderForm('question/repondre.html.twig', [
-            'question' => $question,
-            'form' => $form,
-        ]);
-    }
-
-//Question a choix libre
     #[Route('/question/{id}/{idTicket}/{hash}', name: 'answer')]
     #[ParamConverter('ticket', options: ['mapping' => ['idTicket' => 'id']])]
     public function answerSingle(Request $request, Question $question, Ticket $ticket, $hash): Response
     {
 
-        //Si tu arrive sur la page sans y avoir était invité
+        //Vérification du hash envoyé et comparaison pour savoir si l'url a était trafiqué
+        //si oui on envoie sur access denied
         if (!hash_equals($hash, hash('md5',
-            $question->getContent() .
-            $question->getId() .
-            $this->getUser()->getId() .
-            $ticket->getId()
+                $question->getContent() .
+                $question->getId() .
+                $this->getUser()->getId() .
+                $ticket->getId()
 
-        ))) {
+            )
+        )) {
             throw new AccessDeniedHttpException();
         }
 
         $answer = new Answer();
-        $form = $this->createForm(AnswerMultipleFormType::class, $answer);
+        if ($question->getChoices()->getValues()) {
+
+            $form = $this->createFormBuilder()
+                ->add('content', EntityType::class, [
+                    'class' => 'App\Entity\Choice',
+                    'choice_label' => 'content',
+                    'query_builder' => function (ChoiceRepository $tr) use ($question) {
+                        return $tr->createQueryBuilder('u')
+                            ->where('u.question = :question')
+                            ->setParameter('question', $question);
+                    },
+                ])
+                ->getForm();
+        } else {
+            $form = $this->createForm(AnswerMultipleFormType::class);
+        }
+
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
             $entityManager = $this->getDoctrine()->getManager();
             $answer->setQuestion($question)
+                ->setContent($form->get('content')->getData())
                 ->setPlayer($this->getUser()); //bug phpstorm
 
             $entityManager->persist($answer);
@@ -251,7 +215,6 @@ class SurveyController extends AbstractController
             'form' => $form,
         ]);
     }
-    //TODO: au moment de l'envoie de réponse vérifier si la question répondu et bien la bonne
 
 
 }
