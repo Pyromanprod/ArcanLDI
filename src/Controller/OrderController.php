@@ -43,13 +43,16 @@ class OrderController extends AbstractController
                 $reservation = $orderRepository->findOneorder($game, $this->getUser());
                 dump($reservation);
                 if ($reservation !== null) {
-                    //si la date de paiement est null on renvoie ver le questionnaire avec le message flash
+
+
+                    //si la date de paiement est null on renvoie vers le questionnaire avec le message flash
                     if ($reservation->getDatePaid() == NULL) {
 
                         $this->addFlash('error', 'vous devez finir le questionnaire pour acheter le ticket');
 
-                        //si la date de paiement est presente alors il ne pas acheter un autre ticket
-                        // renvoie sur home avec message d'erreur
+                        return $this->redirectToRoute('survey_suvey_for_ticket', [
+                            'id' => $order->getTicket()->getId(),
+                        ], Response::HTTP_SEE_OTHER);
                     } else {
 
                         $this->addFlash('error', 'vous ne pouvez acheter qu\'un seul ticket par jeu de role');
@@ -64,9 +67,9 @@ class OrderController extends AbstractController
                     $order->setTotal($order->getTicket()->getPrice());
                     $entityManager->persist($order);
                     $entityManager->flush();
-                    //TODO: FAIRE LA REDIRECTION VER LE QUESTIONNAIRE
-                    return $this->redirectToRoute('checkout', [
-                        'id' => $order->getId(),
+
+                    return $this->redirectToRoute('survey_suvey_for_ticket', [
+                        'id' => $order->getTicket()->getId(),
                     ], Response::HTTP_SEE_OTHER);
                 }
             } else {
