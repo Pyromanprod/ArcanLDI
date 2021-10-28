@@ -12,10 +12,12 @@ use Faker;
 class AppFixtures extends Fixture
 {
     private $encoder;
+
     public function __construct(UserPasswordHasherInterface $encoder)
     {
         $this->encoder = $encoder;
     }
+
     public function load(ObjectManager $manager): void
     {
         $faker = Faker\Factory::create('fr_FR');
@@ -30,31 +32,31 @@ class AppFixtures extends Fixture
             ->setRoles(["ROLE_ADMIN"])
             ->setPassword(
                 $this->encoder->hashPassword($admin, 'a')
-            )
-        ;
+            );
         $manager->persist($admin);
 
-        for ($i = 0; $i < 50; $i++){
+        for ($i = 0; $i < 50; $i++) {
             $user = new User();
             $user
                 ->setEmail($faker->email)
-                ->setFirstName( $faker->firstName)
-                ->setPseudo( $faker->firstName)
-                ->setLastname($faker->userName )
+                ->setFirstName($faker->firstName)
+                ->setPseudo($faker->firstName)
+                ->setLastname($faker->userName)
                 ->setPassword(
-                    $this->encoder->hashPassword($user, $faker->password()))
-            ;
+                    $this->encoder->hashPassword($user, 'a'));
             $manager->persist($user);
+            $this->setReference('user',$admin);
         }
 
-        $gdn = new Game();
 
-        $gdn
-            ->setName('Arcan')
-            ->setDescription('je suis un jeu hey !')
-            ->setBanner('something')
-        ;
-        $manager->persist($gdn);
+            $gdn = new Game();
+
+            $gdn
+                ->setName('le jeu')
+                ->setDescription($faker->paragraph('10'))
+                ->setBanner('something');
+            $manager->persist($gdn);
+            $this->addReference('gdn', $gdn);
 
 
         $manager->flush();
