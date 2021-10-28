@@ -24,6 +24,9 @@ class Survey
     #[ORM\ManyToMany(targetEntity: Ticket::class, inversedBy: 'surveys')]
     private $ticket;
 
+    #[ORM\Column(type: 'boolean')]
+    private $general;
+
     public function __construct()
     {
         $this->question = new ArrayCollection();
@@ -97,6 +100,18 @@ class Survey
     public function removeTicket(Ticket $ticket): self
     {
         $this->ticket->removeElement($ticket);
+
+        return $this;
+    }
+
+    public function getGeneral(): ?bool
+    {
+        return $this->general;
+    }
+
+    public function setGeneral(bool $general): self
+    {
+        $this->general = $general;
 
         return $this;
     }

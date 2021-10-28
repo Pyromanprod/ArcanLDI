@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Survey;
+use App\Entity\Ticket;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -19,22 +20,22 @@ class SurveyRepository extends ServiceEntityRepository
         parent::__construct($registry, Survey::class);
     }
 
-    // /**
-    //  * @return Survey[] Returns an array of Survey objects
-    //  */
-    /*
-    public function findByExampleField($value)
+     /**
+      * @return Survey[] Returns an array of Survey objects
+      */
+
+    public function findByNotOnTicket(): array
     {
+
         return $this->createQueryBuilder('s')
-            ->andWhere('s.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('s.id', 'ASC')
-            ->setMaxResults(10)
+            ->leftJoin('s.ticket', 't')
+            ->Where('t.id IS NULL')
+            ->andWhere('s.general = 0')
             ->getQuery()
             ->getResult()
         ;
     }
-    */
+
 
     /*
     public function findOneBySomeField($value): ?Survey

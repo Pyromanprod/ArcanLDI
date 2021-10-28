@@ -2,10 +2,14 @@
 
 namespace App\Controller;
 
+use App\Entity\Survey;
 use App\Entity\Ticket;
+use App\Form\AssociationTicketSurveyFormType;
 use App\Form\TicketType;
+use App\Repository\SurveyRepository;
 use App\Repository\TicketRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -23,7 +27,7 @@ class TicketController extends AbstractController
         ]);
     }
 
-    #[Route('/new', name: 'ticket_new', methods: ['GET','POST'])]
+    #[Route('/new', name: 'ticket_new', methods: ['GET', 'POST'])]
     #[IsGranted('ROLE_ADMIN')]
     public function new(Request $request): Response
     {
@@ -45,15 +49,57 @@ class TicketController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'ticket_show', methods: ['GET'])]
-    public function show(Ticket $ticket): Response
+    #[Route('/{id}', name: 'ticket_show', methods: ['GET', 'POST'])]
+    public function show(Ticket $ticket, Request $request, SurveyRepository $surveyRepository): Response
     {
-        return $this->render('ticket/show.html.twig', [
+
+//TODO: make:form
+        $formNotGeneral = $this->createFormBuilder()
+            ->add('survey', EntityType::class, [
+                'class' => 'App\Entity\Survey',
+                'choices' => $surveyRepository->findByNotOnTicket(),
+                'choice_label' => 'name',
+            ])->getForm()
+        ;
+        $formNotGeneral->handleRequest($request);
+        if ($formNotGeneral->isSubmitted() && $formNotGeneral->isValid()) {
+            $ticket->addSurvey($formNotGeneral->get('survey')->getData());
+            $this->getDoctrine()->getManager()->flush();
+            dump($ticket);
+            return $this->redirectToRoute('ticket_show', ['id'=>$ticket->getId()]);
+        }
+
+
+        $formGeneral = $this->createFormBuilder()
+            ->add('surveya', EntityType::class, [
+                'class' => 'App\Entity\Survey',
+                'choices' => $surveyRepository->findByGeneral('1'),
+                'choice_label' => 'name',
+            ])->getForm()
+        ;
+
+        // Ajout des questionnaires "Généraux"
+        $formGeneral->handleRequest($request);
+        if ($formGeneral->isSubmitted() && $formGeneral->isValid()) {
+            $ticket->addSurvey($formGeneral->get('surveya')->getData());
+            $this->getDoctrine()->getManager()->flush();
+            dump($ticket);
+            return $this->redirectToRoute('ticket_show', ['id'=>$ticket->getId()]);
+        }
+
+
+
+
+        return $this->renderForm('ticket/show.html.twig', [
             'ticket' => $ticket,
+            'formgeneral' => $formGeneral,
+            'formnotgeneral' => $formNotGeneral,
         ]);
+
+
     }
 
-    #[Route('/{id}/edit', name: 'ticket_edit', methods: ['GET','POST'])]
+    #[Route('/{id}/edit', name: 'ticket_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Ticket $ticket): Response
     {
         $form = $this->createForm(TicketType::class, $ticket);
@@ -71,10 +117,10 @@ class TicketController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'ticket_delete', methods: ['POST'])]
+    #[Route('/{id}/delete', name: 'ticket_delete', methods: ['POST'])]
     public function delete(Request $request, Ticket $ticket): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$ticket->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $ticket->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($ticket);
             $entityManager->flush();

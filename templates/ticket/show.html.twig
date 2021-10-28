@@ -3,10 +3,12 @@
 {% block title %}Ticket{% endblock %}
 
 {% block body %}
-    <h1>Ticket</h1>
+    <div class="container">
 
-    <table class="table">
-        <tbody>
+        <h1>Ticket</h1>
+
+        <table class="table">
+            <tbody>
             <tr>
                 <th>Id</th>
                 <td>{{ ticket.id }}</td>
@@ -27,12 +29,31 @@
                 <th>UpdatedAt</th>
                 <td>{{ ticket.updatedAt ? ticket.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
             </tr>
-        </tbody>
-    </table>
+            </tbody>
+        </table>
+        <div class="row">
+            <div class="col-12 col-lg-4 mx-auto">
 
-    <a href="{{ path('ticket_index') }}">back to list</a>
 
-    <a href="{{ path('ticket_edit', {'id': ticket.id}) }}">edit</a>
+                {{ form_start(formnotgeneral) }}
+                {{ form_row(formnotgeneral.survey, {'label': 'Les questionnaires précis'}) }}
+                <button type="submit" class="btn btn-primary">Ajouter</button>
+                {{ form_end(formnotgeneral) }}
+            </div>
+            <div class="col-12 col-lg-4 mx-auto">
 
-    {{ include('ticket/_delete_form.html.twig') }}
+
+                {{ form_start(formgeneral) }}
+                {{ form_row(formgeneral.surveya, {'label': 'Les questionnaires généraux'}) }}
+                <button type="submit" class="btn btn-primary">Ajouter</button>
+                {{ form_end(formgeneral) }}
+            </div>
+        </div>
+
+        <a href="{{ path('ticket_index') }}">back to list</a>
+
+        <a href="{{ path('ticket_edit', {'id': ticket.id}) }}">edit</a>
+
+        {{ include('ticket/_delete_form.html.twig') }}
+    </div>
 {% endblock %}
