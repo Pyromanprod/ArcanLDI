@@ -74,7 +74,7 @@ class RoleGroupeController extends AbstractController
             'form' => $form,
         ]);
     }
-    //ajout role de groupe a un utilisateur
+    //ajout role de groupe a un utilisateurdfg
     #[Route('/{id}/add', name: 'role_groupe_add', methods: ['GET','POST'])]
     public function add(Request $request, User $user, OrderRepository $orderRepository): Response
     {
