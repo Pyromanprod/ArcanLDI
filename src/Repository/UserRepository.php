@@ -48,7 +48,6 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     }
 
     public function findRoleArticle( $role, User $user){
-        dump($user);
         return $this->createQueryBuilder('a')
             ->join('a.roleGroupes','r')
             ->andWhere('a = :user')

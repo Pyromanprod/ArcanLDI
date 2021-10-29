@@ -3,9 +3,12 @@
 namespace App\Controller;
 
 use App\Entity\Article;
+use App\Entity\Coment;
 use App\Form\ArticleType;
+use App\Form\ComentFormType;
 use App\Repository\ArticleRepository;
 use App\Repository\UserRepository;
+use Doctrine\ORM\EntityManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -57,23 +60,33 @@ class ArticleController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'article_show', methods: ['GET'])]
-    public function show(Article $article, UserRepository $userRepository): Response
+    #[Route('/{id}/article', name: 'article_show', methods: ['GET', 'POST'])]
+    public function show(Article $article, UserRepository $userRepository, Request $request): Response
     {
-        if ($this->isGranted('ROLE_ADMIN')){
-            return $this->render('article/show.html.twig', [
-                'article' => $article,
-            ]);
-        }
-        if (!$article->getRoleGroupe() == NULL) {
-            if (!$userRepository->findRoleArticle($article->getRoleGroupe()->getId(),$this->getUser())) {
-                throw  new AccessDeniedHttpException();
+        $coment = new Coment();
+        $form = $this->createForm(ComentFormType::class, $coment);
+        if ($article->getRoleGroupe() == NULL || $userRepository->findRoleArticle($article->getRoleGroupe()->getId(), $this->getUser()) || $this->isGranted('ROLE_ADMIN')) {
+            $form->handleRequest($request);
+            if ($form->isSubmitted() && $form->isValid()) {
+                $coment
+                    ->setPlayer($this->getUser())
+                    ->setArticle($article);
+
+                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager->persist($coment);
+                $entityManager->flush();
+                unset($coment);
+                unset($form);
+                $coment = new Coment();
+                $form = $this->createForm(ComentFormType::class, $coment);
             }
+            return $this->renderForm('article/show.html.twig', [
+                'article' => $article,
+                'form' => $form
+            ]);
 
         }
-        return $this->render('article/show.html.twig', [
-            'article' => $article,
-        ]);
+        return throw new AccessDeniedHttpException();
     }
 
     #[Route('/{id}/edit', name: 'article_edit', methods: ['GET', 'POST'])]
@@ -94,7 +107,7 @@ class ArticleController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'article_delete', methods: ['POST'])]
+    #[Route('/{id}/delete', name: 'article_delete', methods: ['POST'])]
     public function delete(Request $request, Article $article): Response
     {
         if ($this->isCsrfTokenValid('delete' . $article->getId(), $request->request->get('_token'))) {
@@ -104,5 +117,21 @@ class ArticleController extends AbstractController
         }
 
         return $this->redirectToRoute('article_index', [], Response::HTTP_SEE_OTHER);
+    }
+
+    #[Route('/comment/{id}/delete', name: 'comment_delete', methods: ['POST'])]
+    #[IsGranted('ROLE_ADMIN')]
+    public function deletecomment(Request $request, Coment $coment): Response
+    {
+        $id = $coment->getArticle()->getId();
+        if ($this->isCsrfTokenValid('delete' . $coment->getId(), $request->request->get('_token'))) {
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->remove($coment);
+            $entityManager->flush();
+        }
+
+        return $this->redirectToRoute('article_show', [
+            'id' => $id
+        ], Response::HTTP_SEE_OTHER);
     }
 }
