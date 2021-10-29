@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\RoleGroupe;
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -44,5 +45,17 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             ->setParameter(':ticket',$ticket)
             ->getQuery()
             ->getResult();
+    }
+
+    public function findRoleArticle( $role, User $user){
+        dump($user);
+        return $this->createQueryBuilder('a')
+            ->join('a.roleGroupes','r')
+            ->andWhere('a = :user')
+            ->andWhere('r = :val')
+            ->setParameter(':user',$user)
+            ->setParameter(':val',$role)
+            ->getQuery()
+            ->getOneOrNullResult();
     }
 }
