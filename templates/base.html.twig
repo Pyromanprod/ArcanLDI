@@ -3,24 +3,29 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css" integrity="sha512-YWzhKL2whUzgiheMoBFwW8CKV4qpHQAEuvilg9FAn5VJUDwKZZxkJNuGM4XkWuk94WCrrwslk8yWNGmY1EduTA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    {# FONT AWESOME #}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css"
+          integrity="sha512-YWzhKL2whUzgiheMoBFwW8CKV4qpHQAEuvilg9FAn5VJUDwKZZxkJNuGM4XkWuk94WCrrwslk8yWNGmY1EduTA=="
+          crossorigin="anonymous" referrerpolicy="no-referrer"/>
+    {# BOOTSTRAP #}
     <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}">
+    {# STYLE PERSO #}
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
     {% block stylsheet %}{% endblock %}
     <title>{% block title %}{% endblock %} - Arcan, Les démons d'ivoire</title>
 </head>
-<body class="bg-light text-dark">
+<body class="bg-dark text-light">
 <nav class="navbar navbar-expand-lg navbar-dark bg-black">
     <div class="container-fluid">
-        <a class="navbar-brand" href="{{ path('home') }}"><img src="{{ asset('img/Logo Asso.jpg') }}" alt="" width="100"></a>
+        <a class="navbar-brand" href="{{ path('home') }}"><img
+                    src="{{ asset('img/Logo Asso.jpg')|imagine_filter('logo_nav') }}" alt="" width="100"></a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
                 aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-{#        A GAUCHE#}
+        {# A GAUCHE #}
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
@@ -33,35 +38,38 @@
                 </li>
             </ul>
 
-{#            A DROITE#}
+            {# A DROITE #}
             <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                 {% if app.user %}
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="{{ path('home') }}" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user"></i>
+                        <a class="nav-link dropdown-toggle" href="{{ path('home') }}" id="navbarDropdown" role="button"
+                           data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user"></i>
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                             <li><a class="dropdown-item" href="#">Another action</a></li>
-                            <li><hr class="dropdown-divider"></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
                             <li><a class="dropdown-item" href="{{ path('app_logout') }}">deconnexion</a></li>
-                            {# TODO: page profil#}
+                            {# TODO: page profil #}
                         </ul>
                     </li>
                     {% if is_granted('ROLE_ADMIN') %}
 
-                    <li class="nav-item">
-                        <a class="nav-link {{ route == 'admin_home' ? 'active' }}" aria-current="page"
-                           href="{{ path('admin_home') }}">Administration</a>
-                    </li>
+                        <li class="nav-item">
+                            <a class="nav-link {{ route == 'admin_home' ? 'active' }}" aria-current="page"
+                               href="{{ path('admin_home') }}">Administration</a>
+                        </li>
                     {% endif %}
                 {% else %}
                     <li class="nav-item">
-                    <a class="nav-link {{ route == 'app_login' ? 'active' }}" aria-current="page"
-                       href="{{ path('app_login') }}">Se connecter</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link {{ route == 'app_register' ? 'active' }}" aria-current="page"
-                       href="{{ path('app_register') }}">Créer un compte</a>
-                </li>
+                        <a class="nav-link {{ route == 'app_login' ? 'active' }}" aria-current="page"
+                           href="{{ path('app_login') }}">Se connecter</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {{ route == 'app_register' ? 'active' }}" aria-current="page"
+                           href="{{ path('app_register') }}">Créer un compte</a>
+                    </li>
                 {% endif %}
             </ul>
         </div>

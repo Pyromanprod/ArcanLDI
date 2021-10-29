@@ -163,7 +163,7 @@ class SurveyController extends AbstractController
 
     #[Route('/question/{id}/{idTicket}/{hash}', name: 'answer')]
     #[ParamConverter('ticket', options: ['mapping' => ['idTicket' => 'id']])]
-    public function answerSingle(Request $request, Question $question, Ticket $ticket, $hash): Response
+    public function answer(Request $request, Question $question, Ticket $ticket, $hash): Response
     {
 
         //Vérification du hash envoyé et comparaison pour savoir si l'url a était trafiqué

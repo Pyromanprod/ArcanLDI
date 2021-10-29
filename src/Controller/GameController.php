@@ -9,23 +9,25 @@ use App\Form\AlbumPhotoFormType;
 use App\Form\AlbumVideoFormType;
 use App\Form\GameType;
 use App\Repository\GameRepository;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[Route('/game')]
+#[Route('/nos-jeux')]
 class GameController extends AbstractController
 {
     #[Route('/', name: 'game_index', methods: ['GET'])]
     public function index(GameRepository $gameRepository): Response
     {
         return $this->render('game/index.html.twig', [
-            'games' => $gameRepository->findAll(),
+            'allGames' => $gameRepository->findAll(),
         ]);
     }
 
     #[Route('/new', name: 'game_new', methods: ['GET', 'POST'])]
+    #[isGranted('ROLE_ADMIN')]
     public function new(Request $request): Response
     {
         $game = new Game();
@@ -34,10 +36,9 @@ class GameController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager = $this->getDoctrine()->getManager();
-
 //            TODO: Factoriser envoie de photo
             // dossier du jeu dans le game.photo.directory
-            $directory = $this->getParameter('game.photo.directory') . $game->getName() . '/';
+            $directory = $this->getParameter('game.photo.directory');
 
             //récupération de la photo si il y a
             $photo = $form->get('banner')->getData();
@@ -46,7 +47,10 @@ class GameController extends AbstractController
                 if (!file_exists($directory)) {
                     //on le créer
                     mkdir($directory);
-//                    die($directory);
+                }
+                $directory .= $game->getName() . '/';
+                if (!file_exists($directory)) {
+                    mkdir($directory);
                 }
 
                 $newFileName = 'banner' . '.' . $photo->guessExtension();
@@ -73,7 +77,7 @@ class GameController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'game_show', methods: ['GET'])]
+    #[Route('/{slug}', name: 'game_show', methods: ['GET'])]
     public function show(Game $game): Response
     {
         return $this->render('game/show.html.twig', [
@@ -136,7 +140,7 @@ class GameController extends AbstractController
         return $this->redirectToRoute('game_index', [], Response::HTTP_SEE_OTHER);
     }
 
-    #[Route('/ajouter-photo/{slug}', name: 'game_add_album_Photo',methods: ['POST', 'GET']) ]
+    #[Route('/ajouter-photo/{slug}', name: 'game_add_album_Photo', methods: ['POST', 'GET'])]
     public function addAlbumPhoto(Request $request, Game $game): Response
     {
         $form = $this->createForm(AlbumPhotoFormType::class);
@@ -168,7 +172,7 @@ class GameController extends AbstractController
                 );
                 $picture = new Picture();
                 $picture->setName($nameFile)
-                ->setGame($game);
+                    ->setGame($game);
 
             }
             $this->getDoctrine()->getManager()->flush();
@@ -179,7 +183,7 @@ class GameController extends AbstractController
         ]);
     }
 
-    #[Route('/ajouter-video/{slug}', name: 'game_add_album_video',methods: ['POST', 'GET']) ]
+    #[Route('/ajouter-video/{slug}', name: 'game_add_album_video', methods: ['POST', 'GET'])]
     public function addAlbumVideo(Request $request, Game $game): Response
     {
         $form = $this->createForm(AlbumVideoFormType::class);

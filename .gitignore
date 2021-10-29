@@ -24,3 +24,7 @@
 /migrations/*.php
 /public/img/*
 ###< nos ignores ###
+
+###> liip/imagine-bundle ###
+/public/media/cache/
+###< liip/imagine-bundle ###
