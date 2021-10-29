@@ -5,25 +5,27 @@
 {% block body %}
     <div class="container">
         <div class="row">
-            <div class="col-12 text-center">
-                <h1 class="text-center">tickets pour les jeux en cour </h1>
+            <div class="col-12 text-center mt-5">
+                {% if tickets %}
+                    <h1 class="text-center">tickets pour les jeux en cours </h1>
+                {% endif %}
                 {% for ticket in tickets %}
-                    <a class="btn btn-outline-primary"
+                    <a class="btn btn-outline-info"
                        href="{{ path('user_index_ticket', {'id': ticket.id}) }}">{{ ticket.name }} {{ ticket.game.name }}</a>
-                {% endfor %}
 
+                {% endfor %}
             </div>
 
         </div>
         <h2 class="text-center">Joueurs</h2>
         <div class="row">
             {% for user in users %}
-                <div class="card mx-auto my-3" style="width: 18rem;">
+                <div class="card mx-auto my-3 bg-cardgame" style="width: 18rem;">
                     <div class="card-body">
                         <h5 class="card-title">{{ user.pseudo }}</h5>
                         <h6 class="card-subtitle mb-2 text-muted">{{ user.firstname }}  {{ user.lastname }}</h6>
-                        <p class="card-text">email: user.email</p>
-                        <a class="card-link" href="{{ path('user_show', {'id': user.id}) }}">Détails</a>
+                        <p class="card-text">email: {{ user.email }}</p>
+                        <a class="btn btn-outline-light" href="{{ path('user_show', {'id': user.id}) }}">Détails</a>
                     </div>
                 </div>
 
