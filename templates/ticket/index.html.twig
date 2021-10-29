@@ -3,39 +3,43 @@
 {% block title %}Ticket index{% endblock %}
 
 {% block body %}
-    <h1>Ticket index</h1>
+    <div class="container">
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Name</th>
-                <th>Price</th>
-                <th>CreatedAt</th>
-                <th>UpdatedAt</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for ticket in tickets %}
-            <tr>
-                <td>{{ ticket.id }}</td>
-                <td>{{ ticket.name }}</td>
-                <td>{{ ticket.price }}</td>
-                <td>{{ ticket.createdAt ? ticket.createdAt|date('Y-m-d H:i:s') : '' }}</td>
-                <td>{{ ticket.updatedAt ? ticket.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
-                <td>
-                    <a href="{{ path('ticket_show', {'id': ticket.id}) }}">show</a>
-                    <a href="{{ path('ticket_edit', {'id': ticket.id}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="6">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+            <a href="{{ path('ticket_new') }}" class="btn btn-outline-light my-3">Nouveau ticket</a>
 
-    <a href="{{ path('ticket_new') }}">Create new</a>
+        <div class="row">
+            <h1>Liste des tickets</h1>
+        </div>
+
+        <div class="row">
+
+            {% for ticket in tickets %}
+                <div class="card bg-cardgame col-12 col-md-5 mx-auto p-0 my-3">
+                    <div class="card-header bg-header-card">
+                        <h5>Nom du ticket : {{ ticket.name }}</h5>
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-group list-group-flush ">
+                            <li class="list-group-item bg-transparent text-light">Prix : {{ ticket.price }} €</li>
+                            <li class="list-group-item bg-transparent text-light">Pour le jeu
+                                : {{ ticket.game.name }}</li>
+                            <li class="list-group-item bg-transparent text-light">En Stock
+                                : {{ ticket.stock }}</li>
+                        </ul>
+                    </div>
+                    <div class="card-footer list-group-item bg-transparent text-light">
+                        <p class="text-info text-end blockquote-footer m-0">
+                            Créé le : {{ ticket.createdAt ? ticket.createdAt|date('d-m-Y') : '' }}
+                        </p>
+                    </div>
+                </div>
+
+            {% else %}
+                <div class="alert alert-info">
+                    <p>Pas de ticket </p>
+                </div>
+            {% endfor %}
+        </div>
+
+    </div>
 {% endblock %}

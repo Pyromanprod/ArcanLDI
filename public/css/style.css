@@ -19,3 +19,7 @@ body{
 .bg-cardgame{
     background-color: rgba(255, 255, 255, 0.19);
 }
+
+.bg-header-card{
+    background-color: rgba(0, 0, 0, 0.39);
+}
