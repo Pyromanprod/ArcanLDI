@@ -42,6 +42,7 @@ class OrderController extends AbstractController
             if ($order->getTicket()->getGame()->getDateEnd() > new \DateTime() || $order->getTicket()->getGame()->getDateEnd() == NULL) {
                 $reservation = $orderRepository->findOneorder($game, $this->getUser());
                 dump($reservation);
+
                 if ($reservation !== null) {
 
 
@@ -51,7 +52,7 @@ class OrderController extends AbstractController
                         $this->addFlash('error', 'vous devez finir le questionnaire pour acheter le ticket');
 
                         return $this->redirectToRoute('survey_suvey_for_ticket', [
-                            'id' => $order->getTicket()->getId(),
+                            'id' => $reservation->getId(),
                         ], Response::HTTP_SEE_OTHER);
                     } else {
 
@@ -69,7 +70,7 @@ class OrderController extends AbstractController
                     $entityManager->flush();
 
                     return $this->redirectToRoute('survey_suvey_for_ticket', [
-                        'id' => $order->getTicket()->getId(),
+                        'id' => $order->getId(),
                     ], Response::HTTP_SEE_OTHER);
                 }
             } else {

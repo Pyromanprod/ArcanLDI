@@ -71,7 +71,7 @@ class TicketController extends AbstractController
 
 
         $formGeneral = $this->createFormBuilder()
-            ->add('surveya', EntityType::class, [
+            ->add('survey', EntityType::class, [
                 'class' => 'App\Entity\Survey',
                 'choices' => $surveyRepository->findByGeneral('1'),
                 'choice_label' => 'name',
@@ -81,7 +81,7 @@ class TicketController extends AbstractController
         // Ajout des questionnaires "Généraux"
         $formGeneral->handleRequest($request);
         if ($formGeneral->isSubmitted() && $formGeneral->isValid()) {
-            $ticket->addSurvey($formGeneral->get('surveya')->getData());
+            $ticket->addSurvey($formGeneral->get('survey')->getData());
             $this->getDoctrine()->getManager()->flush();
             dump($ticket);
             return $this->redirectToRoute('ticket_show', ['id'=>$ticket->getId()]);

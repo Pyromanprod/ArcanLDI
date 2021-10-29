@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Answer;
 use App\Entity\Choice;
+use App\Entity\Order;
 use App\Entity\Question;
 use App\Entity\Survey;
 use App\Entity\Ticket;
@@ -123,9 +124,10 @@ class SurveyController extends AbstractController
         ]);
     }
 
-    #[Route('/questionnaire-pour-le-ticket/{id}', name: 'suvey_for_ticket')]
-    public function surveyForTicket(Request $request, Ticket $ticket): Response
+    #[Route('/checksurvey/{id}', name: 'suvey_for_ticket')]
+    public function surveyForTicket(Request $request, Order $order): Response
     {
+        $ticket = $order->getTicket();
         $user = $this->getUser();
         $listeSurvey = $ticket->getSurveys();
         $reposAnswer = $this->getDoctrine()->getRepository(Answer::class);
@@ -154,8 +156,9 @@ class SurveyController extends AbstractController
             }
 
         }
-        //TODO : rediriger vers paiement
-        return $this->redirectToRoute('home');
+    //si toutes les questions sont répondu on redirige vers le paiement
+        return $this->redirectToRoute('checkout', ['id'=>$order->getId()]);
+        //TODO: pensé a faire une vérif des orders sans paiement de plus de 7 jours (delete order + answer etc...)
     }
 
     #[Route('/question/{id}/{idTicket}/{hash}', name: 'answer')]

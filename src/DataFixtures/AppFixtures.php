@@ -35,6 +35,18 @@ class AppFixtures extends Fixture
             );
         $manager->persist($admin);
 
+        $nonadmin = new User();
+
+        $nonadmin
+            ->setEmail('b@b.b')
+            ->setFirstName('Renaud')
+            ->setPseudo('ArcanNonAdmin')
+            ->setLastname('Enzo')
+            ->setPassword(
+                $this->encoder->hashPassword($nonadmin, 'a')
+            );
+        $manager->persist($nonadmin);
+
         for ($i = 0; $i < 50; $i++) {
             $user = new User();
             $user
