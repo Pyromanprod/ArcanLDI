@@ -7,11 +7,17 @@ use App\Entity\Order;
 use App\Form\OrderType;
 use App\Repository\OrderRepository;
 use App\Repository\TicketRepository;
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
+use Stripe\Checkout\Session;
+use Stripe\Stripe;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Generator\UrlGenerator;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 #[Route('/order')]
 class OrderController extends AbstractController
@@ -23,6 +29,7 @@ class OrderController extends AbstractController
             'orders' => $orderRepository->findAll(),
         ]);
     }
+
 
     #[Route('/new/{slug}', name: 'order_new', methods: ['GET', 'POST'])]
     public function new(Request $request, Game $game, OrderRepository $orderRepository): Response
@@ -123,15 +130,43 @@ class OrderController extends AbstractController
     }
 
     #[Route('/{id}/paiement', name: 'checkout', methods: ['GET', 'POST'])]
-    public function checkout(Request $request, Order $order): Response
+    public function checkout(Order $order, $stripeSK): Response
     {
-        if ($this->isCsrfTokenValid('checkout' . $order->getId(), $request->request->get('_token'))) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->remove($order);
-            $entityManager->flush();
-            $this->addFlash('success', 'ticket acheter');
+        Stripe::setApiKey($stripeSK);
+        $session = Session::create([
+            'payment_method_types' => ['card'],
+            'line_items' => [[
+                'price_data' => [
+                    'currency' => 'eur',
+                    'product_data' => [
+                        'name' => $order->getTicket()->getName(),
+                    ],
+                    'unit_amount' => $order->getTotal() * 100,
+                ],
+                'quantity' => 1,
+            ]],
+            'mode' => 'payment',
+            'success_url' => $this->generateUrl('success', ['id' => $order->getId()], UrlGeneratorInterface::ABSOLUTE_URL) . '?session_id={CHECKOUT_SESSION_ID}',
+            'cancel_url' => $this->generateUrl('home', [], UrlGeneratorInterface::ABSOLUTE_URL),
+        ]);
+        return $this->redirect($session->url, 303);
+    }
+
+    #[Route('-success-url/{id}/', name: 'success', methods: ['GET', 'POST'])]
+    public function success(Request $request, Order $order, $stripeSK,EntityManagerInterface $entityManager): Response
+    {
+        Stripe::setApiKey($stripeSK);
+        $session = Session::retrieve($request->query->get('session_id'));
+        dump($session->payment_status);
+        if ($session->payment_status == 'paid'){
+        $order->setDatePaid(new \DateTime());
+        $entityManager->flush();
+        $this->addFlash('success', 'ticket acheter avec succés');
+        return $this->redirectToRoute('home');
+
+        }else{
+            return $this->redirectToRoute('home');
         }
 
-        return $this->render('order/checkout.html.twig');
     }
 }
