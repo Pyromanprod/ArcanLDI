@@ -67,6 +67,13 @@
                     </li>
                 {% endif %}
             </ul>
+            <form class="d-flex" method="GET" action="{{ path('search')}}">
+                <input type="text" name="q" id="search"
+                       class="form-control bg-black border-0 border-bottom border-ivoire rounded-0 text-light"
+                       placeholder="Rechercher" required>
+
+                <button class="btn text-ivoire border-ivoire ms-2" type="submit"><i class="fas fa-search"></i></button>
+            </form>
         </div>
     </div>
 </nav>
