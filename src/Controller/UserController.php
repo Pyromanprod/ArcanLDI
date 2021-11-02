@@ -24,7 +24,6 @@ class UserController extends AbstractController
     public function index(UserRepository $userRepository,TicketRepository $ticketRepository,GameRepository $gameRepository): Response
     {
         $tickets = $ticketRepository->findOneBydate(new \DateTime());
-        dump($tickets);
 
         return $this->render('user/index.html.twig', [
             'users' => $userRepository->findAll(),
@@ -98,7 +97,6 @@ class UserController extends AbstractController
     {
 
         $user = $this->getUser();
-        dump($user);
         return $this->render('user/show_profile.html.twig', [
             'user' => $user,
         ]);

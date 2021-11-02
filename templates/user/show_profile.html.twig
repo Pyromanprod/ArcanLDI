@@ -3,25 +3,21 @@
 {% block title %}{{ app.user.pseudo }}{% endblock %}
 
 {% block body %}
-    <h1>{{ user.pseudo }}</h1>
 
-    <table class="table">
-        <tbody>
-        <tr>
-            <th>Email</th>
-            <td>{{ user.email }}</td>
-        </tr>
-        <tr>
-            <th>Firstname</th>
-            <td>{{ user.firstname }}</td>
-        </tr>
-        <tr>
-            <th>Lastname</th>
-            <td>{{ user.lastname }}</td>
-        </tr>
-        </tbody>
-    </table>
-    <a class="btn btn-outline-primary" href="{{ path('user_edit_profile') }}">modifier mes informations</a>
-
+    <div class="card bg-cardgame col-12 col-md-5 mx-auto">
+        <div class="card-header bg-header-card">
+            <h1>{{ user.pseudo }}</h1>
+        </div>
+        <div class="card-body">
+            <ul class="list-group list-group-flush ">
+                <li class="list-group-item bg-transparent text-light">Email : {{ user.email }} </li>
+                <li class="list-group-item bg-transparent text-light">Prenom : {{ user.firstname }}</li>
+                <li class="list-group-item bg-transparent text-light">nom : {{ user.lastname }}</li>
+            </ul>
+        </div>
+        <div class="card-footer list-group-item bg-transparent text-light">
+            <a class="btn btn-primary" href="{{ path('user_edit_profile') }}">modifier mes informations</a>
+        </div>
+    </div>
 {% endblock %}
 

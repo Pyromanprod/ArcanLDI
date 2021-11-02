@@ -3,37 +3,33 @@
 {% block title %}RoleGroupe index{% endblock %}
 
 {% block body %}
-    <h1>RoleGroupe index</h1>
+    <div class="container">
+        <h1 class="text-center">Role de groupe</h1>
+        <a class="btn btn-primary my-5" href="{{ path('role_groupe_new') }}">Créer un nouveau role</a>
+        <div class="row">
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Name</th>
-                <th>CreatedAt</th>
-                <th>UpdatedAt</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for role_groupe in role_groupes %}
-            <tr>
-                <td>{{ role_groupe.id }}</td>
-                <td>{{ role_groupe.name }}</td>
-                <td>{{ role_groupe.createdAt ? role_groupe.createdAt|date('Y-m-d H:i:s') : '' }}</td>
-                <td>{{ role_groupe.updatedAt ? role_groupe.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
-                <td>
-                    <a href="{{ path('role_groupe_show', {'id': role_groupe.id}) }}">show</a>
-                    <a href="{{ path('role_groupe_edit', {'id': role_groupe.id}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="5">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+            {% for role in role_groupes %}
+                <div class="card bg-cardgame col-12 col-md-4 p-0 mx-auto">
+                    <div class="card-header bg-header-card">
+                        <h1>{{ role.name }}</h1>
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-group list-group-flush ">
+                            <li class="list-group-item bg-transparent text-light">créer le
+                                : {{ role.createdAt ? role.createdAt|date('d-m-Y') : '' }} </li>
 
-    <a href="{{ path('role_groupe_new') }}">Create new</a>
+                        </ul>
+                    </div>
+                    <div class="card-footer list-group-item bg-transparent text-light">
+                        <a class="btn btn-primary" href="{{ path('role_groupe_edit', {'id': role.id}) }}">modifier</a>
+                    </div>
+                </div>
+
+            {% else %}
+                <p>aucun role pour l'instant</p>
+            {% endfor %}
+        </div>
+
+
+    </div>
 {% endblock %}
