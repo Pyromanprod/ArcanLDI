@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ app.user.pseudo }}{% endblock %}
+
+{% block body %}
+    <h1>{{ user.pseudo }}</h1>
+
+    <table class="table">
+        <tbody>
+        <tr>
+            <th>Email</th>
+            <td>{{ user.email }}</td>
+        </tr>
+        <tr>
+            <th>Firstname</th>
+            <td>{{ user.firstname }}</td>
+        </tr>
+        <tr>
+            <th>Lastname</th>
+            <td>{{ user.lastname }}</td>
+        </tr>
+        </tbody>
+    </table>
+    <a class="btn btn-outline-primary" href="{{ path('user_edit_profile') }}">modifier mes informations</a>
+
+{% endblock %}
+

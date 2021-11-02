@@ -10,6 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 
 #[UniqueEntity(fields: 'email', message:"Adresse Mail déjà utilisée")]
@@ -25,6 +26,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $id;
 
     #[ORM\Column(type: 'string', length: 180, unique: true)]
+    #[Assert\NotBlank(message: 'tout les champ doivent etre remplis')]
+    #[Assert\Email(message: 'l\'email {{ value }} n\'est pas un email valide')]
     private $email;
 
     #[ORM\Column(type: 'json')]
@@ -33,12 +36,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'string')]
     private $password;
 
+    #[Assert\NotBlank(message: 'tout les champ doivent etre remplis')]
     #[ORM\Column(type: 'string', length: 36)]
     private $firstname;
 
+    #[Assert\NotBlank(message: 'tout les champ doivent etre remplis')]
     #[ORM\Column(type: 'string', length: 32)]
     private $lastname;
 
+    #[Assert\NotBlank(message: 'tout les champ doivent etre remplis')]
     #[ORM\Column(type: 'string', length: 50)]
     private $pseudo;
 

@@ -4,7 +4,7 @@
 
 {% block body %}
     <div class="conatainer">
-                <h1 class="text-center">{{ article.title }}</h1>
+        <h1 class="text-center">{{ article.title }}</h1>
         <div class="row">
             <div class="col-12 text-center">
                 {{ article.content }}
@@ -16,23 +16,35 @@
 
     {% if is_granted('ROLE_ADMIN') %}
 
-    <a class="btn btn-outline-primary" href="{{ path('article_edit', {'id': article.id}) }}">modifier</a>
+        <a class="btn btn-outline-primary" href="{{ path('article_edit', {'id': article.id}) }}">modifier</a>
     {% endif %}
 
     {{ include('article/_delete_form.html.twig') }}
+    {{ form_start(form) }}
+    {{ form_widget(form) }}
+    <button type="submit" class="btn btn-outline-primary">Envoyer un commentaire</button>
+    {{ form_end(form) }}
     {% for coment in article.coments %}
 
-    <div class="row">
-        <div class="col-4 offset-4">
-            <div class="card">
-                <div class="card-header">
-                    {{ coment.player.pseudo }}
-                </div>
-                <div class="card-body">
-                    <p class="card-text">{{ coment.content }}</p>
+        <div class="row">
+            <div class="col-4 offset-4">
+                <div class="card bg-cardgame">
+                    <div class="card-header">
+                        {{ coment.player.pseudo }}
+                    </div>
+                    <div class="card-body">
+                        <p class="card-text">{{ coment.content }}</p>
+                        {% if is_granted('ROLE_ADMIN') %}
+
+                        <form method="post" action="{{ path('comment_delete', {'id': coment.id}) }}"
+                              onsubmit="return confirm('Etes vous sure de vouloir supprimer ce message?');">
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ coment.id) }}">
+                            <button class="btn">Delete</button>
+                        </form>
+                        {% endif %}
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
     {% endfor %}
 {% endblock %}

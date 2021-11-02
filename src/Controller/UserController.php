@@ -72,4 +72,36 @@ class UserController extends AbstractController
         ]);
     }
 
+    #[Route('-profile/edit', name: 'user_edit_profile', methods: ['GET','POST'])]
+    #[IsGranted('ROLE_USER')]
+    public function editProfile(Request $request): Response
+    {
+        $user = $this->getUser();
+        $form = $this->createForm(UserType::class, $user);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->getDoctrine()->getManager()->flush();
+            $this->addFlash('success','Vos informations ont bien été modifier');
+            return $this->redirectToRoute('home', [], Response::HTTP_SEE_OTHER);
+        }
+
+        return $this->renderForm('user/edit.html.twig', [
+            'user' => $user,
+            'form' => $form,
+        ]);
+    }
+
+    #[Route('-profile/', name: 'user_show_profile', methods: ['GET','POST'])]
+    #[IsGranted('ROLE_USER')]
+    public function showProfile(): Response
+    {
+
+        $user = $this->getUser();
+        dump($user);
+        return $this->render('user/show_profile.html.twig', [
+            'user' => $user,
+        ]);
+    }
+
 }
