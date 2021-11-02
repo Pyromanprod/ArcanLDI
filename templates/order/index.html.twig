@@ -3,38 +3,35 @@
 {% block title %}Order index{% endblock %}
 
 {% block body %}
-    <h1>Order index</h1>
+    <h1>Liste des commandes</h1>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Total</th>
-                <th>DatePaid</th>
-                <th>CreatedAt</th>
-                <th>UpdatedAt</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
+
         {% for order in orders %}
-            <tr>
-                <td>{{ order.id }}</td>
-                <td>{{ order.total }}</td>
-                <td>{{ order.datePaid ? order.datePaid|date('Y-m-d H:i:s') : '' }}</td>
-                <td>{{ order.createdAt ? order.createdAt|date('Y-m-d H:i:s') : '' }}</td>
-                <td>{{ order.updatedAt ? order.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
-                <td>
-                    <a href="{{ path('order_show', {'id': order.id}) }}">show</a>
-                    <a href="{{ path('order_edit', {'id': order.id}) }}">edit</a>
-                </td>
-            </tr>
+
+            <div class="card bg-cardgame col-12 col-md-2 mx-auto p-0 my-3">
+                <div class="card-header bg-header-card">
+                    <h5>Billet pour le jeu :  {{ order.ticket.game.name }}</h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-group list-group-flush ">
+                        <li class="list-group-item bg-transparent text-light">Acheter par : {{ order.player.pseudo }}</li>
+                        <li class="list-group-item bg-transparent text-light">Prix : {{ order.total }} €</li>
+                        <li class="list-group-item bg-transparent text-light">
+
+                            {% if order.datePaid %}
+                                Payé le {{ order.datePaid }}
+                            {% else %}
+                                En cours de paiement
+                            {% endif %}
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
         {% else %}
-            <tr>
-                <td colspan="6">no records found</td>
-            </tr>
+           <div class="alert alert-warning">
+               Pas encore de billet acheter
+           </div>
         {% endfor %}
-        </tbody>
-    </table>
 
 {% endblock %}
