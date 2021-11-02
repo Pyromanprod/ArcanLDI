@@ -160,6 +160,7 @@ class OrderController extends AbstractController
         dump($session->payment_status);
         if ($session->payment_status == 'paid'){
         $order->setDatePaid(new \DateTime());
+        $order->setReference($session->id);
         $entityManager->flush();
         $this->addFlash('success', 'ticket acheter avec succés');
         return $this->redirectToRoute('home');
