@@ -59,4 +59,14 @@ class TicketRepository extends ServiceEntityRepository
             ->getResult()
             ;
     }
+    public function findByGame($value)
+    {
+        return $this->createQueryBuilder('t')
+            ->join('t.game','g')
+            ->andWhere('g.id = :name')
+            ->setParameter('name', $value)
+            ->getQuery()
+            ->getResult()
+            ;
+    }
 }

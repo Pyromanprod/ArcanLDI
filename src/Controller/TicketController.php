@@ -2,10 +2,12 @@
 
 namespace App\Controller;
 
+use App\Entity\Game;
 use App\Entity\Survey;
 use App\Entity\Ticket;
 use App\Form\AssociationTicketSurveyFormType;
 use App\Form\TicketType;
+use App\Repository\GameRepository;
 use App\Repository\SurveyRepository;
 use App\Repository\TicketRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -20,10 +22,22 @@ use Symfony\Component\Routing\Annotation\Route;
 class TicketController extends AbstractController
 {
     #[Route('/', name: 'ticket_index', methods: ['GET'])]
-    public function index(TicketRepository $ticketRepository): Response
+    public function index(TicketRepository $ticketRepository,GameRepository $gameRepository): Response
     {
+
         return $this->render('ticket/index.html.twig', [
+            'games' => $gameRepository->findAll(),
             'tickets' => $ticketRepository->findAll(),
+        ]);
+    }
+    #[Route('/game/{id}', name: 'ticket_index_game', methods: ['GET'])]
+    public function indexGame(TicketRepository $ticketRepository, Game $game, GameRepository $gameRepository): Response
+    {
+        $tickets = $ticketRepository->findByGame($game);
+
+        return $this->render('ticket/index.html.twig', [
+            'tickets' => $tickets,
+            'games' =>  $gameRepository->findAll(),
         ]);
     }
 

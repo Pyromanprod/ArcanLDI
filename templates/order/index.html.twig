@@ -19,7 +19,7 @@
                         <li class="list-group-item bg-transparent text-light">
 
                             {% if order.datePaid %}
-                                Payé le {{ order.datePaid }}
+                                Payé le {{ order.datePaid|date('d-m-Y') }}
                             {% else %}
                                 En cours de paiement
                             {% endif %}

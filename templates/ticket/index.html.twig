@@ -5,14 +5,25 @@
 {% block body %}
     <div class="container">
 
-            <a href="{{ path('ticket_new') }}" class="btn btn-outline-light my-3">Nouveau ticket</a>
+        <a href="{{ path('ticket_new') }}" class="btn btn-outline-light my-3">Nouveau ticket</a>
 
         <div class="row">
             <h1>Liste des tickets</h1>
         </div>
 
+        <div class="dropdown">
+            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1"
+                    data-bs-toggle="dropdown" aria-expanded="false">
+                selection des tickets par jeu
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                {% for game in games %}
+                    <li><a class="dropdown-item"
+                           href="{{ path('ticket_index_game', {'id': game.id }) }}">{{ game.name }}</a></li>
+                {% endfor %}
+            </ul>
+        </div>
         <div class="row">
-
             {% for ticket in tickets %}
                 <div class="card bg-cardgame col-12 col-md-5 mx-auto p-0 my-3">
                     <div class="card-header bg-header-card">
