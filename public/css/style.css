@@ -23,3 +23,11 @@ body{
 .bg-header-card{
     background-color: rgba(0, 0, 0, 0.39);
 }
+.card{
+    transition: all 200ms;
+}
+.card:hover{
+    transform: scale(1.01);
+    cursor: pointer;
+    box-shadow: rgba(0, 0, 0, 0.63) 3px 3px 10px;
+}

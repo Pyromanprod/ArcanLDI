@@ -4,22 +4,35 @@
 
 {% block body %}
     <div class="container mt-5">
-
         <div class="row">
-            <h1 class="text-center">{{ game.name }}</h1>
-        </div>
-        <div class="row">
-            <div class="col-12 m-0 p-0">
-                <img src="{{ asset("img/uploads/"~game.name~"/banner.jpg") }}" alt="" class="w-100 m-0 mb-5 p-0">
-            </div>
-            <div class="col-12">
-                <p class="text-center">
+            <div class="col-12 col-lg-10">
 
-                    {{ game.description }}
-                </p>
+                <div class="row">
+                    <h1 class="text-center">{{ game.name }}</h1>
+                </div>
+                <div class="row">
+                    <div class="col-12 m-0 p-0">
+                        <img src="{{ asset("img/uploads/"~game.name~"/banner.jpg") }}" alt=""
+                             class="w-100 m-0 mb-5 p-0">
+                    </div>
+                    <div class="col-12">
+                        <p class="text-center">
+
+                            {{ game.description }}
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-12 col-lg-2">
+                {% for ticket in game.tickets %}
+
+                    <p>{{ ticket.name }} : {{ ticket.price }} €</p>
+
+                {% endfor %}
+                <a href="{{ path('order_new', {'slug':  game.slug }) }}" class="btn btn-warning mx-auto">Acheter un billet</a>
             </div>
         </div>
-
 
         <a href="{{ path('game_index') }}" class="btn btn-outline-light">Retour a la liste des jeux</a>
         {% if is_granted('ROLE_ADMIN') %}
