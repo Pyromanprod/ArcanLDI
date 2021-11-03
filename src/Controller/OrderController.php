@@ -10,6 +10,7 @@ use App\Repository\TicketRepository;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Stripe\Checkout\Session;
+use Stripe\Customer;
 use Stripe\Stripe;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -155,9 +156,10 @@ class OrderController extends AbstractController
     #[Route('-success-url/{id}/', name: 'success', methods: ['GET', 'POST'])]
     public function success(Request $request, Order $order, $stripeSK, EntityManagerInterface $entityManager): Response
     {
+
         Stripe::setApiKey($stripeSK);
         $session = Session::retrieve($request->query->get('session_id'));
-        dump($session->payment_status);
+        $customer = Customer::retrieve($session->customer);
         if ($session->payment_status == 'paid') {
             $order->getTicket()->setStock($order->getTicket()->getStock()-1);
             $order->setDatePaid(new \DateTime());

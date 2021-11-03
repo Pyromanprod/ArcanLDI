@@ -3,9 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Game;
-use App\Entity\Survey;
 use App\Entity\Ticket;
-use App\Form\AssociationTicketSurveyFormType;
 use App\Form\TicketType;
 use App\Repository\GameRepository;
 use App\Repository\SurveyRepository;

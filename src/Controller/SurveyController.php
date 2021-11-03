@@ -128,6 +128,7 @@ class SurveyController extends AbstractController
     public function surveyForTicket(Request $request, Order $order): Response
     {
         $ticket = $order->getTicket();
+
         $user = $this->getUser();
         $listeSurvey = $ticket->getSurveys();
         $reposAnswer = $this->getDoctrine()->getRepository(Answer::class);
@@ -150,7 +151,7 @@ class SurveyController extends AbstractController
                                 $this->getUser()->getId() .
                                 $ticket->getId()
                             ),
-                            'idTicket' => $ticket->getId(),
+                            'idOrder' => $order->getId(),
                         ]);
                 }
             }
@@ -161,11 +162,12 @@ class SurveyController extends AbstractController
         //TODO: pensé a faire une vérif des orders sans paiement de plus de 7 jours (delete order + answer etc...)
     }
 
-    #[Route('/question/{id}/{idTicket}/{hash}', name: 'answer')]
-    #[ParamConverter('ticket', options: ['mapping' => ['idTicket' => 'id']])]
-    public function answer(Request $request, Question $question, Ticket $ticket, $hash): Response
+    #[Route('/question/{id}/{idOrder}/{hash}', name: 'answer')]
+    #[ParamConverter('order', options: ['mapping' => ['idOrder' => 'id']])]
+    public function answer(Request $request, Question $question, Order $order, $hash): Response
     {
-
+        
+        $ticket = $order->getTicket();
         //Vérification du hash envoyé et comparaison pour savoir si l'url a était trafiqué
         //si oui on envoie sur access denied
         if (!hash_equals($hash, hash('md5',
@@ -210,7 +212,7 @@ class SurveyController extends AbstractController
             $entityManager->persist($answer);
             $entityManager->flush();
             return $this->redirectToRoute('survey_suvey_for_ticket', [
-                'id' => $ticket->getId(),
+                'id' => $order->getId(),
             ], Response::HTTP_SEE_OTHER);
         }
         return $this->renderForm('question/repondre.html.twig', [
