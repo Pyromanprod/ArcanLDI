@@ -7,17 +7,15 @@ use App\Entity\Order;
 use App\Form\OrderType;
 use App\Repository\OrderRepository;
 use App\Repository\TicketRepository;
-use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Stripe\Checkout\Session;
-use Stripe\Customer;
 use Stripe\Stripe;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Routing\Generator\UrlGenerator;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 #[Route('/order')]
@@ -31,7 +29,7 @@ class OrderController extends AbstractController
         ]);
     }
 
-
+    #[IsGranted('ROLE_USER')]
     #[Route('/acheter/{slug}', name: 'order_new', methods: ['GET', 'POST'])]
     public function new(Request $request, Game $game, OrderRepository $orderRepository): Response
     {
@@ -42,6 +40,7 @@ class OrderController extends AbstractController
                 'query_builder' => function (TicketRepository $tr) use ($game) {
                     return $tr->createQueryBuilder('u')
                         ->where('u.game = :game')
+                        ->andWhere('u.stock > 0')
                         ->setParameter('game', $game);
                 },
             ])->getForm();
@@ -160,7 +159,6 @@ class OrderController extends AbstractController
 
         Stripe::setApiKey($stripeSK);
         $session = Session::retrieve($request->query->get('session_id'));
-        $customer = Customer::retrieve($session->customer);
         if ($session->payment_status == 'paid') {
             $order->getTicket()->setStock($order->getTicket()->getStock()-1);
             $order->setDatePaid(new \DateTime());

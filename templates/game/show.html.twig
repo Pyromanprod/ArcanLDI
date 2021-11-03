@@ -26,11 +26,16 @@
             </div>
             <div class="col-12 col-lg-2">
                 {% for ticket in game.tickets %}
+                    {% if ticket.stock %}
+                        <p>{{ ticket.name }} : {{ ticket.price }} €</p>
+                    {% else %}
+                        <p>{{ ticket.name }} : épuisé </p>
 
-                    <p>{{ ticket.name }} : {{ ticket.price }} €</p>
+                    {% endif %}
 
                 {% endfor %}
-                <a href="{{ path('order_new', {'slug':  game.slug }) }}" class="btn btn-warning mx-auto">Acheter un ticket</a>
+                <a href="{{ path('order_new', {'slug':  game.slug }) }}" class="btn btn-warning mx-auto">Acheter un
+                    ticket</a>
             </div>
         </div>
 

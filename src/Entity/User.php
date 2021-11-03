@@ -70,6 +70,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\ManyToMany(targetEntity: RoleGroupe::class, mappedBy: 'player')]
     private $roleGroupes;
 
+    #[ORM\Column(type: 'datetime')]
+    private $birthDate;
+
+    #[ORM\Column(type: 'string', length: 60)]
+    private $photo;
+
     public function __construct()
     {
         $this->orders = new ArrayCollection();
@@ -372,6 +378,30 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         if ($this->roleGroupes->removeElement($roleGroupe)) {
             $roleGroupe->removePlayer($this);
         }
+
+        return $this;
+    }
+
+    public function getBirthDate(): ?\DateTimeInterface
+    {
+        return $this->birthDate;
+    }
+
+    public function setBirthDate(\DateTimeInterface $birthDate): self
+    {
+        $this->birthDate = $birthDate;
+
+        return $this;
+    }
+
+    public function getPhoto(): ?string
+    {
+        return $this->photo;
+    }
+
+    public function setPhoto(string $photo): self
+    {
+        $this->photo = $photo;
 
         return $this;
     }

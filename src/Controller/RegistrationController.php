@@ -34,6 +34,16 @@ class RegistrationController extends AbstractController
             }
             if ($form->isValid()){
 
+                $photo = $form->get('photo')->getData();
+
+                do{
+                    $newFileName = md5(random_bytes(100)).'.'. $photo->guessExtension();
+
+                }while(file_exists($this->getParameter('user.photo.directory'). $newFileName));
+
+
+                $user->setPhoto($newFileName);
+
             // encode the plain password
             $user->setPassword(
             $userPasswordHasherInterface->hashPassword(
@@ -46,7 +56,10 @@ class RegistrationController extends AbstractController
             $entityManager->persist($user);
             $entityManager->flush();
             // do anything else you need here, like send an email
-
+                $photo->move(
+                    $this->getParameter('user.photo.directory'),
+                    $newFileName
+                );
             return $this->redirectToRoute('app_login');
             }
         }
