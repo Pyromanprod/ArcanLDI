@@ -153,19 +153,20 @@ class OrderController extends AbstractController
     }
 
     #[Route('-success-url/{id}/', name: 'success', methods: ['GET', 'POST'])]
-    public function success(Request $request, Order $order, $stripeSK,EntityManagerInterface $entityManager): Response
+    public function success(Request $request, Order $order, $stripeSK, EntityManagerInterface $entityManager): Response
     {
         Stripe::setApiKey($stripeSK);
         $session = Session::retrieve($request->query->get('session_id'));
         dump($session->payment_status);
-        if ($session->payment_status == 'paid'){
-        $order->setDatePaid(new \DateTime());
-        $order->setReference($session->id);
-        $entityManager->flush();
-        $this->addFlash('success', 'ticket acheter avec succés');
-        return $this->redirectToRoute('home');
+        if ($session->payment_status == 'paid') {
+            $order->getTicket()->setStock($order->getTicket()->getStock()-1);
+            $order->setDatePaid(new \DateTime());
+            $order->setReference($session->id);
+            $entityManager->flush();
+            $this->addFlash('success', 'ticket acheter avec succés');
+            return $this->redirectToRoute('home');
 
-        }else{
+        } else {
             return $this->redirectToRoute('home');
         }
 
