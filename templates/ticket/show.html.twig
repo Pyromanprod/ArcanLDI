@@ -5,32 +5,28 @@
 {% block body %}
     <div class="container">
 
-        <h1>Ticket</h1>
+        <h1 class="text-center">Ticket</h1>
 
-        <table class="table">
-            <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ ticket.id }}</td>
-            </tr>
-            <tr>
-                <th>Name</th>
-                <td>{{ ticket.name }}</td>
-            </tr>
-            <tr>
-                <th>Price</th>
-                <td>{{ ticket.price }}</td>
-            </tr>
-            <tr>
-                <th>CreatedAt</th>
-                <td>{{ ticket.createdAt ? ticket.createdAt|date('Y-m-d H:i:s') : '' }}</td>
-            </tr>
-            <tr>
-                <th>UpdatedAt</th>
-                <td>{{ ticket.updatedAt ? ticket.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
-            </tr>
-            </tbody>
-        </table>
+        <div class="card bg-cardgame col-12 col-md-5 mx-auto p-0 my-3">
+            <div class="card-header bg-header-card">
+                <h5>Nom du ticket : {{ ticket.name }}</h5>
+            </div>
+            <div class="card-body">
+                <ul class="list-group list-group-flush ">
+                    <li class="list-group-item bg-transparent text-light">Prix : {{ ticket.price }} €</li>
+                    <li class="list-group-item bg-transparent text-light">Pour le jeu
+                        : {{ ticket.game.name }}</li>
+                    <li class="list-group-item bg-transparent text-light">En Stock
+                        : {{ ticket.stock }}</li>
+                    <li class="list-group-item bg-transparent text-light"><a class="btn btn-primary" href="{{ path('ticket_edit', {'id': ticket.id}) }}">modifier le ticket</a></li>
+                </ul>
+            </div>
+            <div class="card-footer list-group-item bg-transparent text-light">
+                <p class="text-info text-end blockquote-footer m-0">
+                    Créé le : {{ ticket.createdAt ? ticket.createdAt|date('d-m-Y') : '' }}
+                </p>
+            </div>
+        </div>
         <div class="row">
             <div class="col-12 col-lg-4 mx-auto">
 
@@ -50,9 +46,8 @@
             </div>
         </div>
 
-        <a href="{{ path('ticket_index') }}">back to list</a>
+        <a class="btn btn-primary mt-4" href="{{ path('ticket_index') }}">revenir a la liste des ticket</a>
 
-        <a href="{{ path('ticket_edit', {'id': ticket.id}) }}">edit</a>
 
         {{ include('ticket/_delete_form.html.twig') }}
     </div>
