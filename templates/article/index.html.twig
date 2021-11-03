@@ -3,42 +3,40 @@
 {% block title %}Article index{% endblock %}
 
 {% block body %}
-<h1>Article index</h1>
+    <div class="container">
+        <h1 class="text-center">Liste de tous les articles</h1>
+        <div class="text-center">
+            <a class="btn btn-primary" href="{{ path('article_new') }}">Créer une nouvelle discussion</a>
+        </div>
+        <div class="row">
+            {% for article in articles %}
+                {% if article %}
+                    <div class="card bg-cardgame col-12 col-md-5 mx-auto p-0 my-3">
+                        <div class="card-header bg-header-card">
+                            <h5> discussion : {{ article.title }}</h5>
+                        </div>
+                        <div class="card-body">
+                            <ul class="list-group list-group-flush ">
+                                {% if article.roleGroupe %}
+                                    <li class="list-group-item bg-transparent text-light">Role
+                                        : {{ article.roleGroupe.name }}</li>
+                                {% else %}
+                                    <li class="list-group-item bg-transparent text-light">Article visible par tout
+                                        le
+                                        monde
+                                    </li>
+                                {% endif %}
+                                <li class="list-group-item bg-transparent text-light"><a class="btn btn-primary"
+                                                                                         href="{{ path('article_show', {'id': article.id}) }}">afficher
+                                        la discution</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                {% endif %}
+            {% endfor %}
 
-<table class="table">
-    <thead>
-    <tr>
-        <th>Id</th>
-        <th>Title</th>
-        <th>Content</th>
-        <th>actions</th>
-    </tr>
-    </thead>
-    <tbody>
-    {% for article in articles %}
-    {% if article %}
+        </div>
+    </div>
 
-    <tr>
-        <td>{{ article.id }}</td>
-        <td>{{ article.title }}</td>
-        <td>{{ article.content }}</td>
-        <td>
-            <a href="{{ path('article_show', {'id': article.id}) }}">show</a>
-            {% if is_granted('ROLE_ADMIN') %}
 
-                <a href="{{ path('article_edit', {'id': article.id}) }}">edit</a>
-            {% endif %}
-        </td>
-    </tr>
-    {% else %}
-        <tr>
-            <td colspan="6">no records found</td>
-        </tr>
-    {% endif %}
-    {% endfor %}
-
-    </tbody>
-</table>
-
-<a href="{{ path('article_new') }}">Create new</a>
 {% endblock %}
