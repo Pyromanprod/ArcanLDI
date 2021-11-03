@@ -32,7 +32,7 @@ class OrderController extends AbstractController
     }
 
 
-    #[Route('/new/{slug}', name: 'order_new', methods: ['GET', 'POST'])]
+    #[Route('/acheter/{slug}', name: 'order_new', methods: ['GET', 'POST'])]
     public function new(Request $request, Game $game, OrderRepository $orderRepository): Response
     {
         $order = new Order();
@@ -88,6 +88,7 @@ class OrderController extends AbstractController
 
         }
         return $this->renderForm('order/new.html.twig', ['order' => $order,
+            'game'=>$game,
             'form' => $form,]);
     }
 

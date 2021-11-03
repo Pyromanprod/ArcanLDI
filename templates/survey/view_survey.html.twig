@@ -2,28 +2,52 @@
 
 {% block body %}
     <div class="container">
+        <div class="row mt-5">
 
-        <h1>{{ survey.name }}</h1>
-        <div class="row">
-            <h2>nombre de question : {{ survey.question.count }}</h2>
-        </div>
-        <div class="row">
-            <a href="{{ path('survey_add_question',{'id': survey.id}) }}">Ajouter une question</a>
-        </div>
-        {% for question in survey.question %}
+            <div class="card text-white bg-cardgame mb-3 col-12 col-md-8 col-lg-6">
+                <div class="card-header"><h1>{{ survey.name }}</h1></div>
+                <div class="card-body">
+                    <h2>{{ survey.question.count }} Questions</h2>
+                    <table class="table table-striped table-dark ">
+                        <tr>
+                            <th>Question</th>
+                            <th>Choix</th>
+                        </tr>
+                        {% for question in survey.question %}
 
-            <div class="row">
+                            <tr>
+                                <td>
+                                    {{ question.content }}
 
-                {{ question.content }}
-                {% for choix in question.choices %}
-                {{ choix.content }}
-                {% else %}
-                    Réponse libre
-                {% endfor %}
+                                </td>
+                                <td>
+
+                                    {% for choix in question.choices %}
+                                        {{ choix.content }}
+                                    {% else %}
+                                        Réponse libre
+                                    {% endfor %}
+                                </td>
+                            </tr>
+                        {% else %}
+                            Pas de questions a ce formulaire
+                        {% endfor %}
+                    </table>
+                </div>
+                <div class="card-footer bg-transparent border-secondary">
+                    <a href="{{ path('survey_add_question',{'id': survey.id}) }}" class="btn btn-outline-light">Ajouter
+                        une question</a>
+                </div>
             </div>
-        {% else %}
-            Pas de questions a ce formulaire
-        {% endfor %}
+        </div>
+
+        <div class="row">
+
+        </div>
+        <div class="row">
+
+        </div>
+
     </div>
 {% endblock %}
 

@@ -1,22 +1,31 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    {{ form_start(form) }}
-    {{ form_row(form.content, {'label': 'Question :'}) }}
-    {{ form_row(form.select, {'label': 'Liste déroulante'}) }}
-    <button type="submit" class="btn btn-outline-primary">Ajouter la question</button>
-    {{ form_end(form) }}
-
-    <div class="container">
-        <h1>Questions pour "{{ survey.name }}"</h1>
-        {% for question in survey.question %}
-            <div class="row">
-
-                {{ question.content }}
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-12 col-md-3 col-lg-2">
+                <h3>Ajouter un question</h3>
+                {{ form_start(form) }}
+                {{ form_row(form.content, {'label': 'Question :'}) }}
+                {{ form_row(form.select, {'label': 'Liste déroulante'}) }}
+                <button type="submit" class="btn btn-outline-primary">Ajouter la question</button>
+                {{ form_end(form) }}
             </div>
-        {% endfor %}
+
+
+            <div class="col-12 col-md-8 col-lg-6 ms-5">
+                <h3>Questions pour "{{ survey.name }}"</h3>
+
+                {% for question in survey.question %}
+                    <div class="row">
+
+                        {{ question.content }}
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
     </div>
 {% endblock %}
 
-{% block title %}Add Question{% endblock %}
+    {% block title %}Add Question{% endblock %}
 

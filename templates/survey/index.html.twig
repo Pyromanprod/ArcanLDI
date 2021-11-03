@@ -4,12 +4,13 @@
 
 {% block body %}
 
-    <div class="container">
+    <div class="container mt-5">
         {{ form_start(form) }}
-        {{ form_row(form.name, {'label': 'Nouveau Questionnaire'}) }}
+        {{ form_row(form.name, {'label': 'Nom du questionnaire'}) }}
         {{ form_row(form.general) }}
-        <button type="submit" class="btn btn-outline-primary">Créer</button>
+        <button type="submit" class="btn btn-outline-primary mb-5">Créer</button>
         {{ form_end(form) }}
+        <h2>Les questionnaires déjà présent</h2>
         {% for survey in listeSurvey %}
             <div class="row">
                 <div class="col-12 col-lg-6">

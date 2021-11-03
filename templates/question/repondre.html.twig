@@ -1,11 +1,24 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    {{ question.content }}
-    {{ form_start(form) }}
-    {{ form_widget(form) }}
-    <button type="submit" class="btn btn-primary">Répondre</button>
-    {{ form_end(form) }}
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-12 col-md-8 col-lg-6 mx-auto">
+                <div class="mb-2">
+                    <h2>
+
+                        {{ question.content }} ?
+                    </h2>
+                </div>
+                {{ form_start(form) }}
+                {{ form_row(form.content, {
+                    'label': 'Réponse'
+                }) }}
+                <button type="submit" class="btn btn-primary">Répondre</button>
+                {{ form_end(form) }}
+            </div>
+        </div>
+    </div>
 {% endblock %}
 
 {% block title %}
