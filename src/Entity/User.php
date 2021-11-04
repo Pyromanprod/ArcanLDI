@@ -76,6 +76,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'string', length: 60)]
     private $photo;
 
+    #[ORM\OneToMany(mappedBy: 'author', targetEntity: NewsComment::class, orphanRemoval: true)]
+    private $newsComments;
+
+    #[ORM\OneToMany(mappedBy: 'author', targetEntity: News::class, orphanRemoval: true)]
+    private $news;
+
     public function __construct()
     {
         $this->orders = new ArrayCollection();
@@ -83,6 +89,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->articles = new ArrayCollection();
         $this->coments = new ArrayCollection();
         $this->roleGroupes = new ArrayCollection();
+        $this->newsComments = new ArrayCollection();
+        $this->news = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -402,6 +410,66 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setPhoto(string $photo): self
     {
         $this->photo = $photo;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|NewsComment[]
+     */
+    public function getNewsComments(): Collection
+    {
+        return $this->newsComments;
+    }
+
+    public function addNewsComment(NewsComment $newsComment): self
+    {
+        if (!$this->newsComments->contains($newsComment)) {
+            $this->newsComments[] = $newsComment;
+            $newsComment->setAuthor($this);
+        }
+
+        return $this;
+    }
+
+    public function removeNewsComment(NewsComment $newsComment): self
+    {
+        if ($this->newsComments->removeElement($newsComment)) {
+            // set the owning side to null (unless already changed)
+            if ($newsComment->getAuthor() === $this) {
+                $newsComment->setAuthor(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|News[]
+     */
+    public function getNews(): Collection
+    {
+        return $this->news;
+    }
+
+    public function addNews(News $news): self
+    {
+        if (!$this->news->contains($news)) {
+            $this->news[] = $news;
+            $news->setAuthor($this);
+        }
+
+        return $this;
+    }
+
+    public function removeNews(News $news): self
+    {
+        if ($this->news->removeElement($news)) {
+            // set the owning side to null (unless already changed)
+            if ($news->getAuthor() === $this) {
+                $news->setAuthor(null);
+            }
+        }
 
         return $this;
     }

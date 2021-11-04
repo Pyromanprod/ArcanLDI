@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Les Actualités{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <h1 class="text-center">Les Actualités</h1>
+        <a class="btn btn-primary" href="{{ path('news_new') }}">Créer une nouvelle actualité</a>
+        <div class="row">
+            <div class="col-12">
+                {% for news in news %}
+                <div class="card col-12 col-md-5 mx-auto bg-cardgame p-0 my-2 card-zoom">
+                    <a href="{{ path('news_show', {'slug': news.slug}) }}"
+                       class="text-decoration-none text-light d-inline">
+                        <img src="{{ asset("img/news/"~news.photo~"/banner.jpg")|imagine_filter('banner_game') }}"
+                             class="card-img-top" alt="">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ news.title }}</h5>
+                            <p class="card-text">{{ news.content|excerpt(20) }}</p>
+                            <a class="btn btn-outline-light mb-3 me-2"
+                               href="{{ path('news_show', {'slug': news.slug}) }}">voir
+                                plus</a>
+                            {% if is_granted('ROLE_ADMIN') %}
+
+                                <a href="{{ path('news_edit', {'id': news.id}) }} "
+                                   class="btn btn-outline-warning mb-3 me-2">Modifier</a>
+                                <form method="post" action="{{ path('news_delete', {'id': news.id}) }}"
+                                      onsubmit="return confirm('Voulez-vou vraiment supprimer {{ news.title }}');">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ news.id) }}">
+                                    <button class="btn btn-outline-danger mb-3 me-2">supprimer</button>
+                                </form>
+                            {% else %}
+                                <p class="alert alert-warning">pas encore d'actualité mais ça arrive</p>
+                            {% endif %}
+                        </div>
+                        {% endfor %}
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

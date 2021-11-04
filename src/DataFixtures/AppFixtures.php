@@ -28,6 +28,8 @@ class AppFixtures extends Fixture
             ->setEmail('a@a.a')
             ->setFirstName('Enzo')
             ->setPseudo('ArcanAdmin')
+            ->setBirthDate($faker->dateTimeBetween('-60 years','-18 years'))
+            ->setPhoto('photo.jpg')
             ->setLastname('Renaud')
             ->setRoles(["ROLE_ADMIN"])
             ->setPassword(
@@ -40,6 +42,8 @@ class AppFixtures extends Fixture
         $nonadmin
             ->setEmail('b@b.b')
             ->setFirstName('Renaud')
+            ->setBirthDate($faker->dateTimeBetween('-60 years','-18 years'))
+            ->setPhoto('photo.jpg')
             ->setPseudo('ArcanNonAdmin')
             ->setLastname('Enzo')
             ->setPassword(
@@ -52,6 +56,8 @@ class AppFixtures extends Fixture
             $user
                 ->setEmail($faker->email)
                 ->setFirstName($faker->firstName)
+                ->setBirthDate($faker->dateTimeBetween('-60 years','-18 years'))
+                ->setPhoto('photo.jpg')
                 ->setPseudo($faker->firstName)
                 ->setLastname($faker->userName)
                 ->setPassword(
@@ -66,7 +72,7 @@ class AppFixtures extends Fixture
             $gdn
                 ->setName('le jeu')
                 ->setDescription($faker->paragraph('10'))
-                ->setBanner('something');
+                ->setBanner('something.jpg');
             $manager->persist($gdn);
             $this->addReference('gdn', $gdn);
 
