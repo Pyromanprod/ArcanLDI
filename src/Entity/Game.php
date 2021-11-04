@@ -60,6 +60,11 @@ class Game
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $banner;
 
+    public function __toString(): string
+    {
+        return $this->getName();
+    }
+
     public function __construct()
     {
         $this->tickets = new ArrayCollection();
