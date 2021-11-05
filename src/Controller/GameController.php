@@ -9,6 +9,7 @@ use App\Form\AlbumPhotoFormType;
 use App\Form\AlbumVideoFormType;
 use App\Form\GameType;
 use App\Repository\GameRepository;
+use App\Service\uploadGamePhoto;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -28,7 +29,7 @@ class GameController extends AbstractController
 
     #[Route('/new', name: 'game_new', methods: ['GET', 'POST'])]
     #[isGranted('ROLE_ADMIN')]
-    public function new(Request $request): Response
+    public function new(Request $request, uploadGamePhoto $uploadGamePhoto): Response
     {
         $game = new Game();
         $form = $this->createForm(GameType::class, $game);
@@ -36,33 +37,11 @@ class GameController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager = $this->getDoctrine()->getManager();
-//            TODO: Factoriser envoie de photo
-            // dossier du jeu dans le game.photo.directory
-            $directory = $this->getParameter('game.photo.directory');
 
             //récupération de la photo si il y a
             $photo = $form->get('banner')->getData();
             if ($photo) {
-                //si le dossier n'exist pas
-                if (!file_exists($directory)) {
-                    //on le créer
-                    mkdir($directory);
-                }
-                $directory .= $game->getName() . '/';
-                if (!file_exists($directory)) {
-                    mkdir($directory);
-                }
-
-                $newFileName = 'banner' . '.' . $photo->guessExtension();
-
-
-                // Déplacement de la photo dans le dossier que l'on avait paramétré dans le fichier services.yaml,
-                // avec le nouveau nom qu'on lui a généré
-                $photo->move(
-                    $directory,     // Emplacement de sauvegarde du fichier
-                    $newFileName    // Nouveau nom du fichier
-                );
-                $game->setBanner($newFileName);
+                $game->setBanner($uploadGamePhoto->uploadBanner($photo, $game));
             }
 
             $entityManager->persist($game);
@@ -87,39 +66,20 @@ class GameController extends AbstractController
 
     #[Route('/{id}/edit', name: 'game_edit', methods: ['GET', 'POST'])]
     #[isGranted('ROLE_ADMIN')]
-    public function edit(Request $request, Game $game): Response
+    public function edit(Request $request, Game $game, uploadGamePhoto $uploadGamePhoto): Response
     {
         $form = $this->createForm(GameType::class, $game);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->getDoctrine()->getManager()->flush();
-            //            TODO: Factoriser envoie de photo
-
-            // dossier du jeu dans le game.photo.directory
-            $directory = $this->getParameter('game.photo.directory') . $game->getName() . '/';
-
             //récupération de la photo si il y a
             $photo = $form->get('banner')->getData();
             if ($photo) {
-                //si le dossier n'exist pas
-                if (!file_exists($directory)) {
-                    //on le créer
-                    mkdir($directory);
-//                    die($directory);
-                }
-
-                $newFileName = 'banner' . '.' . $photo->guessExtension();
-
-
-                // Déplacement de la photo dans le dossier que l'on avait paramétré dans le fichier services.yaml,
-                // avec le nouveau nom qu'on lui a généré
-                $photo->move(
-                    $directory,     // Emplacement de sauvegarde du fichier
-                    $newFileName    // Nouveau nom du fichier
-                );
-                $game->setBanner($newFileName);
+                //utilisation du service pour l'upload de bannière
+                $game->setBanner($uploadGamePhoto->uploadBanner($photo, $game));
             }
+
             return $this->redirectToRoute('game_index', [], Response::HTTP_SEE_OTHER);
         }
 

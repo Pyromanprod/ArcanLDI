@@ -7,12 +7,15 @@ use App\Entity\Choice;
 use App\Entity\Order;
 use App\Entity\Question;
 use App\Entity\Survey;
-use App\Entity\Ticket;
 use App\Form\AnswerMultipleFormType;
 use App\Form\ChoiceFormType;
+use App\Form\OrderQuestionFormType;
 use App\Form\QuestionFormType;
 use App\Form\SurveyFormType;
 use App\Repository\ChoiceRepository;
+use App\Repository\QuestionRepository;
+use Doctrine\ORM\EntityManagerInterface;
+use PhpParser\Node\Expr\Throw_;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -128,7 +131,7 @@ class SurveyController extends AbstractController
     public function surveyForTicket(Request $request, Order $order): Response
     {
         $ticket = $order->getTicket();
-
+//TODO: VERIFIER CETTE MERDE
         $user = $this->getUser();
         $listeSurvey = $ticket->getSurveys();
         $reposAnswer = $this->getDoctrine()->getRepository(Answer::class);
@@ -136,7 +139,7 @@ class SurveyController extends AbstractController
             $listeQuestion = $survey->getQuestion();
             foreach ($listeQuestion as $question) {
                 if (!$reposAnswer->findByUserQuestion($user, $question)) {
-                // envoie d'un hash composer de
+                    // envoie d'un hash composer de
                     // l'id de la question
                     //l'id du user
                     //le contenue de la question
@@ -157,8 +160,8 @@ class SurveyController extends AbstractController
             }
 
         }
-    //si toutes les questions sont répondu on redirige vers le paiement
-        return $this->redirectToRoute('checkout', ['id'=>$order->getId()]);
+        //si toutes les questions sont répondu on redirige vers le paiement
+        return $this->redirectToRoute('checkout', ['id' => $order->getId()]);
         //TODO: pensé a faire une vérif des orders sans paiement de plus de 7 jours (delete order + answer etc...)
     }
 
@@ -166,7 +169,7 @@ class SurveyController extends AbstractController
     #[ParamConverter('order', options: ['mapping' => ['idOrder' => 'id']])]
     public function answer(Request $request, Question $question, Order $order, $hash): Response
     {
-        
+
         $ticket = $order->getTicket();
         //Vérification du hash envoyé et comparaison pour savoir si l'url a était trafiqué
         //si oui on envoie sur access denied
@@ -219,6 +222,29 @@ class SurveyController extends AbstractController
             'question' => $question,
             'form' => $form,
         ]);
+    }
+
+
+    #[Route('/orderedquestion/{id}', name: 'ordered')]
+    public function orderedQuestion(Request                $request,
+                                    QuestionRepository     $questionRepository,
+                                    EntityManagerInterface $em,
+                                    Survey                 $survey): Response
+    {
+
+
+        foreach ($request->request->get('question') as $key => $reponse) {
+            if (!is_numeric($reponse)){
+                $this->addFlash('error', 'L\'ordre doit etre un chiffre');
+                return $this->redirectToRoute('survey_view', ['id' =>$survey->getId()]);
+            }
+            $question = $questionRepository->findOneById($key);
+            $question->setOrderBy($reponse);
+            $em->persist($question);
+
+        }
+        $em->flush();
+        return $this->redirectToRoute('survey_view', ['id' =>$survey->getId()]);
     }
 
 

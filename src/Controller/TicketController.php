@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Game;
+use App\Entity\SurveyTicket;
 use App\Entity\Ticket;
 use App\Form\TicketType;
 use App\Repository\GameRepository;
@@ -28,6 +29,7 @@ class TicketController extends AbstractController
             'tickets' => $ticketRepository->findAll(),
         ]);
     }
+
     #[Route('/game/{id}', name: 'ticket_index_game', methods: ['GET'])]
     public function indexGame(TicketRepository $ticketRepository, Game $game, GameRepository $gameRepository): Response
     {
@@ -73,11 +75,18 @@ class TicketController extends AbstractController
                 'choice_label' => 'name',
             ])->getForm()
         ;
+            $surveyTicket = new SurveyTicket();
+            $surveyTicket->setTicket($ticket);
+
         $formNotGeneral->handleRequest($request);
+
         if ($formNotGeneral->isSubmitted() && $formNotGeneral->isValid()) {
-            $ticket->addSurvey($formNotGeneral->get('survey')->getData());
+
+            $surveyTicket->setSurvey($formNotGeneral->get('survey')->getData());
+
+            $this->getDoctrine()->getManager()->persist($surveyTicket);
             $this->getDoctrine()->getManager()->flush();
-            dump($ticket);
+
             return $this->redirectToRoute('ticket_show', ['id'=>$ticket->getId()]);
         }
 
@@ -93,9 +102,12 @@ class TicketController extends AbstractController
         // Ajout des questionnaires "Généraux"
         $formGeneral->handleRequest($request);
         if ($formGeneral->isSubmitted() && $formGeneral->isValid()) {
-            $ticket->addSurvey($formGeneral->get('survey')->getData());
+
+            $surveyTicket->setSurvey($formGeneral->get('survey')->getData());
+
+            $this->getDoctrine()->getManager()->persist($surveyTicket);
             $this->getDoctrine()->getManager()->flush();
-            dump($ticket);
+
             return $this->redirectToRoute('ticket_show', ['id'=>$ticket->getId()]);
         }
 

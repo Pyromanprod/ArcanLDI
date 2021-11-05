@@ -27,13 +27,12 @@ class SurveyRepository extends ServiceEntityRepository
     public function findByNotOnTicket(): array
     {
 
-        return $this->createQueryBuilder('s')
-            ->leftJoin('s.ticket', 't')
-            ->Where('t.id IS NULL')
-            ->andWhere('s.general = 0')
+        return $this->createQueryBuilder('survey')
+            ->leftJoin('survey.surveyTickets', 'survey_tickets')
+            ->andWhere('survey_tickets.ticket IS NULL')
+            ->andWhere('survey.general != 1')
             ->getQuery()
-            ->getResult()
-        ;
+            ->getResult();
     }
 
 

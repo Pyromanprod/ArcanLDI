@@ -7,6 +7,7 @@ use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: QuestionRepository::class)]
 #[ORM\HasLifecycleCallbacks]
@@ -35,6 +36,10 @@ class Question
     #[ORM\ManyToOne(targetEntity: Survey::class, inversedBy: 'question')]
     #[ORM\JoinColumn(nullable: false)]
     private $survey;
+
+    #[ORM\Column(type: 'integer', nullable: true)]
+    #[Assert\GreaterThanOrEqual(0)]
+    private $orderBy;
 
     public function __construct()
     {
@@ -150,6 +155,18 @@ class Question
     public function setSurvey(?Survey $survey): self
     {
         $this->survey = $survey;
+
+        return $this;
+    }
+
+    public function getOrderBy(): ?int
+    {
+        return $this->orderBy;
+    }
+
+    public function setOrderBy(?int $orderBy): self
+    {
+        $this->orderBy = $orderBy;
 
         return $this;
     }
