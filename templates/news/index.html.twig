@@ -28,12 +28,12 @@
                                     <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ news.id) }}">
                                     <button class="btn btn-outline-danger mb-3 me-2">supprimer</button>
                                 </form>
-                            {% else %}
-                                <p class="alert alert-warning">pas encore d'actualité mais ça arrive</p>
                             {% endif %}
                         </div>
                     </a>
                 </div>
+            {% else %}
+                <p class="alert alert-warning">pas encore d'actualité mais ça arrive</p>
             {% endfor %}
         </div>
     </div>
