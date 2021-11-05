@@ -18,7 +18,12 @@
                         : {{ ticket.game.name }}</li>
                     <li class="list-group-item bg-transparent text-light">En Stock
                         : {{ ticket.stock }}</li>
-                    <li class="list-group-item bg-transparent text-light"><a class="btn btn-primary" href="{{ path('ticket_edit', {'id': ticket.id}) }}">modifier le ticket</a></li>
+                    <li class="list-group-item bg-transparent text-light">
+                        <a class="btn btn-primary" href="{{ path('ticket_edit', {'id': ticket.id}) }}">modifier le
+                            ticket</a>
+                        <a class="btn btn-primary" href="{{ path('survey_ticket_ordered', {'id': ticket.id}) }}">Ordonner
+                            Questionnaires</a>
+                    </li>
                 </ul>
             </div>
             <div class="card-footer list-group-item bg-transparent text-light">

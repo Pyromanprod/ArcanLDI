@@ -1,0 +1,68 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="container">
+        <div class="row">
+            <div class="col-12 col-md-4">
+                <div class="card bg-cardgame col-12 p-0 my-3">
+                    <div class="card-header bg-header-card">
+                        <h5>Nom du ticket : {{ ticket.name }}</h5>
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-group list-group-flush ">
+                            <li class="list-group-item bg-transparent text-light">Prix : {{ ticket.price }} €</li>
+                            <li class="list-group-item bg-transparent text-light">Pour le jeu
+                                : {{ ticket.game.name }}</li>
+                            <li class="list-group-item bg-transparent text-light">En Stock
+                                : {{ ticket.stock }}</li>
+                            <li class="list-group-item bg-transparent text-light">
+                                <a class="btn btn-outline-light" href="{{ path('ticket_show', {'id': ticket.id}) }}">Ajouter
+                                    des questionnaires</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="card-footer list-group-item bg-transparent text-light">
+                        <p class="text-info text-end blockquote-footer m-0">
+                            Créé le : {{ ticket.createdAt ? ticket.createdAt|date('d-m-Y') : '' }}
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-8">
+
+                <form action="{{ path('survey_ticket_ordered', {'id': ticket.id}) }}" method="post">
+                    <table class="table table-striped table-dark ">
+                        <tr>
+                            <th>Nom du Questionnaire</th>
+                            <th>ordre</th>
+                        </tr>
+                        {% for index, surveyTicket  in ticket.surveyTickets|sort((a, b) => a.orderBy <=> b.orderBy) %}
+
+                            <tr>
+                                <td>
+                                    {{ surveyTicket.survey.name }}
+
+                                </td>
+                                <td>
+
+                                    <input type="number"
+                                           value="{{ surveyTicket.orderBy != null ? surveyTicket.orderBy : '0' }}"
+                                           name="surveyTicket[{{ surveyTicket.id }}]"
+                                           min=1>
+                                </td>
+                            </tr>
+                        {% else %}
+                            Pas de questions a ce formulaire
+                        {% endfor %}
+
+                    </table>
+                    <button type="submit">Ordonner</button>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block title %}Ordoner les questionnaires{% endblock %}
+
+
