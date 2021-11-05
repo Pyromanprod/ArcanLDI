@@ -41,12 +41,11 @@ class GameController extends AbstractController
             //récupération de la photo si il y a
             $photo = $form->get('banner')->getData();
             if ($photo) {
-                $game->setBanner($uploadGamePhoto->uploadBanner($photo, $game));
+                $game->setBanner('banner' . '.' . $photo->guessExtension());
             }
-
             $entityManager->persist($game);
             $entityManager->flush();
-
+            $uploadGamePhoto->uploadBanner($photo, $game);
             return $this->redirectToRoute('game_index', [], Response::HTTP_SEE_OTHER);
         }
 

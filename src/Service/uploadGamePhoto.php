@@ -20,11 +20,12 @@ class uploadGamePhoto
         // dossier du jeu dans le game.photo.directory
         $directory = $this->controller->get('game.photo.directory'); //fail phpStorm
 
-            //si le dossier n'exist pas
+            //si le dossier game.photo.directory n'existe pas
             if (!file_exists($directory)) {
                 //on le créer
                 mkdir($directory);
             }
+        //si le dossier game.photo.directory/slug-Du-Jeu n'existe pas
             $directory .= $game->getSlug() . '/';
             if (!file_exists($directory)) {
                 mkdir($directory);
