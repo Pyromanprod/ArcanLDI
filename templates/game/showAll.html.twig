@@ -1,11 +1,10 @@
-<div class="row w-100">
-    <h1 class="text-center">Tous nos jeux</h1>
-    <div class="row col-12 col-md-10 mx-auto p-0">
-        {% for game in allGames %}
-            <div class="card col-12 col-md-5 mx-auto bg-cardgame p-0 my-2 card-zoom">
+<div class="row p-0 m-0">
+    <h1 class="text-center mb-4">Tous nos jeux</h1>
+    {% for game in allGames %}
+        <div class="col-12 col-md-4">
+            <div class="card col-12 col-md-11 mx-auto bg-cardgame p-0 my-2 card-zoom">
                 <a href="{{ path('game_show', {'slug': game.slug}) }}" class="text-decoration-none text-light d-inline">
-{#                    {{ dump(asset("img/uploads/"~game.slug~"/banner.jpg")) }}#}
-                    <img src="{{ asset("img/uploads/"~game.slug~"/banner.jpg")|imagine_filter('banner_game')}}"
+                    <img src="{{ asset("img/uploads/"~game.slug~"/banner.jpg")|imagine_filter('banner_game') }}"
                          class="card-img-top" alt="">
                     <div class="card-body">
                         <h5 class="card-title">{{ game.name }}</h5>
@@ -25,8 +24,8 @@
                     </div>
                 </a>
             </div>
-        {% else %}
-            <div class="alert alert-warning">Pas de jeux enregistré</div>
-        {% endfor %}
-    </div>
+        </div>
+    {% else %}
+        <div class="alert alert-warning">Pas de jeux enregistré</div>
+    {% endfor %}
 </div>

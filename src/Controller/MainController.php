@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Game;
+use App\Entity\News;
 use App\Repository\GameRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -16,9 +17,12 @@ class MainController extends AbstractController
     public function index(): Response
     {
         $repos = $this->getDoctrine()->getRepository(Game::class);
-        $allGames = $repos->findAll();
+        $reposnews = $this->getDoctrine()->getRepository(News::class);
+        $allGames = $repos->findLastThree();
+        $news = $reposnews->findLastThree();
         return $this->render('main/index.html.twig',
             [
+                'news'=> $news,
                 'allGames' => $allGames,
             ]
         );
