@@ -21,16 +21,17 @@ class Survey
     #[ORM\OneToMany(mappedBy: 'survey', targetEntity: Question::class, orphanRemoval: true)]
     private $question;
 
-    #[ORM\ManyToMany(targetEntity: Ticket::class, inversedBy: 'surveys')]
-    private $ticket;
 
     #[ORM\Column(type: 'boolean')]
     private $general;
 
+    #[ORM\OneToMany(mappedBy: 'survey', targetEntity: SurveyTicket::class, orphanRemoval: true)]
+    private $surveyTickets;
+
     public function __construct()
     {
         $this->question = new ArrayCollection();
-        $this->ticket = new ArrayCollection();
+        $this->surveyTickets = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -80,30 +81,6 @@ class Survey
         return $this;
     }
 
-    /**
-     * @return Collection|Ticket[]
-     */
-    public function getTicket(): Collection
-    {
-        return $this->ticket;
-    }
-
-    public function addTicket(Ticket $ticket): self
-    {
-        if (!$this->ticket->contains($ticket)) {
-            $this->ticket[] = $ticket;
-        }
-
-        return $this;
-    }
-
-    public function removeTicket(Ticket $ticket): self
-    {
-        $this->ticket->removeElement($ticket);
-
-        return $this;
-    }
-
     public function getGeneral(): ?bool
     {
         return $this->general;
@@ -112,6 +89,36 @@ class Survey
     public function setGeneral(bool $general): self
     {
         $this->general = $general;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|SurveyTicket[]
+     */
+    public function getSurveyTickets(): Collection
+    {
+        return $this->surveyTickets;
+    }
+
+    public function addSurveyTicket(SurveyTicket $surveyTicket): self
+    {
+        if (!$this->surveyTickets->contains($surveyTicket)) {
+            $this->surveyTickets[] = $surveyTicket;
+            $surveyTicket->setSurvey($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSurveyTicket(SurveyTicket $surveyTicket): self
+    {
+        if ($this->surveyTickets->removeElement($surveyTicket)) {
+            // set the owning side to null (unless already changed)
+            if ($surveyTicket->getSurvey() === $this) {
+                $surveyTicket->setSurvey(null);
+            }
+        }
 
         return $this;
     }
