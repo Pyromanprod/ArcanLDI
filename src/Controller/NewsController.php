@@ -10,6 +10,8 @@ use App\Repository\NewsRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\TooManyRequestsHttpException;
+use Symfony\Component\RateLimiter\RateLimiterFactory;
 use Symfony\Component\Routing\Annotation\Route;
 
 #[Route('/news')]
@@ -46,13 +48,18 @@ class NewsController extends AbstractController
     }
 
     #[Route('/{slug}', name: 'news_show', methods: ['GET','POST'])]
-    public function show(News $news, Request $request): Response
+    public function show(News $news, Request $request,RateLimiterFactory $anonymousApiLimiter): Response
     {
+        $limiter = $anonymousApiLimiter->create($request->getClientIp());
+
+
         $newsComment = new NewsComment();
         $form = $this->createForm(NewsCommentType::class, $newsComment);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            if (false === $limiter->consume(1)->isAccepted()) {
+            throw new TooManyRequestsHttpException();}
             $newsComment->setAuthor($this->getUser())
                 ->setNews($news);
             $entityManager = $this->getDoctrine()->getManager();

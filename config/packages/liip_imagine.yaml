@@ -18,3 +18,10 @@ liip_imagine:
             filters:
                 scale:          # Agrandit ou réduit l'image jusqu'à ce qu'un des côtés de l'image atteigne sa valeur (conserve le ratio, sans déformation d'image)
                     dim: [ 100, 100 ]
+
+
+        profil:
+            quality: 75
+            filters:
+                scale:
+                    dim: [ 700, 700 ]

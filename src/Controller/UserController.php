@@ -60,9 +60,30 @@ class UserController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->getDoctrine()->getManager()->flush();
+            $photo = $form->get('photo')->getData();
 
-            return $this->redirectToRoute('user_index', [], Response::HTTP_SEE_OTHER);
+            if ($this->getUser()->getPhoto() != null && file_exists($this->getParameter('user.photo.directory'). $this->getUser()->getPhoto())){
+
+                unlink( $this->getParameter('user.photo.directory') . $this->getUser()->getPhoto() );
+            }
+
+            do{
+                $newFileName = md5(random_bytes(100)).'.'. $photo->guessExtension();
+
+            }while(file_exists($this->getParameter('user.photo.directory'). $newFileName));
+
+
+            $this->getUser()->setPhoto($newFileName);
+
+            $this->getDoctrine()->getManager()->flush();
+            $photo->move(
+                $this->getParameter('user.photo.directory'),
+                $newFileName
+            );
+
+            return $this->redirectToRoute('user_show_profile', [
+                'id' => $this->getUser()->getId()
+            ], Response::HTTP_SEE_OTHER);
         }
 
         return $this->renderForm('user/edit.html.twig', [
@@ -80,9 +101,39 @@ class UserController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            //TODO:Attendre que renaud deigne me donner le service des photo
+            $photo = $form->get('photo')->getData();
+            if (!$photo){
+                $this->getDoctrine()->getManager()->flush();
+                $this->addFlash('success','Vos informations ont bien été modifier');
+                return $this->redirectToRoute('user_show_profile', [
+                    'id' => $this->getUser()->getId()
+                ], Response::HTTP_SEE_OTHER);
+            }
+
+
+            if ($this->getUser()->getPhoto() != null && file_exists($this->getParameter('user.photo.directory'). $this->getUser()->getPhoto())){
+
+                unlink( $this->getParameter('user.photo.directory') . $this->getUser()->getPhoto() );
+            }
+
+            do{
+                $newFileName = md5(random_bytes(100)).'.'. $photo->guessExtension();
+
+            }while(file_exists($this->getParameter('user.photo.directory'). $newFileName));
+
+
+            $this->getUser()->setPhoto($newFileName);
+
             $this->getDoctrine()->getManager()->flush();
+            $photo->move(
+                $this->getParameter('user.photo.directory'),
+                $newFileName
+            );
             $this->addFlash('success','Vos informations ont bien été modifier');
-            return $this->redirectToRoute('home', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('user_show_profile', [
+                'id' => $this->getUser()->getId()
+            ], Response::HTTP_SEE_OTHER);
         }
 
         return $this->renderForm('user/edit.html.twig', [
