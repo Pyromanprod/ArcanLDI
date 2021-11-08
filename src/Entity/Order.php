@@ -39,6 +39,12 @@ class Order
     #[ORM\Column(type: 'string', length: 255, unique: true, nullable: true)]
     private $reference;
 
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private $paymentIntent;
+
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private $refundRequest;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -121,6 +127,30 @@ class Order
     public function setReference(?string $reference): self
     {
         $this->reference = $reference;
+
+        return $this;
+    }
+
+    public function getPaymentIntent(): ?string
+    {
+        return $this->paymentIntent;
+    }
+
+    public function setPaymentIntent(?string $paymentIntent): self
+    {
+        $this->paymentIntent = $paymentIntent;
+
+        return $this;
+    }
+
+    public function getRefundRequest(): ?string
+    {
+        return $this->refundRequest;
+    }
+
+    public function setRefundRequest(?string $refundRequest): self
+    {
+        $this->refundRequest = $refundRequest;
 
         return $this;
     }

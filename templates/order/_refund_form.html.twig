@@ -1,0 +1,4 @@
+<form method="post" action="{{ path('refund', {'id': order.id}) }}" onsubmit="return confirm('Etes vous sure de vouloir remboursé cette commande?');">
+    <input type="hidden" name="_token" value="{{ csrf_token('refund' ~ order.id) }}">
+    <button class="btn btn-danger">Rembourser le ticket</button>
+</form>
