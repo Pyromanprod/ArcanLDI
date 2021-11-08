@@ -16,6 +16,7 @@
 ###< symfony/phpunit-bridge ###
 
 ###> nos ignores ###
+/public/cgv/*
 .env
 /migrations/*.php
 /public/img/*
