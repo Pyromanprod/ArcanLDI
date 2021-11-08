@@ -9,13 +9,13 @@ use App\Entity\Question;
 use App\Entity\Survey;
 use App\Form\AnswerMultipleFormType;
 use App\Form\ChoiceFormType;
-use App\Form\OrderQuestionFormType;
 use App\Form\QuestionFormType;
 use App\Form\SurveyFormType;
+use App\Repository\AnswerRepository;
 use App\Repository\ChoiceRepository;
 use App\Repository\QuestionRepository;
+use App\Repository\SurveyTicketRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use PhpParser\Node\Expr\Throw_;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -128,17 +128,23 @@ class SurveyController extends AbstractController
     }
 
     #[Route('/checksurvey/{id}', name: 'suvey_for_ticket')]
-    public function surveyForTicket(Request $request, Order $order): Response
+    public function surveyForTicket(Request                $request,
+                                    Order                  $order,
+                                    SurveyTicketRepository $surveyTicketRepository,
+                                    AnswerRepository       $answerRepository,
+                                    QuestionRepository     $questionRepository,
+    ): Response
     {
         $ticket = $order->getTicket();
-//TODO: VERIFIER CETTE MERDE
         $user = $this->getUser();
-        $listeSurvey = $ticket->getSurveys();
-        $reposAnswer = $this->getDoctrine()->getRepository(Answer::class);
-        foreach ($listeSurvey as $survey) {
-            $listeQuestion = $survey->getQuestion();
+        $listeSurveyTicket = $surveyTicketRepository->findOrdered($ticket);
+
+        foreach ($listeSurveyTicket as $surveyTicket) {
+
+            $listeQuestion = $questionRepository->findOrderBy($surveyTicket->getSurvey());
+
             foreach ($listeQuestion as $question) {
-                if (!$reposAnswer->findByUserQuestion($user, $question)) {
+                if (!$answerRepository->findByUserQuestion($user, $question)) {
                     // envoie d'un hash composer de
                     // l'id de la question
                     //l'id du user
@@ -234,9 +240,9 @@ class SurveyController extends AbstractController
 
 
         foreach ($request->request->get('question') as $key => $reponse) {
-            if (!is_numeric($reponse)){
+            if (!is_numeric($reponse)) {
                 $this->addFlash('error', 'L\'ordre doit etre un chiffre');
-                return $this->redirectToRoute('survey_view', ['id' =>$survey->getId()]);
+                return $this->redirectToRoute('survey_view', ['id' => $survey->getId()]);
             }
             $question = $questionRepository->findOneById($key);
             $question->setOrderBy($reponse);
@@ -244,7 +250,7 @@ class SurveyController extends AbstractController
 
         }
         $em->flush();
-        return $this->redirectToRoute('survey_view', ['id' =>$survey->getId()]);
+        return $this->redirectToRoute('survey_view', ['id' => $survey->getId()]);
     }
 
 

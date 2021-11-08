@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\SurveyTicket;
+use App\Entity\Ticket;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -22,19 +23,17 @@ class SurveyTicketRepository extends ServiceEntityRepository
     // /**
     //  * @return SurveyTicket[] Returns an array of SurveyTicket objects
     //  */
-    /*
-    public function findByExampleField($value)
+
+    public function findOrdered(Ticket $ticket)
     {
-        return $this->createQueryBuilder('s')
-            ->andWhere('s.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('s.id', 'ASC')
-            ->setMaxResults(10)
+        return $this->createQueryBuilder('st')
+            ->andWhere('st.ticket = :ticket')
+            ->setParameter('ticket', $ticket)
+            ->orderBy('st.orderBy', 'ASC')
             ->getQuery()
             ->getResult()
         ;
     }
-    */
 
     /*
     public function findOneBySomeField($value): ?SurveyTicket
