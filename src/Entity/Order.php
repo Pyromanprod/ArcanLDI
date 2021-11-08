@@ -45,6 +45,9 @@ class Order
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $refundRequest;
 
+    #[ORM\Column(type: 'boolean', nullable: true)]
+    private $is_cgv;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -151,6 +154,18 @@ class Order
     public function setRefundRequest(?string $refundRequest): self
     {
         $this->refundRequest = $refundRequest;
+
+        return $this;
+    }
+
+    public function getIsCgv(): ?bool
+    {
+        return $this->is_cgv;
+    }
+
+    public function setIsCgv(bool $is_cgv): self
+    {
+        $this->is_cgv = $is_cgv;
 
         return $this;
     }

@@ -42,6 +42,9 @@ class Ticket
     #[ORM\OneToMany(mappedBy: 'ticket', targetEntity: SurveyTicket::class, orphanRemoval: true)]
     private $surveyTickets;
 
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private $cgv;
+
     public function __toString(): string
     {
         return $this->getName().'-'.$this->getPrice().' euro';
@@ -187,6 +190,18 @@ class Ticket
                 $surveyTicket->setTicket(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getCgv(): ?string
+    {
+        return $this->cgv;
+    }
+
+    public function setCgv(?string $cgv): self
+    {
+        $this->cgv = $cgv;
 
         return $this;
     }

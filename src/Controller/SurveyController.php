@@ -9,6 +9,7 @@ use App\Entity\Question;
 use App\Entity\Survey;
 use App\Form\AnswerMultipleFormType;
 use App\Form\ChoiceFormType;
+use App\Form\IsCgvFormType;
 use App\Form\QuestionFormType;
 use App\Form\SurveyFormType;
 use App\Repository\AnswerRepository;
@@ -127,6 +128,23 @@ class SurveyController extends AbstractController
         ]);
     }
 
+    #[Route('/accepter-les-cgv/{id}', name: 'is_cgv')]
+    #[isGranted('ROLE_USER')]
+    public function accepte_cgv(Request $request, Order $order): Response
+    {
+        $form = $this->createForm(IsCgvFormType::class, $order);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()){
+            return $this->redirectToRoute('checkout', ['id'=>$order->getId()]);
+        }
+        return $this->renderForm('survey/accepte_cgv.html.twig', [
+            'form' => $form,
+            'order' => $order,
+
+        ]);
+    }
+
     #[Route('/checksurvey/{id}', name: 'suvey_for_ticket')]
     public function surveyForTicket(Request                $request,
                                     Order                  $order,
@@ -166,8 +184,9 @@ class SurveyController extends AbstractController
             }
 
         }
+
         //si toutes les questions sont répondu on redirige vers le paiement
-        return $this->redirectToRoute('checkout', ['id' => $order->getId()]);
+        return $this->redirectToRoute('survey_is_cgv', ['id' => $order->getId()]);
         //TODO: pensé a faire une vérif des orders sans paiement de plus de 7 jours (delete order + answer etc...)
     }
 

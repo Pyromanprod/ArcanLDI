@@ -9,6 +9,8 @@ use App\Form\TicketType;
 use App\Repository\GameRepository;
 use App\Repository\SurveyRepository;
 use App\Repository\TicketRepository;
+use App\Service\uploadGamePhoto;
+use DateTime;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -21,7 +23,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class TicketController extends AbstractController
 {
     #[Route('/', name: 'ticket_index', methods: ['GET'])]
-    public function index(TicketRepository $ticketRepository,GameRepository $gameRepository): Response
+    public function index(TicketRepository $ticketRepository, GameRepository $gameRepository): Response
     {
 
         return $this->render('ticket/index.html.twig', [
@@ -37,23 +39,27 @@ class TicketController extends AbstractController
 
         return $this->render('ticket/index.html.twig', [
             'tickets' => $tickets,
-            'games' =>  $gameRepository->findAll(),
+            'games' => $gameRepository->findAll(),
         ]);
     }
 
     #[Route('/new', name: 'ticket_new', methods: ['GET', 'POST'])]
     #[IsGranted('ROLE_ADMIN')]
-    public function new(Request $request): Response
+    public function new(Request $request, uploadGamePhoto $uploadGamePhoto): Response
     {
         $ticket = new Ticket();
         $form = $this->createForm(TicketType::class, $ticket);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
+
+            $ticket->setCgv('cgv.'.$form->get('cgv')->getData()->guessExtension());
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($ticket);
             $entityManager->flush();
-
+            $uploadGamePhoto->uploadCGVTicket($form->get('cgv')->getData(), $ticket);
+            $this->addFlash('success','Ticket ajouté');
             return $this->redirectToRoute('ticket_index', [], Response::HTTP_SEE_OTHER);
         }
 
@@ -73,10 +79,9 @@ class TicketController extends AbstractController
                 'class' => 'App\Entity\Survey',
                 'choices' => $surveyRepository->findByNotOnTicket(),
                 'choice_label' => 'name',
-            ])->getForm()
-        ;
-            $surveyTicket = new SurveyTicket();
-            $surveyTicket->setTicket($ticket);
+            ])->getForm();
+        $surveyTicket = new SurveyTicket();
+        $surveyTicket->setTicket($ticket);
 
         $formNotGeneral->handleRequest($request);
 
@@ -87,7 +92,7 @@ class TicketController extends AbstractController
             $this->getDoctrine()->getManager()->persist($surveyTicket);
             $this->getDoctrine()->getManager()->flush();
 
-            return $this->redirectToRoute('ticket_show', ['id'=>$ticket->getId()]);
+            return $this->redirectToRoute('ticket_show', ['id' => $ticket->getId()]);
         }
 
 
@@ -96,8 +101,7 @@ class TicketController extends AbstractController
                 'class' => 'App\Entity\Survey',
                 'choices' => $surveyRepository->findByGeneral('1'),
                 'choice_label' => 'name',
-            ])->getForm()
-        ;
+            ])->getForm();
 
         // Ajout des questionnaires "Généraux"
         $formGeneral->handleRequest($request);
@@ -108,10 +112,8 @@ class TicketController extends AbstractController
             $this->getDoctrine()->getManager()->persist($surveyTicket);
             $this->getDoctrine()->getManager()->flush();
 
-            return $this->redirectToRoute('ticket_show', ['id'=>$ticket->getId()]);
+            return $this->redirectToRoute('ticket_show', ['id' => $ticket->getId()]);
         }
-
-
 
 
         return $this->renderForm('ticket/show.html.twig', [
@@ -130,6 +132,7 @@ class TicketController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $ticket->setCgv('cgv.'.$form->get('cgv')->getData()->guessExtension());
             $this->getDoctrine()->getManager()->flush();
 
             return $this->redirectToRoute('ticket_index', [], Response::HTTP_SEE_OTHER);

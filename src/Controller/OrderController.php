@@ -155,6 +155,7 @@ class OrderController extends AbstractController
     #[Route('/{id}/paiement', name: 'checkout', methods: ['GET', 'POST'])]
     public function checkout(Order $order, $stripeSK, EntityManagerInterface $entityManager): Response
     {
+
         if ($order->getTicket()->getStock() > 0) {
             Stripe::setApiKey($stripeSK);
             $session = Session::create([
