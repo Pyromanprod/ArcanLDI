@@ -75,13 +75,12 @@ class GameController extends AbstractController
             //récupération de la photo si il y a
             $photo = $form->get('banner')->getData();
             if ($photo) {
-                $game->setBanner('banner' . '.' . $photo->guessExtension());
+                $game->setBanner($uploadGamePhoto->uploadBanner($photo, $game));
             }
             $game->setIsPublished(false);
             $entityManager->persist($game);
             $entityManager->flush();
-            $uploadGamePhoto->uploadBanner($photo, $game);
-            return $this->redirectToRoute('game_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('admin_jeu', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->renderForm('game/new.html.twig', [
@@ -138,17 +137,18 @@ class GameController extends AbstractController
     #[isGranted('ROLE_ADMIN')]
     public function edit(Request $request, Game $game, uploadGamePhoto $uploadGamePhoto): Response
     {
+
         $form = $this->createForm(GameType::class, $game);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->getDoctrine()->getManager()->flush();
             //récupération de la photo si il y a
             $photo = $form->get('banner')->getData();
             if ($photo) {
                 //utilisation du service pour l'upload de bannière
                 $game->setBanner($uploadGamePhoto->uploadBanner($photo, $game));
             }
+            $this->getDoctrine()->getManager()->flush();
 
             return $this->redirectToRoute('game_index', [], Response::HTTP_SEE_OTHER);
         }
@@ -168,7 +168,7 @@ class GameController extends AbstractController
             $entityManager->flush();
         }
 
-        return $this->redirectToRoute('game_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('admin_jeu', [], Response::HTTP_SEE_OTHER);
     }
 
     #[Route('/ajouter-photo/{slug}', name: 'game_add_album_Photo', methods: ['POST', 'GET'])]

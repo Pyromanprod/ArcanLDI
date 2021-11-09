@@ -1,4 +1,17 @@
 {{ form_start(form) }}
-    {{ form_widget(form) }}
-    <button class="btn">{{ button_label|default('Save') }}</button>
+{{ form_row(form.name) }}
+{{ form_row(form.description) }}
+{{ form_row(form.dateStart) }}
+{{ form_row(form.dateEnd) }}
+{{ form_row(form.adress) }}
+{{ form_row(form.postcode) }}
+{{ form_row(form.city) }}
+{% if game.banner %}
+
+    {{ form_widget(form.banner) }}
+{% else %}
+    {{ form_widget(form.banner, {attr: {required: 'required'}}) }}
+
+{% endif %}
+<button class="btn">{{ button_label|default('Save') }}</button>
 {{ form_end(form) }}

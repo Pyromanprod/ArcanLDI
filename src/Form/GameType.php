@@ -31,6 +31,7 @@ class GameType extends AbstractType
             ->add('postcode')
             ->add('city')
             ->add('banner', FileType::class, [
+                'required' =>false,
                 'mapped' => false,
                 'constraints' => [
 

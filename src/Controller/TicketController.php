@@ -10,7 +10,6 @@ use App\Repository\GameRepository;
 use App\Repository\SurveyRepository;
 use App\Repository\TicketRepository;
 use App\Service\uploadGamePhoto;
-use DateTime;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -54,12 +53,12 @@ class TicketController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
 
 
-            $ticket->setCgv('cgv.'.$form->get('cgv')->getData()->guessExtension());
+            $ticket->setCgv($uploadGamePhoto->uploadCGVTicket($form->get('cgv')->getData(), $ticket));
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($ticket);
             $entityManager->flush();
-            $uploadGamePhoto->uploadCGVTicket($form->get('cgv')->getData(), $ticket);
-            $this->addFlash('success','Ticket ajouté');
+
+            $this->addFlash('success', 'Ticket ajouté');
             return $this->redirectToRoute('ticket_index', [], Response::HTTP_SEE_OTHER);
         }
 
@@ -126,13 +125,15 @@ class TicketController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'ticket_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Ticket $ticket): Response
+    public function edit(uploadGamePhoto $uploadGamePhoto, Request $request, Ticket $ticket): Response
     {
         $form = $this->createForm(TicketType::class, $ticket);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $ticket->setCgv('cgv.'.$form->get('cgv')->getData()->guessExtension());
+            if ($form->get('cgv')->getData()) {
+                $ticket->setCgv($uploadGamePhoto->uploadCGVTicket($form->get('cgv')->getData(), $ticket));
+            }
             $this->getDoctrine()->getManager()->flush();
 
             return $this->redirectToRoute('ticket_index', [], Response::HTTP_SEE_OTHER);
