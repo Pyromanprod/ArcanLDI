@@ -20,6 +20,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class ArticleController extends AbstractController
 {
     #[Route('/', name: 'article_index', methods: ['GET', 'POST'])]
+    #[IsGranted('ROLE_USER')]
     public function index(ArticleRepository $articleRepository): Response
     {
 

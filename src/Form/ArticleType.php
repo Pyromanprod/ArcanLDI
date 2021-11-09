@@ -17,7 +17,9 @@ class ArticleType extends AbstractType
             ->add('content')
             ->add('roleGroupe',EntityType::class,[
                 'class' => 'App\Entity\RoleGroupe',
-                'choice_label' => 'name'
+                'choice_label' => 'name',
+                'placeholder' => 'discussion publique',
+                'required' => false
                 ])
         ;
     }

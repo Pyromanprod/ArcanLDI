@@ -52,46 +52,6 @@ class UserController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/edit', name: 'user_edit', methods: ['GET','POST'])]
-    #[IsGranted('ROLE_USER')]
-    public function edit(Request $request, User $user): Response
-    {
-        $form = $this->createForm(UserType::class, $user);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $photo = $form->get('photo')->getData();
-
-            if ($this->getUser()->getPhoto() != null && file_exists($this->getParameter('user.photo.directory'). $this->getUser()->getPhoto())){
-
-                unlink( $this->getParameter('user.photo.directory') . $this->getUser()->getPhoto() );
-            }
-
-            do{
-                $newFileName = md5(random_bytes(100)).'.'. $photo->guessExtension();
-
-            }while(file_exists($this->getParameter('user.photo.directory'). $newFileName));
-
-
-            $this->getUser()->setPhoto($newFileName);
-
-            $this->getDoctrine()->getManager()->flush();
-            $photo->move(
-                $this->getParameter('user.photo.directory'),
-                $newFileName
-            );
-
-            return $this->redirectToRoute('user_show_profile', [
-                'id' => $this->getUser()->getId()
-            ], Response::HTTP_SEE_OTHER);
-        }
-
-        return $this->renderForm('user/edit.html.twig', [
-            'user' => $user,
-            'form' => $form,
-        ]);
-    }
-
     #[Route('-profile/edit', name: 'user_edit_profile', methods: ['GET','POST'])]
     #[IsGranted('ROLE_USER')]
     public function editProfile(Request $request): Response

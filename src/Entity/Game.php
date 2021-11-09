@@ -66,6 +66,7 @@ class Game
         $this->pictures = new ArrayCollection();
         $this->videos = new ArrayCollection();
         $this->roleGroupes = new ArrayCollection();
+        $this->gameComments = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -81,6 +82,9 @@ class Game
 
     #[ORM\Column(type: 'boolean')]
     private $isPublished;
+
+    #[ORM\OneToMany(mappedBy: 'game', targetEntity: GameComment::class, orphanRemoval: true)]
+    private $gameComments;
 
     public function getSlug(): ?string
     {
@@ -327,6 +331,36 @@ class Game
     public function setBanner(?string $banner): self
     {
         $this->banner = $banner;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|GameComment[]
+     */
+    public function getGameComments(): Collection
+    {
+        return $this->gameComments;
+    }
+
+    public function addGameComment(GameComment $gameComment): self
+    {
+        if (!$this->gameComments->contains($gameComment)) {
+            $this->gameComments[] = $gameComment;
+            $gameComment->setGame($this);
+        }
+
+        return $this;
+    }
+
+    public function removeGameComment(GameComment $gameComment): self
+    {
+        if ($this->gameComments->removeElement($gameComment)) {
+            // set the owning side to null (unless already changed)
+            if ($gameComment->getGame() === $this) {
+                $gameComment->setGame(null);
+            }
+        }
 
         return $this;
     }

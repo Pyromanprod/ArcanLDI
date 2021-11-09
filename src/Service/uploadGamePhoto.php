@@ -66,4 +66,5 @@ class uploadGamePhoto
             $ticket->getCgv()
         );
     }
+
 }

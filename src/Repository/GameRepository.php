@@ -43,6 +43,21 @@ class GameRepository extends ServiceEntityRepository
             ->getResult()
             ;
     }
+    public function findPlayerGame($game,$player)
+    {
+        return $this->createQueryBuilder('g')
+            ->join('g.tickets','t')
+            ->join('t.orders','o')
+            ->join('o.player','p')
+            ->where('g = :game')
+            ->andWhere('p = :player')
+            ->setParameter(':game',$game)
+            ->setParameter(':player',$player)
+            ->getQuery()
+            ->getOneOrNullResult()
+            ;
+    }
+
 
 
 

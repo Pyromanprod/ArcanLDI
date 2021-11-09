@@ -82,6 +82,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'author', targetEntity: News::class, orphanRemoval: true)]
     private $news;
 
+    #[ORM\OneToMany(mappedBy: 'author', targetEntity: GameComment::class, orphanRemoval: true)]
+    private $gameComments;
+
     public function __construct()
     {
         $this->orders = new ArrayCollection();
@@ -91,6 +94,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->roleGroupes = new ArrayCollection();
         $this->newsComments = new ArrayCollection();
         $this->news = new ArrayCollection();
+        $this->gameComments = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -468,6 +472,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($news->getAuthor() === $this) {
                 $news->setAuthor(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|GameComment[]
+     */
+    public function getGameComments(): Collection
+    {
+        return $this->gameComments;
+    }
+
+    public function addGameComment(GameComment $gameComment): self
+    {
+        if (!$this->gameComments->contains($gameComment)) {
+            $this->gameComments[] = $gameComment;
+            $gameComment->setAuthor($this);
+        }
+
+        return $this;
+    }
+
+    public function removeGameComment(GameComment $gameComment): self
+    {
+        if ($this->gameComments->removeElement($gameComment)) {
+            // set the owning side to null (unless already changed)
+            if ($gameComment->getAuthor() === $this) {
+                $gameComment->setAuthor(null);
             }
         }
 

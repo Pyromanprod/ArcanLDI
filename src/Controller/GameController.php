@@ -3,11 +3,14 @@
 namespace App\Controller;
 
 use App\Entity\Game;
+use App\Entity\GameComment;
 use App\Entity\Picture;
 use App\Entity\Video;
 use App\Form\AlbumPhotoFormType;
 use App\Form\AlbumVideoFormType;
+use App\Form\GameCommentType;
 use App\Form\GameType;
+use App\Repository\GameCommentRepository;
 use App\Repository\GameRepository;
 use App\Service\uploadGamePhoto;
 use Doctrine\ORM\EntityManagerInterface;
@@ -15,6 +18,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\TooManyRequestsHttpException;
+use Symfony\Component\RateLimiter\RateLimiterFactory;
 use Symfony\Component\Routing\Annotation\Route;
 
 #[Route('/nos-jeux')]
@@ -27,6 +32,7 @@ class GameController extends AbstractController
             'allGames' => $gameRepository->findByIsPublished(1),
         ]);
     }
+
     #[Route('/admin-jeu', name: 'admin_jeu', methods: ['GET'])]
     #[isGranted('ROLE_ADMIN')]
     public function adminJeu(GameRepository $gameRepository): Response
@@ -35,18 +41,19 @@ class GameController extends AbstractController
             'allGames' => $gameRepository->findAll(),
         ]);
     }
+
     #[Route('/publier-jeu/{id}/', name: 'publish_game', methods: ['GET'])]
     #[isGranted('ROLE_ADMIN')]
-    public function publishGame(Request $request, Game $game, GameRepository $gameRepository, EntityManagerInterface $em ): Response
+    public function publishGame(Request $request, Game $game, GameRepository $gameRepository, EntityManagerInterface $em): Response
     {
         $csrf = $request->get('csrf_token');
 
-        if ($this->isCsrfTokenValid('publish' . $game->getId(), $csrf)){
+        if ($this->isCsrfTokenValid('publish' . $game->getId(), $csrf)) {
             $game->setIsPublished(true);
             $em->flush();
-            $this->addFlash('success', $game->getName().' publié avec succés');
-        }else{
-            $this->addFlash('error', $game->getName().' n\'as pas été publier (token invalide)');
+            $this->addFlash('success', $game->getName() . ' publié avec succés');
+        } else {
+            $this->addFlash('error', $game->getName() . ' n\'as pas été publier (token invalide)');
         }
 
         return $this->render('game/index.html.twig', [
@@ -83,10 +90,46 @@ class GameController extends AbstractController
         ]);
     }
 
-    #[Route('/{slug}', name: 'game_show', methods: ['GET'])]
-    public function show(Game $game): Response
+    #[Route('/{slug}', name: 'game_show', methods: ['GET', 'POST'])]
+    public function show(Game $game, GameCommentRepository $commentRepository, Request $request, RateLimiterFactory $anonymousApiLimiter, GameRepository $gameRepository): Response
     {
-        return $this->render('game/show.html.twig', [
+        $gameComment = new GameComment();
+        $form = $this->createForm(GameCommentType::class, $gameComment);
+        $form->handleRequest($request);
+        $limiter = $anonymousApiLimiter->create($request->getClientIp());
+        $comment = $commentRepository->findByGame($game);
+
+        if ($form->isSubmitted() && $form->isValid() ) {
+            if (!$gameRepository->findPlayerGame($game, $this->getUser())){
+                $this->addFlash('error','vous ne pouvez pas écrire un commentaire pour un jeu ou vous n\'avez pas participé');
+                return $this->redirectToRoute('game_show', [
+                    'slug'=> $game->getSlug(),
+                    'form' => $form,
+                    'comment' => $comment,
+                    'game' => $game,
+                ], Response::HTTP_SEE_OTHER);
+            }
+            if (false === $limiter->consume(1)->isAccepted()) {
+                throw new TooManyRequestsHttpException();
+            }
+            $gameComment
+                ->setAuthor($this->getUser())
+                ->setGame($game);
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($gameComment);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('game_show', [
+                'slug'=> $game->getSlug(),
+                'form' => $form,
+                'comment' => $comment,
+                'game' => $game,
+            ], Response::HTTP_SEE_OTHER);
+
+        }
+        return $this->renderForm('game/show.html.twig', [
+            'form' => $form,
+            'comment' => $comment,
             'game' => $game,
         ]);
     }
