@@ -228,6 +228,7 @@ class OrderController extends AbstractController
             $entityManager->flush();
 
             $email = (new Email())
+                ->from('jesuis@uneadresse.fr')
                 ->to($order->getPlayer()->getEmail())
                 ->subject('remboursement ArcanLDI '.' jeu '.$order->getTicket()->getGame()->getName().' ticket '.$order->getTicket()->getName())
                 ->text('votre demande de remboursement a été accepté');
@@ -256,6 +257,7 @@ class OrderController extends AbstractController
                 $mailer->send($email);
             }else{
             $email = (new Email())
+                ->from('jesuis@uneadresse.fr')
                 ->to($order->getPlayer()->getEmail())
                 ->subject('remboursement ArcanLDI')
                 ->text('Votre demande de remboursement a été refusé');
