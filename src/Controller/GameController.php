@@ -10,6 +10,7 @@ use App\Form\AlbumVideoFormType;
 use App\Form\GameType;
 use App\Repository\GameRepository;
 use App\Service\uploadGamePhoto;
+use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -22,6 +23,32 @@ class GameController extends AbstractController
     #[Route('/', name: 'game_index', methods: ['GET'])]
     public function index(GameRepository $gameRepository): Response
     {
+        return $this->render('game/index.html.twig', [
+            'allGames' => $gameRepository->findByIsPublished(1),
+        ]);
+    }
+    #[Route('/admin-jeu', name: 'admin_jeu', methods: ['GET'])]
+    #[isGranted('ROLE_ADMIN')]
+    public function adminJeu(GameRepository $gameRepository): Response
+    {
+        return $this->render('game/index.html.twig', [
+            'allGames' => $gameRepository->findAll(),
+        ]);
+    }
+    #[Route('/publier-jeu/{id}/', name: 'publish_game', methods: ['GET'])]
+    #[isGranted('ROLE_ADMIN')]
+    public function publishGame(Request $request, Game $game, GameRepository $gameRepository, EntityManagerInterface $em ): Response
+    {
+        $csrf = $request->get('csrf_token');
+
+        if ($this->isCsrfTokenValid('publish' . $game->getId(), $csrf)){
+            $game->setIsPublished(true);
+            $em->flush();
+            $this->addFlash('success', $game->getName().' publié avec succés');
+        }else{
+            $this->addFlash('error', $game->getName().' n\'as pas été publier (token invalide)');
+        }
+
         return $this->render('game/index.html.twig', [
             'allGames' => $gameRepository->findAll(),
         ]);
@@ -183,4 +210,6 @@ class GameController extends AbstractController
             'form' => $form,
         ]);
     }
+
+
 }

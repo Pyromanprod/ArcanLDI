@@ -80,7 +80,7 @@ class Game
     private $slug;
 
     #[ORM\Column(type: 'boolean')]
-    private $isPublied;
+    private $isPublished;
 
     public function getSlug(): ?string
     {
@@ -331,14 +331,14 @@ class Game
         return $this;
     }
 
-    public function getIsPublied(): ?bool
+    public function getIsPublished(): ?bool
     {
-        return $this->isPublied;
+        return $this->isPublished;
     }
 
-    public function setIsPublied(bool $isPublied): self
+    public function setIsPublished(bool $isPublished): self
     {
-        $this->isPublied = $isPublied;
+        $this->isPublished = $isPublished;
 
         return $this;
     }

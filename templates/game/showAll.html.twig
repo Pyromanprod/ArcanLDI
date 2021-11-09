@@ -15,6 +15,10 @@
 
                             <a href="{{ path('game_edit', {'id': game.id}) }} "
                                class="btn btn-outline-warning mb-3 me-2">Modifier</a>
+                            {% if game.isPublished == false %}
+                                <a href="{{ path('publish_game', {'id': game.id}) }}?csrf_token={{ csrf_token('publish' ~ game.id) }} "
+                                   class="btn btn-outline-success mb-3 me-2">Publier</a>
+                            {% endif %}
                             <form method="post" action="{{ path('game_delete', {'id': game.id}) }}"
                                   onsubmit="return confirm('Voulez-vou vraiment supprimer {{ game.name }}');">
                                 <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ game.id) }}">

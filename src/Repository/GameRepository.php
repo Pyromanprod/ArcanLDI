@@ -26,6 +26,7 @@ class GameRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('g')
             ->andWhere('g.name LIKE :val')
             ->orWhere('g.description LIKE :val')
+            ->andWhere('g.isPublished = 1')
             ->setParameter('val', '%'.$value.'%')
             ->getQuery()
             ->getResult()
@@ -36,6 +37,7 @@ class GameRepository extends ServiceEntityRepository
     {
         return $this->createQueryBuilder('g')
             ->orderBy('g.createdAt', 'DESC')
+            ->where('g.isPublished = 1')
             ->setMaxResults(3)
             ->getQuery()
             ->getResult()
