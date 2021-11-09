@@ -4,7 +4,7 @@
         <div class="col-12 col-md-4 mx-auto">
             <div class="card col-12 col-md-11 mx-auto bg-cardgame p-0 my-2 card-zoom">
                 <a href="{{ path('game_show', {'slug': game.slug}) }}" class="text-decoration-none text-light d-inline">
-                    <img src="{{ asset("img/uploads/"~game.slug~"/banner.jpg")|imagine_filter('banner_game') }}"
+                    <img src="{{ asset("img/uploads/"~game.slug~"/"~game.banner)|imagine_filter('banner_game') }}"
                          class="card-img-top" alt="">
                     <div class="card-body">
                         <h5 class="card-title">{{ game.name }}</h5>

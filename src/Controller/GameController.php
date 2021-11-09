@@ -70,6 +70,7 @@ class GameController extends AbstractController
             if ($photo) {
                 $game->setBanner('banner' . '.' . $photo->guessExtension());
             }
+            $game->setIsPublished(false);
             $entityManager->persist($game);
             $entityManager->flush();
             $uploadGamePhoto->uploadBanner($photo, $game);
