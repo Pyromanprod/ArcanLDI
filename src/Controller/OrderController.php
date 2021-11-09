@@ -249,6 +249,7 @@ class OrderController extends AbstractController
         if ($this->isCsrfTokenValid('rejectRefund' . $order->getId(), $request->request->get('_token'))) {
             if ($request->request->get('reason')){
                 $email = (new Email())
+                    ->from('jesuis@uneadresse.fr')
                     ->to($order->getPlayer()->getEmail())
                     ->subject('remboursement ArcanLDI '.' jeu '.$order->getTicket()->getGame()->getName().' ticket '.$order->getTicket()->getName())
                     ->text($request->request->get('reason'));
