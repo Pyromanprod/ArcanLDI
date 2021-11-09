@@ -146,6 +146,7 @@ class SurveyController extends AbstractController
     }
 
     #[Route('/checksurvey/{id}', name: 'suvey_for_ticket')]
+    #[isGranted('ROLE_USER')]
     public function surveyForTicket(Request                $request,
                                     Order                  $order,
                                     SurveyTicketRepository $surveyTicketRepository,

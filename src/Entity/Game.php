@@ -79,6 +79,9 @@ class Game
      */
     private $slug;
 
+    #[ORM\Column(type: 'boolean')]
+    private $isPublied;
+
     public function getSlug(): ?string
     {
         return $this->slug;
@@ -324,6 +327,18 @@ class Game
     public function setBanner(?string $banner): self
     {
         $this->banner = $banner;
+
+        return $this;
+    }
+
+    public function getIsPublied(): ?bool
+    {
+        return $this->isPublied;
+    }
+
+    public function setIsPublied(bool $isPublied): self
+    {
+        $this->isPublied = $isPublied;
 
         return $this;
     }
