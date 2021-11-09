@@ -4,10 +4,27 @@
     <div class="container mt-5">
         <div class="row">
             <div class="col-12 col-md-3 col-lg-2">
-                <h3>Ajouter un question</h3>
                 {{ form_start(form) }}
-                {{ form_row(form.content, {'label': 'Question :'}) }}
-                {{ form_row(form.select, {'label': 'Liste déroulante'}) }}
+                {{ form_row(form.content, {
+                    label: 'Nouvelle Question',
+                    attr: {
+                        placeholder: '',
+                        class: 'bg-dark border-0 border-bottom border-ivoire rounded-0 text-light'
+                    },
+                    row_attr: {
+                        class: 'form-floating bg-dark text-ivoire mb-3'
+                    }
+                }) }}
+                {{ form_row(form.select, {
+                    label: 'Liste déroulante',
+                    attr: {
+                        placeholder: '',
+                        class: 'bg-ivoire border-ivoire text-light'
+                    },
+                    row_attr: {
+                        class: 'form-floating bg-dark text-ivoire mb-3'
+                    }
+                }) }}
                 <button type="submit" class="btn btn-outline-primary">Ajouter la question</button>
                 {{ form_end(form) }}
             </div>

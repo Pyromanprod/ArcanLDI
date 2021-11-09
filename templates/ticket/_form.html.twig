@@ -1,13 +1,81 @@
-{{ form_start(form) }}
-    {{ form_row(form.name) }}
-    {{ form_row(form.price) }}
-    {{ form_row(form.game) }}
-    {{ form_row(form.stock) }}
-{% if ticket.cgv %}
-    {{ form_row(form.cgv) }}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12 col-md-6 mx-auto">
 
-{% else %}
-    {{ form_row(form.cgv, {attr: {requiered: 'required'}}) }}
-{% endif %}
-    <button class="btn btn-primary">{{ button_label|default('Save') }}</button>
-{{ form_end(form) }}
+
+            {{ form_start(form) }}
+            {{ form_row(form.name, {
+                label: 'Nom du tickey',
+                attr: {
+                    placeholder: '',
+                    class: 'bg-dark border-0 border-bottom border-ivoire rounded-0 text-light'
+                },
+                row_attr: {
+                    class: 'form-floating bg-dark text-ivoire mb-3'
+                }
+            }) }}
+            {# {{ form_label(form.price, 'Prix') }} #}
+            {{ form_widget(form.price, {
+
+                money_pattern: '{{ widget }} €',
+                attr: {
+                    placeholder: 'Prix',
+                    class: 'bg-dark border-0 border-bottom border-ivoire rounded-0 text-light'
+                },
+                widget_attr: {
+                    class: 'form-floating bg-dark text-ivoire mb-3',
+                }
+            }) }}
+            {{ form_row(form.game, {
+                label: 'Jeu',
+                attr: {
+                    placeholder: '',
+                    class: 'bg-dark border-0 border-bottom border-ivoire rounded-0 text-light'
+                },
+                row_attr: {
+                    class: 'form-floating bg-dark text-ivoire mb-3'
+                }
+            }) }}
+            {{ form_row(form.stock, {
+                label: 'Stock',
+                attr: {
+                    placeholder: '',
+                    class: 'bg-dark border-0 border-bottom border-ivoire rounded-0 text-light'
+                },
+                row_attr: {
+                    class: 'form-floating bg-dark text-ivoire mb-3'
+                }
+            }) }}
+            {% if ticket.cgv %}
+                {{ form_row(form.cgv, {
+                    label: 'CGV',
+                    attr: {
+                        placeholder: '',
+                        class: 'bg-dark border-0 border-bottom border-ivoire rounded-0 text-light'
+                    },
+                    row_attr: {
+                        class: 'form-floating bg-dark text-ivoire mb-3'
+                    }
+                }) }}
+
+            {% else %}
+                {{ form_widget(form.cgv, {
+                    label: 'Bannière',
+                    attr: {
+                        required: 'required',
+                        placeholder: '',
+                        class: 'bg-dark border-0 border-bottom border-ivoire rounded-0 text-light',
+
+                    },
+                    row_attr: {
+                        class: 'form-floating bg-dark text-ivoire mb-3'
+                    }
+                }
+                ) }}
+            {% endif %}
+            <button class="btn btn-primary">{{ button_label|default('Save') }}</button>
+            {{ form_end(form) }}
+        </div>
+    </div>
+</div>
+

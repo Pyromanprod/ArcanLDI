@@ -112,11 +112,33 @@ class SurveyController extends AbstractController
             $em->flush();
             $this->addFlash('success',
                 $newChoice->getContent() . " ajouté à la question : " . $question->getContent());
+
+            return $this->redirectToRoute('survey_add_choice', ['id' => $question->getId()]);
+
         }
         return $this->renderForm('survey/add_choice_question.html.twig', [
             'question' => $question,
             'form' => $form,
         ]);
+    }
+
+    #[Route('/delete-choice/{id}/', name: 'delete_choice')]
+    #[isGranted('ROLE_ADMIN')]
+    public function deleteChoice(Request $request, Choice $choice): Response
+    {
+        if ($this->isCsrfTokenValid($choice->getId() . "delete", $request->get('csrf_token'))) {
+            $this->addFlash('success', 'Suppression Réussi');
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->remove($choice);
+            $entityManager->flush();
+        } else {
+
+            $this->addFlash('error', 'Suppression échouée');
+        }
+
+        return $this->redirectToRoute('survey_add_choice', ['id' => $choice->getQuestion()->getId()]);
+
+
     }
 
     #[Route('/voir-questionnaire/{id}', name: 'view')]
@@ -135,8 +157,8 @@ class SurveyController extends AbstractController
         $form = $this->createForm(IsCgvFormType::class, $order);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()){
-            return $this->redirectToRoute('checkout', ['id'=>$order->getId()]);
+        if ($form->isSubmitted() && $form->isValid()) {
+            return $this->redirectToRoute('checkout', ['id' => $order->getId()]);
         }
         return $this->renderForm('survey/accepte_cgv.html.twig', [
             'form' => $form,

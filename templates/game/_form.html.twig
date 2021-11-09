@@ -1,17 +1,109 @@
-{{ form_start(form) }}
-{{ form_row(form.name) }}
-{{ form_row(form.description) }}
-{{ form_row(form.dateStart) }}
-{{ form_row(form.dateEnd) }}
-{{ form_row(form.adress) }}
-{{ form_row(form.postcode) }}
-{{ form_row(form.city) }}
-{% if game.banner %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12 col-md-6 mx-auto">
 
-    {{ form_widget(form.banner) }}
-{% else %}
-    {{ form_widget(form.banner, {attr: {required: 'required'}}) }}
 
-{% endif %}
-<button class="btn">{{ button_label|default('Save') }}</button>
-{{ form_end(form) }}
+            {{ form_start(form) }}
+            {{ form_row(form.name, {
+                label: 'Nom du jeu',
+                attr: {
+                    placeholder: '',
+                    class: 'bg-dark border-0 border-bottom border-ivoire rounded-0 text-light'
+                },
+                row_attr: {
+                    class: 'form-floating bg-dark text-ivoire mb-3'
+                }
+            }) }}
+            {{ form_row(form.description, {
+                label: 'Description',
+                attr: {
+                    placeholder: '',
+                    class: 'bg-dark border-0 border-bottom border-ivoire rounded-0 text-light'
+                },
+                row_attr: {
+                    class: 'form-floating bg-dark text-ivoire mb-3'
+                }
+            }) }}
+            {{ form_row(form.dateStart, {
+                label: 'Date de début',
+                attr: {
+                    placeholder: '',
+                    class: 'bg-dark border-0 border-bottom border-ivoire rounded-0 text-light'
+                },
+                row_attr: {
+                    class: 'form-floating bg-dark text-ivoire mb-3'
+                }
+            }) }}
+            {{ form_row(form.dateEnd, {
+                label: 'Date de fin',
+                attr: {
+                    placeholder: '',
+                    class: 'bg-dark border-0 border-bottom border-ivoire rounded-0 text-light'
+                },
+                row_attr: {
+                    class: 'form-floating bg-dark text-ivoire mb-3'
+                }
+            }) }}
+            {{ form_row(form.adress, {
+                label: 'Adresse où ce déroulera le jeu',
+                attr: {
+                    placeholder: '',
+                    class: 'bg-dark border-0 border-bottom border-ivoire rounded-0 text-light'
+                },
+                row_attr: {
+                    class: 'form-floating bg-dark text-ivoire mb-3'
+                }
+            }) }}
+            {{ form_row(form.postcode, {
+                label: 'Code postal',
+                attr: {
+                    placeholder: '',
+                    class: 'bg-dark border-0 border-bottom border-ivoire rounded-0 text-light'
+                },
+                row_attr: {
+                    class: 'form-floating bg-dark text-ivoire mb-3'
+                }
+            }) }}
+            {{ form_row(form.city, {
+                label: 'Ville',
+                attr: {
+                    placeholder: '',
+                    class: 'bg-dark border-0 border-bottom border-ivoire rounded-0 text-light'
+                },
+                row_attr: {
+                    class: 'form-floating bg-dark text-ivoire mb-3'
+                }
+            }) }}
+            {% if game.banner %}
+
+                {{ form_widget(form.banner, {
+                    label: 'Bannière',
+                    attr: {
+                        placeholder: '',
+                        class: 'bg-dark border-0 border-bottom border-ivoire rounded-0 text-light'
+                    },
+                    row_attr: {
+                        class: 'form-floating bg-dark text-ivoire mb-3'
+                    }
+                }) }}
+            {% else %}
+                {{ form_widget(form.banner, {
+                    label: 'Bannière',
+                    attr: {
+                        required: 'required',
+                        placeholder: '',
+                        class: 'bg-dark border-0 border-bottom border-ivoire rounded-0 text-light',
+
+                    },
+                    row_attr: {
+                        class: 'form-floating bg-dark text-ivoire mb-3'
+                    }
+                }
+                ) }}
+
+            {% endif %}
+            <button id='boutonCreer' class="btn btn-outline-light mt-3">Créer</button>
+            {{ form_end(form) }}
+        </div>
+    </div>
+</div>

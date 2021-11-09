@@ -6,8 +6,26 @@
 
     <div class="container mt-5">
         {{ form_start(form) }}
-        {{ form_row(form.name, {'label': 'Nom du questionnaire'}) }}
-        {{ form_row(form.general) }}
+        {{ form_row(form.name, {
+            label: 'Nom du formulaire',
+            attr: {
+                placeholder: '',
+                class: 'bg-dark border-0 border-bottom border-ivoire rounded-0 text-light'
+            },
+            row_attr: {
+                class: 'form-floating bg-dark text-ivoire mb-3'
+            }
+        }) }}
+        {{ form_row(form.general, {
+            label: 'Formulaire Général',
+            attr: {
+                placeholder: '',
+                class: 'bg-ivoire border-ivoire text-light'
+            },
+            row_attr: {
+                class: 'form-floating bg-dark text-ivoire mb-3'
+            }
+        }) }}
         <button type="submit" class="btn btn-outline-primary mb-5">Créer</button>
         {{ form_end(form) }}
         <h2>Les questionnaires déjà présent</h2>

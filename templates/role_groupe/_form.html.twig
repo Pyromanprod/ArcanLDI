@@ -1,4 +1,31 @@
-{{ form_start(form) }}
-    {{ form_widget(form) }}
-    <button class="btn btn-primary">{{ button_label|default('Save') }}</button>
-{{ form_end(form) }}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12 col-md-6 mx-auto">
+
+
+            {{ form_start(form) }}
+            {{ form_row(form.name, {
+                label: 'Nom du groupe',
+                attr: {
+                    placeholder: '',
+                    class: 'bg-dark border-0 border-bottom border-ivoire rounded-0 text-light'
+                },
+                row_attr: {
+                    class: 'form-floating bg-dark text-ivoire mb-3'
+                }
+            }) }}
+            {{ form_row(form.game, {
+                label: 'Jeu',
+                attr: {
+                    placeholder: '',
+                    class: 'bg-dark border-0 border-bottom border-ivoire rounded-0 text-light'
+                },
+                row_attr: {
+                    class: 'form-floating bg-dark text-ivoire mb-3'
+                }
+            }) }}
+            <button class="btn btn-primary">{{ button_label|default('Save') }}</button>
+            {{ form_end(form) }}
+        </div>
+    </div>
+</div>

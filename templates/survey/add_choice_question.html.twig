@@ -1,19 +1,48 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <h1>Ajouter des choix a "{{ question.content }}"</h1>
 
-    <div class="container">
-        {{ form_start(form) }}
-        {{ form_row(form.content) }}
-        <button type="submit" class="btn btn-outline-primary">Ajouter</button>
-        {{ form_end(form) }}
-        {% for choix in question.choices %}
-            <div class="row">{{ choix.content }}</div>
-        {% else %}
-            Pas de encore choix
-        {% endfor %}
-        <a class="btn btn-outline-primary" href='{{ path('survey_add_question', {'id': question.survey.id}) }}'>Nouvelle Question</a>
+    <div class="container-fluid">
+        <div class="col-12 col-md-6 col-lg-4 mx-auto">
+
+            {{ form_start(form) }}
+            {{ form_row(form.content, {
+                label: 'Choix',
+                attr: {
+                    placeholder: '',
+                    class: 'bg-dark border-0 border-bottom border-ivoire rounded-0 text-light'
+                },
+                row_attr: {
+                    class: 'form-floating bg-dark text-ivoire mb-3'
+                }
+            }) }}
+            <button type="submit" class="btn btn-outline-primary">Ajouter</button>
+            {{ form_end(form) }}
+            <div class="row">
+
+                <div class="col-12 ">
+                    <h3 class="text-center">Les choix de {{ question.content }}</h3>
+
+                </div>
+            </div>
+            {% for choix in question.choices %}
+                <div class="row mt-2 border border-ivoire p-2 rounded-2">
+                    <form action="{{ path('survey_delete_choice', {'id': choix.id}) }}"
+                          onsubmit="return confirm('Etes-vous sûr de vouloir supprimer {{ choix.content }}')">
+                        <button type="submit" class="btn btn-outline-danger ms-3">Supprimer</button>
+                        {{ choix.content }}
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token(choix.id~'delete') }}">
+                    </form>
+                </div>
+            {% else %}
+                <p> Pas de encore choix</p>
+            {% endfor %}
+            <div class="row mt-4">
+                <a class="btn btn-outline-warning col-12 col-md-5 mx-auto"
+                   href='{{ path('survey_add_question', {'id': question.survey.id}) }}'>Nouvelle
+                    Question</a>
+            </div>
+        </div>
     </div>
 {% endblock %}
 

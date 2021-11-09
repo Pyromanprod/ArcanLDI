@@ -94,7 +94,7 @@ class NewsController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'news_delete', methods: ['POST'])]
+    #[Route('/{id}/', name: 'news_delete', methods: ['POST'])]
     public function delete(Request $request, News $news): Response
     {
         if ($this->isCsrfTokenValid('delete'.$news->getId(), $request->request->get('_token'))) {
