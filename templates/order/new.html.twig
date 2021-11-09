@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New Order{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <h1 class="text-center">Acheter un ticket</h1>
+        <div class="row">
+            <div class="col-4 mx-auto">
+
+                {{ include('order/_form.html.twig',{'button_label': 'Acheter'}) }}
+
+                <a class="btn btn-primary mt-3 " href="{{ path('game_index') }}">Retour à la liste de jeu</a>
+
+            </div>
+        </div>
+    </div>
+{% endblock %}
