@@ -42,22 +42,64 @@
             <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                 {% if app.user %}
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle me-2" href="{{ path('home') }}" id="navbarDropdown" role="button"
+                        <a class="nav-link dropdown-toggle me-2" href="{{ path('home') }}" id="navbarDropdown"
+                           role="button"
                            data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user"></i>
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                             <li><a class="dropdown-item" href="{{ path('user_show_profile') }}">Profile</a></li>
-                            <li><hr class="dropdown-divider"></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
                             <li><a class="dropdown-item" href="{{ path('user_order') }}">Mes commandes</a></li>
-                            <li><hr class="dropdown-divider"></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
                             <li><a class="dropdown-item" href="{{ path('app_logout') }}">Deconnexion</a></li>
                         </ul>
                     </li>
                     {% if is_granted('ROLE_ADMIN') %}
-
-                        <li class="nav-item">
-                            <a class="nav-link {{ route == 'admin_home' ? 'active' }}" aria-current="page"
-                               href="{{ path('admin_home') }}">Administration</a>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle me-2" href="{{ path('home') }}" id="navbarDropdown"
+                               role="button"
+                               data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-tools me-1"></i> Admin
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <li><a class="dropdown-item" href="{{ path('admin_jeu') }}">Jeux</a></li>
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+                                <li><a class="dropdown-item" href="{{ path('user_index') }}">Joueurs</a></li>
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+                                <li><a class="dropdown-item" href="{{ path('order_index') }}">Commandes</a></li>
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+                                <li><a class="dropdown-item" href="{{ path('ticket_index') }}">Tickets</a></li>
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+                                <li><a class="dropdown-item" href="{{ path('role_groupe_index') }}">Groupes</a></li>
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+                                <li><a class="dropdown-item" href="{{ path('survey_index') }}">Questionnaires</a></li>
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+                                <li><a class="dropdown-item" href="{{ path('article_index') }}">Discussions</a></li>
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+                                <li><a class="dropdown-item" href="{{ path('news_index') }}">Actualités</a></li>
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+                                <li><a class="dropdown-item" href="{{ path('order_refund_requested') }}">Demandes de
+                                        remboursement</a></li>
+                            </ul>
                         </li>
                     {% endif %}
                 {% else %}
@@ -71,7 +113,7 @@
                     </li>
                 {% endif %}
             </ul>
-            <form class="d-flex" method="GET" action="{{ path('search')}}">
+            <form class="d-flex" method="GET" action="{{ path('search') }}">
                 <input type="text" name="q" id="search"
                        class="form-control bg-black border-0 border-bottom border-ivoire rounded-0 text-light"
                        placeholder="Rechercher" required>

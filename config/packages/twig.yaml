@@ -3,7 +3,7 @@ twig:
     form_themes: ['bootstrap_5_layout.html.twig']
     globals:
         google_recaptcha_site_key: '%env(GOOGLE_RECAPTCHA_SITE_KEY)%'
-        game_photo_directory: '%kernel.project_dir%/public/img/uploads/'
+        game_photo_directory: 'img/uploads/gamebanner/'
 
 when@test:
     twig:
