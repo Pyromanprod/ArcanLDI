@@ -27,6 +27,7 @@ class GameController extends AbstractController
             'allGames' => $gameRepository->findByIsPublished(1),
         ]);
     }
+
     #[Route('/admin-jeu', name: 'admin_jeu', methods: ['GET'])]
     #[isGranted('ROLE_ADMIN')]
     public function adminJeu(GameRepository $gameRepository): Response
@@ -35,6 +36,7 @@ class GameController extends AbstractController
             'allGames' => $gameRepository->findAll(),
         ]);
     }
+
     #[Route('/publier-jeu/{id}/', name: 'publish_game', methods: ['GET'])]
     #[isGranted('ROLE_ADMIN')]
     public function publishGame(Request $request, Game $game, GameRepository $gameRepository, EntityManagerInterface $em ): Response
@@ -95,6 +97,7 @@ class GameController extends AbstractController
     #[isGranted('ROLE_ADMIN')]
     public function edit(Request $request, Game $game, uploadGamePhoto $uploadGamePhoto): Response
     {
+
         $form = $this->createForm(GameType::class, $game);
         $form->handleRequest($request);
 
