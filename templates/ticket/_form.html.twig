@@ -1,4 +1,13 @@
 {{ form_start(form) }}
-    {{ form_widget(form) }}
+    {{ form_row(form.name) }}
+    {{ form_row(form.price) }}
+    {{ form_row(form.game) }}
+    {{ form_row(form.stock) }}
+{% if ticket.cgv %}
+    {{ form_row(form.cgv) }}
+
+{% else %}
+    {{ form_row(form.cgv, {attr: {requiered: 'required'}}) }}
+{% endif %}
     <button class="btn btn-primary">{{ button_label|default('Save') }}</button>
 {{ form_end(form) }}

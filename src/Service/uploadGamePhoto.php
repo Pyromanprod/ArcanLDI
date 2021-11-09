@@ -26,25 +26,22 @@ class uploadGamePhoto
             //on le créer
             mkdir($directory);
         }
-        //si le dossier game.photo.directory/slug-Du-Jeu n'existe pas
-        $directory .= $game->getSlug() . '/';
-        if (!file_exists($directory)) {
-            mkdir($directory);
-        }
+        do {
 
-        $newFileName = 'banner' . '.' . $photo->guessExtension();
+            $newFileName = md5($game->getName() . random_bytes(100)) . '.' . $photo->guessExtension();
+        } while (file_exists($directory.$newFileName));
 
 
-        // Déplacement de la photo dans le dossier que l'on avait paramétré dans le fichier services.yaml,
-        // avec le nouveau nom qu'on lui a généré
-        $photo->move(
-            $directory,     // Emplacement de sauvegarde du fichier
-            $newFileName    // Nouveau nom du fichier
-        );
+            // Déplacement de la photo dans le dossier que l'on avait paramétré dans le fichier services.yaml,
+            // avec le nouveau nom qu'on lui a généré
+            $photo->move(
+                $directory,     // Emplacement de sauvegarde du fichier
+                $newFileName    // Nouveau nom du fichier
+            );
         return $newFileName;
     }
 
-    public function uploadCGVTicket(UploadedFile $cgv, Ticket $ticket)
+    public function uploadCGVTicket(UploadedFile $cgv, Ticket $ticket): String
     {
         // dossier du jeu dans le game.photo.directory
         $directory = $this->controller->get('game.cgv.directory'); //fail phpStorm
@@ -54,17 +51,17 @@ class uploadGamePhoto
             //on le créer
             mkdir($directory);
         }
-        //si le dossier game.photo.directory/slug-Du-Jeu n'existe pas
-        $directory .= $ticket->getId() . '/';
-        if (!file_exists($directory)) {
-            mkdir($directory);
-        }
 
+        do {
+
+            $newFileName  = md5($ticket->getName() . random_bytes(100)) . '.pdf';
+        } while (file_exists($directory.$newFileName));
 
         $cgv->move(
             $directory,     // Emplacement de sauvegarde du fichier
-            $ticket->getCgv()
+            $newFileName,
         );
+        return $newFileName;
     }
 
 }

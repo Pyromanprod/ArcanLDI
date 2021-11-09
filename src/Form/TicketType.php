@@ -26,6 +26,7 @@ class TicketType extends AbstractType
             ])
             ->add('stock', IntegerType::class)
             ->add('cgv', FileType::class, [
+                'required' => false,
                 'mapped' => false,
                 'constraints' => [
                     new File(
@@ -34,7 +35,6 @@ class TicketType extends AbstractType
                             'mimeTypesMessage' => 'Le fichier doit etre en pdf',
                         ],
                     ),
-                    new NotBlank(),
                 ],
             ]);
     }
