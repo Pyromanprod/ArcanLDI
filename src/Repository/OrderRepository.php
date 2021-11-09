@@ -32,4 +32,13 @@ class OrderRepository extends ServiceEntityRepository
             ->getOneOrNullResult()
             ;
     }
+    public function findRefundRequestedOrder(){
+        return $this->createQueryBuilder('a')
+            ->andWhere('a.refundRequest is not null')
+            ->andWhere('a.refundRequest != :reject ')
+            ->setParameter(':reject','rejected')
+            ->getQuery()
+            ->getResult()
+            ;
+    }
 }

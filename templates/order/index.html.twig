@@ -16,28 +16,13 @@
                 <ul class="list-group list-group-flush ">
                     <li class="list-group-item bg-transparent text-light">Acheter par : {{ order.player.pseudo }}</li>
                     <li class="list-group-item bg-transparent text-light">Prix : {{ order.total }} €</li>
-                    {# SI DEMANDE DE REMBOURSEMENT EN COURS #}
-                    {% if order.refundRequest %}
-                        {% if is_granted('ROLE_ADMIN') %}
-                            <li class="list-group-item bg-transparent text-light">{{ include('order/_refund_form.html.twig') }}</li>
-                        {% else %}
-                            {# SI LE JOUEUR CONNECTER ET BIEN LE JOUEUR QUI A ACHETE LE BILLET #}
-                            {% if order.player == app.user %}
-
-                                <li class="list-group-item bg-transparent text-light">
-                                    <a class="btn btn-danger"> Demande en cour de traitement</a>
-                                </li>
-                            {% endif %}
-                        {% endif %}
-                    {% else %}{# SINON #}
-
-
-                        {# SI LE JOUEUR CONNECTER ET BIEN LE JOUEUR QUI A ACHETE LE BILLET #}
-                        {% if order.player == app.user and order.datePaid %}
-                            <li class="list-group-item bg-transparent text-light">
-                                <a class="btn btn-danger" href="{{ path('user_refund', {'id': order.id}) }}">Demander un
-                                    remboursement</a></li>
-                        {% endif %}
+                    {% if is_granted('ROLE_ADMIN') and order.datePaid  %}
+                        <li class="list-group-item bg-transparent text-light">{{ include('order/_refund_form.html.twig') }}</li>
+                    {% elseif order.refundRequest %}
+                        <li class="list-group-item bg-transparent text-light">vous ne pouvez plus faire de demande de remboursement sur ce ticket</li>
+                    {% elseif order.datePaid is null %}
+                    {% else %}
+                        <li class="list-group-item bg-transparent text-light"><a class="btn btn-danger" href="{{ path('user_refund', {'id': order.id}) }}">Demander un remboursement</a></li>
                     {% endif %}
                     <li class="list-group-item bg-transparent text-light">
 

@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Game;
 use App\Entity\News;
 use App\Repository\GameRepository;
+use App\Repository\OrderRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -30,9 +31,13 @@ class MainController extends AbstractController
 
     #[Route('/admin', name: 'admin_home')]
     #[isGranted('ROLE_ADMIN')]
-    public function admin(): Response
+    public function admin(OrderRepository $orderRepository): Response
     {
-        return $this->render('admin/index.html.twig');
+       $order =  $orderRepository->findRefundRequestedOrder();
+
+        return $this->render('admin/index.html.twig',[
+            'requestedRefund' => $order,
+        ]);
     }
 
     #[Route('search', name: 'search')]

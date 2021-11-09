@@ -8,6 +8,9 @@ remboursement
         <div class="row">
             <div class="col-12 col-md-8 mx-auto">
                 {{ form_start(form) }}
+                {{ form_row(form.refundRequest,{
+                    'label':'Raison de la demande'
+                }) }}
                 {{ form_widget(form) }}
                 <button type="submit" class="btn btn-warning">Envoyer la demande</button>
                 {{ form_end(form) }}

@@ -32,6 +32,11 @@
             <div class="col-4 col-md-3 mb-3">
                 <a href="{{ path('news_index') }}" class="btn btn-info">News</a>
             </div>
+            {% if requestedRefund %}
+            <div class="col-4 col-md-3 mb-3">
+                <a href="{{ path('order_refund_requested') }}" class="btn btn-info">Demande de remboursement</a>
+            </div>
+            {% endif %}
         </div>
     </div>
 {% endblock %}
