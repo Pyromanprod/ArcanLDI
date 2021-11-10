@@ -73,7 +73,7 @@ class TicketController extends AbstractController
     public function show(Ticket $ticket, Request $request, SurveyRepository $surveyRepository): Response
     {
 
-//TODO: make:form
+//        FORMULAIRE DES QUESTIONNAIRES SPECIFIQUE QUI NE SON PAS ENCORE ASSOCIE
         $formNotGeneral = $this->createFormBuilder()
             ->add('survey', EntityType::class, [
                 'class' => 'App\Entity\Survey',
@@ -94,9 +94,9 @@ class TicketController extends AbstractController
 
             return $this->redirectToRoute('ticket_show', ['id' => $ticket->getId()]);
         }
+//        FORMULAIRE DES QUESTIONNAIRES GENERAUX QUI NE SON PAS ENCORE ASSOCIE A CE TICKET
 
         $listeSurvey = $surveyRepository->findByGeneral('1');
-        $repos = $this->getDoctrine()->getRepository(SurveyTicket::class);
         $surveyAssocie = $surveyRepository->findBySurveyByTicket($ticket);
 
         foreach ($listeSurvey as $survey){
