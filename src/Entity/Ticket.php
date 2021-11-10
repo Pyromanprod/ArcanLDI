@@ -23,7 +23,7 @@ class Ticket
     #[ORM\Column(type: 'float')]
     private $price;
 
-    #[ORM\OneToMany(mappedBy: 'ticket', targetEntity: Order::class)]
+    #[ORM\OneToMany(mappedBy: 'ticket', targetEntity: Order::class, orphanRemoval: true)]
     private $orders;
 
     #[ORM\ManyToOne(targetEntity: Game::class, inversedBy: 'tickets')]

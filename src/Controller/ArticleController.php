@@ -7,6 +7,7 @@ use App\Entity\Coment;
 use App\Form\ArticleType;
 use App\Form\ComentFormType;
 use App\Repository\ArticleRepository;
+use App\Repository\GameRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -40,14 +41,13 @@ class ArticleController extends AbstractController
 
     #[Route('/new', name: 'article_new', methods: ['GET', 'POST'])]
     #[IsGranted('ROLE_ADMIN')]
-    public function new(Request $request): Response
+    public function new(Request $request,): Response
     {
         $article = new Article();
         $form = $this->createForm(ArticleType::class, $article);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $article->setAuthor($this->getUser());
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($article);
             $entityManager->flush();

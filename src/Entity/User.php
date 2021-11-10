@@ -55,8 +55,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $answers;
 
 
-    #[ORM\OneToMany(mappedBy: 'author', targetEntity: Article::class)]
-    private $articles;
 
     #[ORM\OneToMany(mappedBy: 'player', targetEntity: Coment::class)]
     private $coments;
@@ -89,7 +87,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         $this->orders = new ArrayCollection();
         $this->answers = new ArrayCollection();
-        $this->articles = new ArrayCollection();
         $this->coments = new ArrayCollection();
         $this->roleGroupes = new ArrayCollection();
         $this->newsComments = new ArrayCollection();
@@ -284,36 +281,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
 
 
-
-    /**
-     * @return Collection|Article[]
-     */
-    public function getArticles(): Collection
-    {
-        return $this->articles;
-    }
-
-    public function addArticle(Article $article): self
-    {
-        if (!$this->articles->contains($article)) {
-            $this->articles[] = $article;
-            $article->setAuthor($this);
-        }
-
-        return $this;
-    }
-
-    public function removeArticle(Article $article): self
-    {
-        if ($this->articles->removeElement($article)) {
-            // set the owning side to null (unless already changed)
-            if ($article->getAuthor() === $this) {
-                $article->setAuthor(null);
-            }
-        }
-
-        return $this;
-    }
 
     /**
      * @return Collection|Coment[]

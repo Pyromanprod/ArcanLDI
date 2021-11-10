@@ -4,9 +4,9 @@ namespace App\Controller;
 
 use App\Entity\Game;
 use App\Entity\News;
+use App\Entity\Order;
 use App\Repository\GameRepository;
-use App\Repository\OrderRepository;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -19,26 +19,19 @@ class MainController extends AbstractController
     {
         $repos = $this->getDoctrine()->getRepository(Game::class);
         $reposnews = $this->getDoctrine()->getRepository(News::class);
+        $order = $this->getDoctrine()->getRepository(Order::class);
+        $orders = $order->findRefundRequestedOrder();
         $allGames = $repos->findLastThree();
         $news = $reposnews->findLastThree();
         return $this->render('main/index.html.twig',
             [
-                'news'=> $news,
+                'requestedRefund' => $orders,
+                'news' => $news,
                 'allGames' => $allGames,
             ]
         );
     }
 
-    #[Route('/admin', name: 'admin_home')]
-    #[isGranted('ROLE_ADMIN')]
-    public function admin(OrderRepository $orderRepository): Response
-    {
-       $order =  $orderRepository->findRefundRequestedOrder();
-
-        return $this->render('admin/index.html.twig',[
-            'requestedRefund' => $order,
-        ]);
-    }
 
     #[Route('search', name: 'search')]
     public function search(GameRepository $gameRepository, Request $request): Response
@@ -47,5 +40,18 @@ class MainController extends AbstractController
         return $this->render("game/index.html.twig", [
             'allGames' => $allGames
         ]);
+    }
+
+    #[Route('clear', name: 'game_clear', methods: ['GET', 'POST'])]
+    public function clear(GameRepository $gameRepository, EntityManagerInterface $entityManager): Response
+    {
+        $games = $gameRepository->findOneOutdatedGame(new \DateTime());
+        foreach ($games as $game) {
+            foreach ($game->getRoleGroupes() as $role) {
+                $entityManager->remove($role);
+            }
+        }
+        $entityManager->flush();
+        return $this->redirectToRoute('admin_jeu', [], Response::HTTP_SEE_OTHER);
     }
 }

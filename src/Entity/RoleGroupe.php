@@ -24,7 +24,7 @@ class RoleGroupe
     #[ORM\JoinColumn(nullable: false)]
     private $game;
 
-    #[ORM\OneToMany(mappedBy: 'roleGroupe', targetEntity: Article::class)]
+    #[ORM\OneToMany(mappedBy: 'roleGroupe', targetEntity: Article::class, orphanRemoval: true)]
     private $articles;
 
     #[ORM\Column(type: 'datetime_immutable')]
