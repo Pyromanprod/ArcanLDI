@@ -45,9 +45,11 @@ class MainController extends AbstractController
     #[Route('clear', name: 'game_clear', methods: ['GET', 'POST'])]
     public function clear(GameRepository $gameRepository, EntityManagerInterface $entityManager): Response
     {
-        $game = $gameRepository->findOneOutdatedGame(new \DateTime());
-        foreach ($game->getRoleGroupes() as $role) {
-            $entityManager->remove($role);
+        $games = $gameRepository->findOneOutdatedGame(new \DateTime());
+        foreach ($games as $game) {
+            foreach ($game->getRoleGroupes() as $role) {
+                $entityManager->remove($role);
+            }
         }
         $entityManager->flush();
         return $this->redirectToRoute('admin_jeu', [], Response::HTTP_SEE_OTHER);
