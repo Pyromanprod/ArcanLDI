@@ -8,6 +8,7 @@ use App\Entity\Ticket;
 use App\Form\TicketType;
 use App\Repository\GameRepository;
 use App\Repository\SurveyRepository;
+use App\Repository\SurveyTicketRepository;
 use App\Repository\TicketRepository;
 use App\Service\uploadGamePhoto;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -94,11 +95,24 @@ class TicketController extends AbstractController
             return $this->redirectToRoute('ticket_show', ['id' => $ticket->getId()]);
         }
 
+        $listeSurvey = $surveyRepository->findByGeneral('1');
+        $repos = $this->getDoctrine()->getRepository(SurveyTicket::class);
+        $surveyAssocie = $surveyRepository->findBySurveyByTicket($ticket);
 
+        foreach ($listeSurvey as $survey){
+//            dd($surveyAssocie);
+            if (!in_array($survey, $surveyAssocie)){
+                $surveyAAfficher[] = $survey;
+            }
+        }
+        if (!isset($surveyAAfficher)){
+            $surveyAAfficher = [];
+        }
+//        dd($surveyAAfficher);
         $formGeneral = $this->createFormBuilder()
             ->add('survey', EntityType::class, [
                 'class' => 'App\Entity\Survey',
-                'choices' => $surveyRepository->findByGeneral('1'),
+                'choices' => $surveyAAfficher,
                 'choice_label' => 'name',
             ])->getForm();
 

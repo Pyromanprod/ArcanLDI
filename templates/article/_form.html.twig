@@ -1,4 +1,33 @@
 {{ form_start(form) }}
-    {{ form_widget(form) }}
+    {{ form_row(form.title, {
+        label: 'Titre',
+        attr: {
+            placeholder: '',
+            class: 'bg-dark border-0 border-bottom border-ivoire rounded-0 text-light'
+        },
+        row_attr: {
+            class: 'form-floating bg-dark text-ivoire mb-3'
+        }
+    }) }}
+    {{ form_row(form.content, {
+        label: 'Contenu',
+        attr: {
+            placeholder: '',
+            class: 'bg-dark border-0 border-bottom border-ivoire rounded-0 text-light'
+        },
+        row_attr: {
+            class: 'form-floating bg-dark text-ivoire mb-3'
+        }
+    }) }}
+    {{ form_row(form.roleGroupe, {
+        label: 'Groupe',
+        attr: {
+            placeholder: '',
+            class: 'bg-dark border-0 border-bottom border-ivoire rounded-0 text-light'
+        },
+        row_attr: {
+            class: 'form-floating bg-dark text-ivoire mb-3'
+        }
+    }) }}
     <button class="btn btn-primary">{{ button_label|default('Créer') }}</button>
 {{ form_end(form) }}

@@ -152,13 +152,15 @@ class SurveyController extends AbstractController
 
     #[Route('/accepter-les-cgv/{id}', name: 'is_cgv')]
     #[isGranted('ROLE_USER')]
-    public function accepte_cgv(Request $request, Order $order): Response
+    public function accepte_cgv(Request $request,EntityManagerInterface $em, Order $order): Response
     {
         $form = $this->createForm(IsCgvFormType::class, $order);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            return $this->redirectToRoute('checkout', ['id' => $order->getId()]);
+            $order->setIsCgv(true);
+            $em->flush();
+            return $this->redirectToRoute('survey_suvey_for_ticket', ['id' => $order->getId()]);
         }
         return $this->renderForm('survey/accepte_cgv.html.twig', [
             'form' => $form,
@@ -176,6 +178,16 @@ class SurveyController extends AbstractController
                                     QuestionRepository     $questionRepository,
     ): Response
     {
+
+
+        //si les CGV ne sont pas accépter on accéde pas au formulaire
+
+        if (!$order->getIsCgv()){
+
+            return $this->redirectToRoute('survey_is_cgv', ['id' => $order->getId()]);
+        }
+
+        // Si c'est accepter on lance l'algo de vérif formulaire
         $ticket = $order->getTicket();
         $user = $this->getUser();
         $listeSurveyTicket = $surveyTicketRepository->findOrdered($ticket);
@@ -207,9 +219,7 @@ class SurveyController extends AbstractController
             }
 
         }
-
-        //si toutes les questions sont répondu on redirige vers le paiement
-        return $this->redirectToRoute('survey_is_cgv', ['id' => $order->getId()]);
+        return $this->redirectToRoute('checkout', ['id' => $order->getId()]);
         //TODO: pensé a faire une vérif des orders sans paiement de plus de 7 jours (delete order + answer etc...)
     }
 

@@ -34,6 +34,18 @@ class SurveyRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+    public function findBySurveyByTicket(Ticket $ticket): array
+    {
+
+        return $this->createQueryBuilder('survey')
+            ->leftJoin('survey.surveyTickets', 'survey_tickets')
+            ->andWhere('survey_tickets.ticket = :ticket')
+            ->setParameter('ticket', $ticket)
+            ->getQuery()
+            ->getResult();
+    }
+
+
 
 
     /*
