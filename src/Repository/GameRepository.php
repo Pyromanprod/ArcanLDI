@@ -58,7 +58,25 @@ class GameRepository extends ServiceEntityRepository
             ;
     }
 
+    public function findOneOutdatedGame($date): ?Game
+    {
+        return $this->createQueryBuilder('g')
+            ->where('g.dateEnd < :date')
+            ->setParameter(':date',$date)
+            ->getQuery()
+            ->getOneOrNullResult()
+            ;
+    }
 
+    public function findOneNotStartedGame($date): ?Game
+    {
+        return $this->createQueryBuilder('g')
+            ->where('g.dateStart > :date')
+            ->setParameter(':date',$date)
+            ->getQuery()
+            ->getOneOrNullResult()
+            ;
+    }
 
 
 }

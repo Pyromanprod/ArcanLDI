@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Game;
 use App\Entity\GameComment;
 use App\Entity\Picture;
+use App\Entity\RoleGroupe;
 use App\Entity\Video;
 use App\Form\AlbumPhotoFormType;
 use App\Form\AlbumVideoFormType;
@@ -66,12 +67,12 @@ class GameController extends AbstractController
     public function new(Request $request, uploadGamePhoto $uploadGamePhoto): Response
     {
         $game = new Game();
+        $role = new RoleGroupe();
         $form = $this->createForm(GameType::class, $game);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager = $this->getDoctrine()->getManager();
-
             //récupération de la photo si il y a
             $photo = $form->get('banner')->getData();
             if ($photo) {
@@ -79,6 +80,10 @@ class GameController extends AbstractController
             }
             $game->setIsPublished(false);
             $entityManager->persist($game);
+            $role->setGame($game)
+                ->setName('public')
+            ;
+            $entityManager->persist($role);
             $entityManager->flush();
             return $this->redirectToRoute('admin_jeu', [], Response::HTTP_SEE_OTHER);
         }

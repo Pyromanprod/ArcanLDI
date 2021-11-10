@@ -6,6 +6,7 @@ use App\Entity\Game;
 use App\Entity\Order;
 use App\Form\UserRefundFormType;
 use App\Repository\OrderRepository;
+use App\Repository\RoleGroupeRepository;
 use App\Repository\TicketRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -67,12 +68,12 @@ class OrderController extends AbstractController
         if ($order->getPlayer()->getEmail() == $this->getUser()->getUserIdentifier()) {
             $form = $this->createForm(UserRefundFormType::class, $order);
             $form->handleRequest($request);
-            if ($form->isSubmitted() && $form->isValid() && $order->getPlayer() == $this->getUser() && $order->getTicket()->getGame()->getDateEnd() > new \DateTime()) {
+            if ($form->isSubmitted() && $form->isValid() && $order->getPlayer() == $this->getUser() && $order->getTicket()->getGame()->getDateEnd() < new \DateTime()) {
                 $email = (new Email())
                     ->from('jesuis@uneadresse.fr')
                     ->to($this->getUser()->getUserIdentifier())
                     ->subject('remboursement ArcanLDI')
-                    ->text('votre demmande de remboursement a bien etais prise en compte');
+                    ->text('votre demande de remboursement a bien été prise en compte');
                 $mailer->send($email);
                 $entityManager->flush();
                 $this->addFlash('success', 'demande de remboursement effectuer');
@@ -194,13 +195,13 @@ class OrderController extends AbstractController
 
     #[Route('-success-url/{id}/', name: 'success', methods: ['GET', 'POST'])]
     #[IsGranted('ROLE_USER')]
-    public function success(Request $request, Order $order, $stripeSK, EntityManagerInterface $entityManager): Response
+    public function success(Request $request, Order $order, $stripeSK, EntityManagerInterface $entityManager,RoleGroupeRepository $groupeRepository): Response
     {
 
         Stripe::setApiKey($stripeSK);
         $session = Session::retrieve($request->query->get('session_id'));
         if ($session->payment_status == 'paid') {
-
+            $this->getUser()->addRoleGroupe($groupeRepository->findOneByName('public'));
             $order->getTicket()->setStock($order->getTicket()->getStock() - 1);
             $order->setDatePaid(new \DateTime());
             $order->setReference($session->id);

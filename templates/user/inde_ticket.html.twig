@@ -8,6 +8,7 @@
         <div class="row">
             {% for user in users %}
                 <div class="card mx-auto my-3 bg-cardgame col-12 col-md-5">
+                    <img src="{{ asset('img/user/'~user.photo) }}" class="card-img-top img-fluid" alt="photo de profile">
                     <div class="card-body">
                         <h5 class="card-title">{{ user.pseudo }}</h5>
                         <h6 class="card-subtitle mb-2 ">{{ user.firstname }}  {{ user.lastname }}</h6>

@@ -26,9 +26,6 @@ class Article
     #[ORM\ManyToOne(targetEntity: RoleGroupe::class, inversedBy: 'articles')]
     private $roleGroupe;
 
-    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'articles')]
-    #[ORM\JoinColumn(nullable: false)]
-    private $author;
 
     #[ORM\OneToMany(mappedBy: 'article', targetEntity: Coment::class, orphanRemoval: true)]
     private $coments;
@@ -38,6 +35,7 @@ class Article
 
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     private $updatedAt;
+
 
     public function __construct()
     {
@@ -85,17 +83,6 @@ class Article
         return $this;
     }
 
-    public function getAuthor(): ?User
-    {
-        return $this->author;
-    }
-
-    public function setAuthor(?User $author): self
-    {
-        $this->author = $author;
-
-        return $this;
-    }
 
     /**
      * @return Collection|Coment[]
@@ -148,4 +135,5 @@ class Article
     {
         $this->updatedAt = new DateTimeImmutable();
     }
+
 }

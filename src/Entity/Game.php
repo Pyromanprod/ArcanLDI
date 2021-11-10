@@ -54,7 +54,7 @@ class Game
     #[ORM\OneToMany(mappedBy: 'game', targetEntity: Video::class, orphanRemoval: true)]
     private $videos;
 
-    #[ORM\OneToMany(mappedBy: 'game', targetEntity: RoleGroupe::class)]
+    #[ORM\OneToMany(mappedBy: 'game', targetEntity: RoleGroupe::class, orphanRemoval: true)]
     private $roleGroupes;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
@@ -67,6 +67,7 @@ class Game
         $this->videos = new ArrayCollection();
         $this->roleGroupes = new ArrayCollection();
         $this->gameComments = new ArrayCollection();
+        $this->articles = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -86,8 +87,10 @@ class Game
     #[ORM\OneToMany(mappedBy: 'game', targetEntity: GameComment::class, orphanRemoval: true)]
     private $gameComments;
 
+
     public function getSlug(): ?string
     {
+
         return $this->slug;
     }
 
@@ -376,6 +379,7 @@ class Game
 
         return $this;
     }
+
 
 
 }
