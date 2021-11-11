@@ -21,22 +21,19 @@ class RoleGroupeRepository extends ServiceEntityRepository
         parent::__construct($registry, RoleGroupe::class);
     }
 
-    // /**
-    //  * @return RoleGroupe[] Returns an array of RoleGroupe objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    /**
+     * @return RoleGroupe[] Returns an array of RoleGroupe objects
+     */
+
+    public function findAllButPublic()
     {
         return $this->createQueryBuilder('r')
-            ->andWhere('r.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('r.id', 'ASC')
-            ->setMaxResults(10)
+            ->andWhere('r.name != :val')
+            ->setParameter('val', 'public')
             ->getQuery()
-            ->getResult()
-        ;
+            ->getResult();
     }
-    */
+
 
     /*
     public function findOneBySomeField($value): ?RoleGroupe

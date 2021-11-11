@@ -26,8 +26,7 @@ class ArticleRepository extends ServiceEntityRepository
     public function findByRoleNull($value)
     {
         return $this->createQueryBuilder('a')
-            ->andWhere('a.roleGroupe IS NULL')
-            ->orWhere('a.roleGroupe = :val')
+            ->Where('a.roleGroupe = :val')
             ->setParameter(':val',$value)
             ->getQuery()
             ->getResult()

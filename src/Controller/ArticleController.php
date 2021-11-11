@@ -24,13 +24,13 @@ class ArticleController extends AbstractController
     #[IsGranted('ROLE_USER')]
     public function index(ArticleRepository $articleRepository): Response
     {
-
+        $article = null;
 
         if ($this->isGranted('ROLE_ADMIN')) {
             $article = $articleRepository->findAll();
         } else {
             foreach ($this->getUser()->getRoleGroupes() as $role) {
-                $article = $articleRepository->findByRoleNull($role);
+                $article = $articleRepository->findByRoleNull('public');
 
             }
         }

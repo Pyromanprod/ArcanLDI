@@ -24,7 +24,7 @@ class RoleGroupeController extends AbstractController
     public function index(RoleGroupeRepository $roleGroupeRepository): Response
     {
         return $this->render('role_groupe/index.html.twig', [
-            'role_groupes' => $roleGroupeRepository->findAll(),
+            'role_groupes' => $roleGroupeRepository->findAllButPublic(),
         ]);
     }
 
@@ -70,7 +70,7 @@ class RoleGroupeController extends AbstractController
         }
 
         return $this->renderForm('role_groupe/edit.html.twig', [
-            'role_groupe' => $roleGroupe,
+            'role' => $roleGroupe,
             'form' => $form,
         ]);
     }

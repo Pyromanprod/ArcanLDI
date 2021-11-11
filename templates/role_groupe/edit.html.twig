@@ -6,13 +6,9 @@
     <div class="container">
     <h1 class="text-center">Modifier le role</h1>
         <div class="row">
-            <div class="col-4 mx-auto">
+            <div class="col-12 col-md-8 mx-auto">
 
     {{ include('role_groupe/_form.html.twig', {'button_label': 'Modifier'}) }}
-
-    <a  class="btn btn-primary mt-2" href="{{ path('role_groupe_index') }}">retour à la liste des role</a>
-
-    {{ include('role_groupe/_delete_form.html.twig') }}
 
             </div>
         </div>

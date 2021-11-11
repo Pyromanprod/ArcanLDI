@@ -24,8 +24,10 @@
                     class: 'form-floating bg-dark text-ivoire mb-3'
                 }
             }) }}
-            <button class="btn btn-primary">{{ button_label|default('Save') }}</button>
+            <button class="btn btn-primary">{{ button_label|default('Créer') }}</button>
             {{ form_end(form) }}
+            {{ include('role_groupe/_delete_form.html.twig') }}
+            <a class="btn btn-warning" href="{{ path('role_groupe_index') }}">Annuler</a>
         </div>
     </div>
 </div>

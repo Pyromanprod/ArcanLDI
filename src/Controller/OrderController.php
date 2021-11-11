@@ -181,7 +181,7 @@ class OrderController extends AbstractController
                 ]],
                 'mode' => 'payment',
                 'success_url' => $this->generateUrl('success', ['id' => $order->getId()], UrlGeneratorInterface::ABSOLUTE_URL) . '?session_id={CHECKOUT_SESSION_ID}',
-                'cancel_url' => $this->generateUrl('home', [], UrlGeneratorInterface::ABSOLUTE_URL),
+                'cancel_url' => $this->generateUrl('cancel', [], UrlGeneratorInterface::ABSOLUTE_URL),
             ]);
             return $this->redirect($session->url, 303);
         } else {
@@ -193,9 +193,21 @@ class OrderController extends AbstractController
         }
     }
 
+    #[Route('-cancel-url/', name: 'cancel', methods: ['GET', 'POST'])]
+    #[IsGranted('ROLE_USER')]
+    public function cancel(): Response
+    {
+
+
+        $this->addFlash('error', 'Achat annuler');
+
+        return $this->redirectToRoute('home');
+
+    }
+
     #[Route('-success-url/{id}/', name: 'success', methods: ['GET', 'POST'])]
     #[IsGranted('ROLE_USER')]
-    public function success(Request $request, Order $order, $stripeSK, EntityManagerInterface $entityManager,RoleGroupeRepository $groupeRepository): Response
+    public function success(Request $request, Order $order, $stripeSK, EntityManagerInterface $entityManager,RoleGroupeRepository $groupeRepository,MailerInterface $mailer): Response
     {
 
         Stripe::setApiKey($stripeSK);
@@ -207,6 +219,12 @@ class OrderController extends AbstractController
             $order->setReference($session->id);
             $order->setPaymentIntent($session->payment_intent);
             $entityManager->flush();
+            $email = (new Email())
+                ->from('jesuis@uneadresse.fr')
+                ->to($order->getPlayer()->getEmail())
+                ->subject('Achat d\'un ticket ArcanLDI '.' jeu '.$order->getTicket()->getGame()->getName().' ticket '.$order->getTicket()->getName())
+                ->text('vous avez bien acheter un ticket '.$order->getTicket()->getName().' pour le jeu' .$order->getTicket()->getGame()->getName() );
+            $mailer->send($email);
             $this->addFlash('success', 'ticket acheter avec succés');
 
         }
