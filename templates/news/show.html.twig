@@ -7,7 +7,7 @@
         <div class="row">
             <h1 class="text-center">{{ news.title }}</h1>
             <div class="col-12">
-                <p>{{ news.content }}</p>
+                <p>{{ news.content|purify|raw }}</p>
                 <p class="text-info"> Publier le {{ news.createdAt ? news.createdAt|date('d/m/Y à H\\hi') : '' }}</p>
 
                 <a class="btn-primary btn" href="{{ path('news_index') }}">Retour à la liste des Actualités</a>

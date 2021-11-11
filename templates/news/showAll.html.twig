@@ -8,7 +8,7 @@
                        class="text-decoration-none text-light d-inline">
                         <div class="card-body">
                             <h5 class="card-title">{{ news.title }}</h5>
-                            <p class="card-text">{{ news.content|excerpt(20) }}</p>
+                            <p class="card-text">{{ news.content|striptags|excerpt(20) }}</p>
                             <a class="btn btn-outline-light mb-3 me-2"
                                href="{{ path('news_show', {'slug': news.slug}) }}">voir
                                 plus</a>

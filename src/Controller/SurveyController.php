@@ -305,5 +305,17 @@ class SurveyController extends AbstractController
         return $this->redirectToRoute('survey_view', ['id' => $survey->getId()]);
     }
 
+    #[Route('/{id}/delete', name: 'delete', methods: ['POST', 'GET'])]
+    public function delete(Request $request, Survey $survey): Response
+    {
+
+        if ($this->isCsrfTokenValid('delete'.$survey->getId(), $request->request->get('csrf_token'))) {
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->remove($survey);
+            $entityManager->flush();
+        }
+
+        return $this->redirectToRoute('survey_index', [], Response::HTTP_SEE_OTHER);
+    }
 
 }
