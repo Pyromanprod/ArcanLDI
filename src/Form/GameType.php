@@ -45,6 +45,7 @@ class GameType extends AbstractType
                             'image/jpeg',
                             'image/png',
                             'image/gif',
+                            'image/webp',
                         ],
                         'mimeTypesMessage' => 'Fichier accépté : "jpeg, jpg, png, gif"',
                         'maxSizeMessage' => 'Merci de ne pas dépasser {{ limit }} {{ suffixe }}',
@@ -61,3 +62,5 @@ class GameType extends AbstractType
         ]);
     }
 }
+
+
