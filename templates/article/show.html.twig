@@ -3,31 +3,36 @@
 {% block title %}discussion{% endblock %}
 
 {% block body %}
-    <div class="conatainer">
+    <div class="container">
         <h1 class="text-center">{{ article.title }}</h1>
         <div class="row">
             <div class="col-12 text-center">
                 {{ article.content }}
             </div>
         </div>
-    </div>
 
-    <a class="btn btn-outline-primary" href="{{ path('article_index') }}">retour a l'accueil</a>
+        <a class="btn btn-primary" href="{{ path('article_index') }}">retour a l'accueil</a>
 
-    {% if is_granted('ROLE_ADMIN') %}
-
-        <a class="btn btn-outline-primary" href="{{ path('article_edit', {'id': article.id}) }}">modifier</a>
-    {% endif %}
-
-    {{ include('article/_delete_form.html.twig') }}
-    {{ form_start(form) }}
-    {{ form_widget(form) }}
-    <button type="submit" class="btn btn-outline-primary">Envoyer un commentaire</button>
-    {{ form_end(form) }}
-    {% for coment in article.coments %}
-
+        {% if is_granted('ROLE_ADMIN') %}
+            <a class="btn btn-primary" href="{{ path('article_edit', {'id': article.id}) }}">modifier</a>
+            {{ include('article/_delete_form.html.twig') }}
+        {% endif %}
         <div class="row">
-            <div class="col-4 offset-4">
+            <div class="col-12 col-md-8 mx-auto">
+                {{ form_start(form) }}
+                {{ form_row(form.content,{
+                    'label': 'commentaire'
+                }) }}
+                {{ form_widget(form) }}
+                <button type="submit" class="btn btn-primary">Envoyer un commentaire</button>
+                {{ form_end(form) }}
+                {% for coment in article.coments %}
+
+            </div>
+        </div>
+
+        <div class="row mt-5">
+            <div class="col-12 col-md-8 offset-2">
                 <div class="card bg-cardgame">
                     <div class="card-header">
                         {{ coment.player.pseudo }}
@@ -36,15 +41,16 @@
                         <p class="card-text">{{ coment.content }}</p>
                         {% if is_granted('ROLE_ADMIN') %}
 
-                        <form method="post" action="{{ path('comment_delete', {'id': coment.id}) }}"
-                              onsubmit="return confirm('Etes vous sure de vouloir supprimer ce message?');">
-                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ coment.id) }}">
-                            <button class="btn">Delete</button>
-                        </form>
+                            <form method="post" action="{{ path('comment_delete', {'id': coment.id}) }}"
+                                  onsubmit="return confirm('Etes vous sure de vouloir supprimer ce message?');">
+                                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ coment.id) }}">
+                                <button class="btn btn-danger">Delete</button>
+                            </form>
                         {% endif %}
                     </div>
                 </div>
             </div>
         </div>
-    {% endfor %}
+        {% endfor %}
+    </div>
 {% endblock %}
