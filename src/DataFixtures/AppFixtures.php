@@ -72,6 +72,7 @@ class AppFixtures extends Fixture
             $gdn
                 ->setName('le jeu')
                 ->setDescription($faker->paragraph('10'))
+                ->setIsPublished(false)
                 ->setBanner('something.jpg');
             $manager->persist($gdn);
             $this->addReference('gdn', $gdn);

@@ -3,6 +3,7 @@
 namespace App\Form;
 
 use App\Entity\Game;
+use FOS\CKEditorBundle\Form\Type\CKEditorType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
@@ -16,7 +17,10 @@ class GameType extends AbstractType
     {
         $builder
             ->add('name')
-            ->add('description')
+            ->add('description',CKEditorType::class, [
+                'config_name' => 'game',
+                'purify_html' => true,
+            ])
             ->add('dateStart', DateType::class, [
                 'widget'=>'single_text',
                 'required'=>false,

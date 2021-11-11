@@ -26,7 +26,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $id;
 
     #[ORM\Column(type: 'string', length: 180, unique: true)]
-    #[Assert\NotBlank(message: 'tout les champ doivent etre remplis')]
+    #[Assert\NotBlank(message: 'Merci de remplir l\'email')]
     #[Assert\Email(message: 'l\'email {{ value }} n\'est pas un email valide')]
     private $email;
 

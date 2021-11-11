@@ -7,6 +7,7 @@ use App\Entity\News;
 use App\Entity\Order;
 use App\Repository\GameRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -43,6 +44,7 @@ class MainController extends AbstractController
     }
 
     #[Route('clear', name: 'game_clear', methods: ['GET', 'POST'])]
+    #[IsGranted('ROLE_ADMIN')]
     public function clear(GameRepository $gameRepository, EntityManagerInterface $entityManager): Response
     {
         $games = $gameRepository->findOneOutdatedGame(new \DateTime());
