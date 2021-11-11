@@ -6,11 +6,11 @@
 
     <div class="container">
         <h1 class="text-center">Liste de toutes les discussions</h1>
-            <div class="text-center">
-                {% if is_granted('ROLE_ADMIN') %}
-                    <a class="btn btn-primary" href="{{ path('article_new') }}">Créer une nouvelle discussion</a>
-                {% endif %}
-            </div>
+        <div class="text-center">
+            {% if is_granted('ROLE_ADMIN') %}
+                <a class="btn btn-primary" href="{{ path('article_new') }}">Créer une nouvelle discussion</a>
+            {% endif %}
+        </div>
         {% if articles %}
             <div class="row">
                 {% for article in articles %}
@@ -21,11 +21,17 @@
                             </div>
                             <div class="card-body">
                                 <ul class="list-group list-group-flush ">
-                                        <li class="list-group-item bg-transparent text-light">Role
-                                            : {{ article.roleGroupe.name }}</li>
-                                    <li class="list-group-item bg-transparent text-light"><a class="btn btn-primary"
-                                                                                             href="{{ path('article_show', {'id': article.id}) }}">afficher
-                                            la discution</a></li>
+                                    <li class="list-group-item bg-transparent text-light">Role
+                                        : {{ article.roleGroupe.name }}</li>
+                                    <li class="list-group-item bg-transparent text-light">
+                                        <a class="btn btn-primary"
+                                           href="{{ path('article_show', {'id': article.id}) }}">afficher la
+                                            discution</a>
+                                        {% if is_granted('ROLE_ADMIN') %}
+                                            {{ include('article/_delete_form.html.twig') }}
+                                            <a class="btn-warning btn" href="{{ path('article_edit', {'id': article.id}) }}">Modifier</a>
+                                        {% endif %}
+                                    </li>
                                 </ul>
                             </div>
                         </div>
