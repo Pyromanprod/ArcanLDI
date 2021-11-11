@@ -1,0 +1,56 @@
+# Read the documentation: https://symfony.com/doc/current/bundles/FOSCKEditorBundle/index.html
+fos_ck_editor:
+    configs:
+        game:
+            toolbar: 'toolbarGame'
+    toolbars:
+        configs:
+            toolbarGame: [
+                [
+                        'Bold',
+                        'Italic',
+                        'Underline',
+                        'Strike',
+                        '-',
+                        'RemoveFormat',
+                        '-',
+                        'Cut',
+                        'Copy',
+                        'Paste',
+                        'PasteText',
+                        'PasteFromWord',
+                        '-',
+                        'Undo',
+                        'Redo',
+                        '-',
+                        'Styles',
+                        'Font',
+                        'FontSize',
+                        'TextColor',
+                        'BGColor'
+                ],
+                [
+                        'NumberedList',
+                        'BulletedList',
+                        '-',
+                        'Outdent',
+                        'Indent',
+                        '-',
+                        'Blockquote',
+                        '-',
+                        'JustifyLeft',
+                        'JustifyCenter',
+                        'JustifyRight',
+                        'JustifyBlock',
+                        '-',
+                        'Image',
+                        'Table',
+                        'HorizontalRule',
+                        'SpecialChar'
+                ],
+
+            ]
+            my_toolbar_2: [ "@document", "/", "@tool" ]
+twig:
+    form_themes:
+        - '@FOSCKEditor/Form/ckeditor_widget.html.twig'
