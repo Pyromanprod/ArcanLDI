@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Game;
 use App\Entity\News;
 use App\Entity\Order;
+use App\Entity\Presentation;
 use App\Repository\GameRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -20,15 +21,18 @@ class MainController extends AbstractController
     {
         $repos = $this->getDoctrine()->getRepository(Game::class);
         $reposnews = $this->getDoctrine()->getRepository(News::class);
+        $presentationRepository = $this->getDoctrine()->getRepository(Presentation::class);
         $order = $this->getDoctrine()->getRepository(Order::class);
         $orders = $order->findRefundRequestedOrder();
         $allGames = $repos->findLastThree();
         $news = $reposnews->findLastThree();
+        $presentation = $presentationRepository->findOneBy([], ['id'=>'DESC']);
         return $this->render('main/index.html.twig',
             [
                 'requestedRefund' => $orders,
                 'news' => $news,
                 'allGames' => $allGames,
+                'presentation'=>$presentation,
             ]
         );
     }

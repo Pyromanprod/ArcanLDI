@@ -1,0 +1,19 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12 col-md-10 mx-auto">
+
+
+        {{ form_start(form) }}
+    {{ form_row(form.content, {
+        label: 'Présentation',
+        label_attr: {
+            class: 'text-ivoire'
+        }
+
+    }) }}
+    <button class="btn">{{ button_label|default('Save') }}</button>
+{{ form_end(form) }}
+
+        </div>
+    </div>
+</div>

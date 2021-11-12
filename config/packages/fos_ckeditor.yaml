@@ -23,7 +23,6 @@ fos_ck_editor:
                         'Undo',
                         'Redo',
                         '-',
-                        'Styles',
                         'Font',
                         'FontSize',
                         'TextColor',

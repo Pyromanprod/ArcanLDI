@@ -1,0 +1,12 @@
+{% block body %}
+    <div class="container-fluid">
+        <div class="row">
+                <h1 class="text-center">Qui somme nous</h1>
+
+        </div>
+        <div class="col-12 col-md-10 mx-auto">
+            {{ presentation.content|purify|raw }}
+        </div>
+    </div>
+
+{% endblock %}

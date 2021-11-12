@@ -9,16 +9,21 @@
                 <h1 class="my-auto text-center">Arcan Les Démons D'Ivoire</h1>
             </div>
         </div>
-                {% if requestedRefund and is_granted('ROLE_ADMIN') %}
-                    <div class="text-center">
-                    <a class="btn btn-warning" href="{{ path('order_refund_requested') }}">Demandes de
-                        remboursement</a>
-                    </div>
-                {% endif %}
+        {% if requestedRefund and is_granted('ROLE_ADMIN') %}
+            <div class="text-center">
+                <a class="btn btn-warning" href="{{ path('order_refund_requested') }}">Demandes de
+                    remboursement</a>
+            </div>
+        {% endif %}
+        <div class="row">
+
+            {# Affichage Présentation #}
+            {% include 'presentation/show.html.twig' %}
+        </div>
         {# AFFICHAGE DE TOUS LES JEUX #}
         {% include 'game/showAll.html.twig' %}
 
-    </div>
         {# Affichage News #}
         {% include 'news/showAll.html.twig' %}
+    </div>
 {% endblock %}
