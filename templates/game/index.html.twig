@@ -5,11 +5,14 @@
 {% block body %}
     <div class="container">
 
-        <div class="row">
+        <div class="row mt-5">
             <div class="col-12">
 
                 {% if is_granted('ROLE_ADMIN') %}
-                    <a class="btn btn-primary" href="{{ path('game_new') }}">Créer un nouveau jeu</a>
+                    <div class="col-12 text-center mb-3">
+
+                        <a class="btn btn-outline-success" href="{{ path('game_new') }}">Créer un nouveau jeu</a>
+                    </div>
                 {% endif %}
                 {% include 'game/showAll.html.twig' %}
             </div>

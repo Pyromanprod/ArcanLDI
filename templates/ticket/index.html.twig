@@ -4,24 +4,30 @@
 
 {% block body %}
     <div class="container">
+        <div class="row mt-5">
 
-        <a href="{{ path('ticket_new') }}" class="btn btn-outline-light my-3">Nouveau ticket</a>
-
-        <div class="row">
-            <h1>Liste des tickets</h1>
+            <div class="col-12 text-center mb-3">
+                <a href="{{ path('ticket_new') }}" class="btn btn-outline-success">Nouveau ticket</a>
+            </div>
         </div>
 
-        <div class="dropdown">
-            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1"
-                    data-bs-toggle="dropdown" aria-expanded="false">
-                selection des tickets par jeu
-            </button>
-            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                {% for game in games %}
-                    <li><a class="dropdown-item"
-                           href="{{ path('ticket_index_game', {'id': game.id }) }}">{{ game.name }}</a></li>
-                {% endfor %}
-            </ul>
+        <div class="row">
+            <h1 class="text-center mb-4">Liste des tickets</h1>
+        </div>
+        <div class="row">
+
+            <div class="dropdown text-center mb-5">
+                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1"
+                        data-bs-toggle="dropdown" aria-expanded="false">
+                    selection des tickets par jeu
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                    {% for game in games %}
+                        <li><a class="dropdown-item"
+                               href="{{ path('ticket_index_game', {'id': game.id }) }}">{{ game.name }}</a></li>
+                    {% endfor %}
+                </ul>
+            </div>
         </div>
         <div class="row">
             {% for ticket in tickets %}
@@ -37,10 +43,13 @@
                             <li class="list-group-item bg-transparent text-light">En Stock
                                 : {{ ticket.stock }}</li>
                             <li class="list-group-item bg-transparent text-light">
-                                <a class="btn btn-outline-light" href="{{ path('ticket_show', {'id': ticket.id}) }}">Voir plus...</a>
-                                <a class="btn btn-outline-light"
+                                <a class="btn btn-outline-light mb-3 me-2" href="{{ path('ticket_show', {'id': ticket.id}) }}">Ajouter
+                                    questionnaire</a>
+                                <a class="btn btn-outline-warning mb-3 me-2" href="{{ path('ticket_edit', {'id': ticket.id}) }}">Modifier</a>
+                                <a class="btn btn-outline-info mb-3 me-2"
                                    href="{{ path('survey_ticket_ordered', {'id': ticket.id}) }}">Ordonner
                                     les questionnaires</a>
+                                {{ include('ticket/_delete_form.html.twig') }}
                             </li>
                         </ul>
                     </div>

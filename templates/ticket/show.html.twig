@@ -3,11 +3,12 @@
 {% block title %}Ticket{% endblock %}
 
 {% block body %}
-    <div class="container">
+<div class="container">
 
-        <h1 class="text-center">Ticket</h1>
+    <h1 class="text-center">Ticket</h1>
+    <div class="row">
 
-        <div class="card bg-cardgame col-12 col-md-5 mx-auto p-0 my-3">
+        <div class="card bg-cardgame col-12 col-md-4 p-0 my-3">
             <div class="card-header bg-header-card">
                 <h5>Nom du ticket : {{ ticket.name }}</h5>
             </div>
@@ -19,10 +20,10 @@
                     <li class="list-group-item bg-transparent text-light">En Stock
                         : {{ ticket.stock }}</li>
                     <li class="list-group-item bg-transparent text-light">
-                        <a class="btn btn-primary" href="{{ path('ticket_edit', {'id': ticket.id}) }}">modifier le
-                            ticket</a>
-                        <a class="btn btn-primary" href="{{ path('survey_ticket_ordered', {'id': ticket.id}) }}">Ordonner
-                            Questionnaires</a>
+                        <a class="btn btn-outline-warning mb-3 me-2"
+                           href="{{ path('ticket_edit', {'id': ticket.id}) }}">Modifier</a>
+
+                        {{ include('ticket/_delete_form.html.twig') }}
                     </li>
                 </ul>
             </div>
@@ -31,29 +32,47 @@
                     Créé le : {{ ticket.createdAt ? ticket.createdAt|date('d-m-Y') : '' }}
                 </p>
             </div>
+
         </div>
-        <div class="row">
-            <div class="col-12 col-lg-4 mx-auto">
+        <div class="col-md-8 text-center">
+
+                <a href="{{ path('ticket_new') }}" class="btn btn-outline-success mb-3 me-2">Nouveau ticket</a>
+            <a class="btn btn-outline-info mb-3 me-2"
+               href="{{ path('survey_ticket_ordered', {'id': ticket.id}) }}">Ordonner
+                les questionnaires</a>
+                <a class="btn btn-outline-light mb-3 me-2" href="{{ path('ticket_index') }}">revenir a la liste des
+                    ticket</a>
 
 
-                {{ form_start(formnotgeneral) }}
-                {{ form_row(formnotgeneral.survey, {'label': 'Les questionnaires précis'}) }}
-                <button type="submit" class="btn btn-primary">Ajouter</button>
-                {{ form_end(formnotgeneral) }}
-            </div>
-            <div class="col-12 col-lg-4 mx-auto">
+            {{ form_start(formgeneral) }}
+            {{ form_row(formgeneral.survey, {
+                'label': 'Questionnaires généraux',
+                attr: {
+                    placeholder: '',
+                    class: 'bg-dark border-0 border-bottom border-ivoire rounded-0 text-light'
+                },
+                row_attr: {
+                    class: 'form-floating bg-dark text-ivoire mb-3'
+                }
+            }) }}
+            <button type="submit" class="btn btn-outline-primary">Associer</button>
+            {{ form_end(formgeneral) }}
 
 
-                {{ form_start(formgeneral) }}
-                {{ form_row(formgeneral.survey, {'label': 'Les questionnaires généraux'}) }}
-                <button type="submit" class="btn btn-primary">Ajouter</button>
-                {{ form_end(formgeneral) }}
-            </div>
+            {{ form_start(formnotgeneral) }}
+            {{ form_row(formnotgeneral.survey, {
+                'label': 'Questionnaires précis',
+                attr: {
+                    placeholder: '',
+                    class: 'bg-dark border-0 border-bottom border-ivoire rounded-0 text-light'
+                },
+                row_attr: {
+                    class: 'form-floating bg-dark text-ivoire mb-3'
+                }}) }}
+            <button type="submit" class="btn btn-outline-primary">Associer</button>
+            {{ form_end(formnotgeneral) }}
+
         </div>
-
-        <a class="btn btn-primary mt-4" href="{{ path('ticket_index') }}">revenir a la liste des ticket</a>
-
-
-        {{ include('ticket/_delete_form.html.twig') }}
     </div>
-{% endblock %}
+</div>
+    {% endblock %}

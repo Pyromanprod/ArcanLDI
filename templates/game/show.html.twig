@@ -15,7 +15,7 @@
                         <img src="{{ asset("img/uploads/"~game.name~"/banner.jpg") }}" alt=""
                              class="w-100 m-0 mb-5 p-0">
                     </div>
-                    <div class="col-12">
+                    <div class="col-12 ckeditor">
                         <p class="text-center">
 
                             {{ game.description|purify|raw }}
@@ -42,7 +42,8 @@
         <a href="{{ path('game_index') }}" class="btn btn-outline-light">Retour a la liste des jeux</a>
         {% if is_granted('ROLE_ADMIN') %}
 
-            <a href="{{ path('game_edit', {'id': game.id}) }} " class="btn btn-outline-light">Modifier</a>
+            <a href="{{ path('game_edit', {'id': game.id}) }} " class="btn btn-outline-warning">Modifier</a>
+
         {{ include('game/_delete_form.html.twig') }}
         {% endif %}
 
