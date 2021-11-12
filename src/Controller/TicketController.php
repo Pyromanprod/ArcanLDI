@@ -60,7 +60,9 @@ class TicketController extends AbstractController
             $entityManager->flush();
 
             $this->addFlash('success', 'Ticket ajouté');
-            return $this->redirectToRoute('ticket_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('ticket_show', [
+                'id' => $ticket->getId()
+            ], Response::HTTP_SEE_OTHER);
         }
 
         return $this->renderForm('ticket/new.html.twig', [

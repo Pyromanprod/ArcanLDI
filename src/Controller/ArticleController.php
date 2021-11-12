@@ -80,6 +80,9 @@ class ArticleController extends AbstractController
                 unset($form);
                 $coment = new Coment();
                 $form = $this->createForm(ComentFormType::class, $coment);
+                return $this->redirectToRoute('article_show',[
+                    'id' => $article->getId()
+                ]);
             }
             return $this->renderForm('article/show.html.twig', [
                 'article' => $article,

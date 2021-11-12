@@ -43,12 +43,14 @@
                                 Pas de questions a ce formulaire
                             {% endfor %}
                         </table>
-                        <button type="submit">Test</button>
+                        <button class="btn btn-success" type="submit">Ordonner</button>
                     </form>
                 </div>
                 <div class="card-footer bg-transparent border-secondary">
                     <a href="{{ path('survey_add_question',{'id': survey.id}) }}" class="btn btn-outline-light">Ajouter
                         une question</a>
+                    <a href="{{ path('survey_index') }}" class="btn btn-outline-light my-2">faire un autre questionnaire</a>
+                    <a href="{{ path('ticket_new') }}" class="btn btn-outline-light">passer a la creation des ticket</a>
                 </div>
             </div>
         </div>

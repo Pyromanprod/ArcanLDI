@@ -19,6 +19,12 @@
                                 <a class="btn btn-outline-light" href="{{ path('ticket_show', {'id': ticket.id}) }}">Ajouter
                                     des questionnaires</a>
                             </li>
+                            <li class="list-group-item bg-transparent text-light">
+                                <a class="btn btn-outline-light" href="{{ path('ticket_new') }}">créer un nouveau ticket</a>
+                            </li>
+                            <li class="list-group-item bg-transparent text-light">
+                                <a class="btn btn-outline-light" href="{{ path('admin_jeu') }}">revenir a la liste des jeu</a>
+                            </li>
                         </ul>
                     </div>
                     <div class="card-footer list-group-item bg-transparent text-light">
@@ -56,7 +62,7 @@
                         {% endfor %}
 
                     </table>
-                    <button type="submit">Ordonner</button>
+                    <button class="btn-success btn" type="submit">Ordonner</button>
                 </form>
             </div>
         </div>

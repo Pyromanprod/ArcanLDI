@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\ComentRepository;
 use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ComentRepository::class)]
 #[ORM\HasLifecycleCallbacks]
@@ -16,6 +17,12 @@ class Coment
     private $id;
 
     #[ORM\Column(type: 'text')]
+    #[Assert\Length(
+        min: 5,
+        max: 10000,
+        minMessage: 'votre commentaire doit faire au minimum  {{ limit }} caractère de long',
+        maxMessage: 'votre commentaire peut faire au maximum   {{ limit }} caractère de long',
+    )]
     private $content;
 
     #[ORM\ManyToOne(targetEntity: Article::class, inversedBy: 'coments')]

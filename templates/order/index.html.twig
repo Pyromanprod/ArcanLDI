@@ -3,43 +3,53 @@
 {% block title %}Order index{% endblock %}
 
 {% block body %}
-    <h1>Liste des commandes</h1>
+    <div class="container">
+    <h1 class="text-center">Liste des commandes</h1>
+        <div class="row">
+            {% for order in orders %}
+                <div class="card bg-cardgame col-12 col-md-4 mx-auto p-0 my-3">
+                    <div class="card-header bg-header-card">
+                        <h5>Ticket pour le jeu : {{ order.ticket.game.name }}</h5>
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-group list-group-flush ">
+                            <li class="list-group-item bg-transparent text-light">Acheter par
+                                : {{ order.player.pseudo }}</li>
+                            <li class="list-group-item bg-transparent text-light">Prix : {{ order.total }} €</li>
+                            {% if is_granted('ROLE_ADMIN') and order.datePaid %}
+                                <li class="list-group-item bg-transparent text-light">{{ include('order/_refund_form.html.twig') }}</li>
+                            {% elseif order.refundRequest %}
+                                <li class="list-group-item bg-transparent text-light">vous ne pouvez plus faire de
+                                    demande de remboursement sur ce ticket
+                                </li>
+                            {% elseif order.datePaid is null %}
+                            {% else %}
+                                <li class="list-group-item bg-transparent text-light"><a class="btn btn-danger"
+                                                                                         href="{{ path('user_refund', {'id': order.id}) }}">Demander
+                                        un remboursement</a></li>
+                            {% endif %}
+                            <li class="list-group-item bg-transparent text-light">
 
+                                {% if order.datePaid %}
+                                    Payé le {{ order.datePaid|date('d-m-Y') }}
+                                {% else %}
+                                    En cours de paiement
+                                {% endif %}
+                            </li>
+                        </ul>
+                    </div>
+                </div>
 
-    {% for order in orders %}
+            {% else %}
+                <div class="alert alert-warning">
+                    Pas encore de ticket acheter
+                </div>
+            {% endfor %}
 
-        <div class="card bg-cardgame col-12 col-md-2 mx-auto p-0 my-3">
-            <div class="card-header bg-header-card">
-                <h5>Billet pour le jeu : {{ order.ticket.game.name }}</h5>
-            </div>
-            <div class="card-body">
-                <ul class="list-group list-group-flush ">
-                    <li class="list-group-item bg-transparent text-light">Acheter par : {{ order.player.pseudo }}</li>
-                    <li class="list-group-item bg-transparent text-light">Prix : {{ order.total }} €</li>
-                    {% if is_granted('ROLE_ADMIN') and order.datePaid  %}
-                        <li class="list-group-item bg-transparent text-light">{{ include('order/_refund_form.html.twig') }}</li>
-                    {% elseif order.refundRequest %}
-                        <li class="list-group-item bg-transparent text-light">vous ne pouvez plus faire de demande de remboursement sur ce ticket</li>
-                    {% elseif order.datePaid is null %}
-                    {% else %}
-                        <li class="list-group-item bg-transparent text-light"><a class="btn btn-danger" href="{{ path('user_refund', {'id': order.id}) }}">Demander un remboursement</a></li>
-                    {% endif %}
-                    <li class="list-group-item bg-transparent text-light">
-
-                        {% if order.datePaid %}
-                            Payé le {{ order.datePaid|date('d-m-Y') }}
-                        {% else %}
-                            En cours de paiement
-                        {% endif %}
-                    </li>
-                </ul>
-            </div>
         </div>
+    </div>
 
-    {% else %}
-        <div class="alert alert-warning">
-            Pas encore de ticket acheter
-        </div>
-    {% endfor %}
+
+
 
 {% endblock %}

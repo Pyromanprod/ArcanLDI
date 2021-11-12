@@ -7,6 +7,11 @@ remboursement
     <div class="container">
         <div class="row">
             <div class="col-12 col-md-8 mx-auto">
+                {% if disclaimer %}
+                <p class="alert-danger p-5 text-center">{{ disclaimer }}</p>
+                    {% else %}
+                <p class="alert-danger p-5 text-center">Cette demande de remboursement est sous reserve d'acceptation par le staff</p>
+                {% endif %}
                 {{ form_start(form) }}
                 {{ form_row(form.refundRequest,{
                     'label':'Raison de la demande'

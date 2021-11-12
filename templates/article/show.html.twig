@@ -26,31 +26,31 @@
                 {{ form_widget(form) }}
                 <button type="submit" class="btn btn-primary">Envoyer un commentaire</button>
                 {{ form_end(form) }}
-                {% for coment in article.coments %}
 
             </div>
         </div>
 
         <div class="row mt-5">
-            <div class="col-12 col-md-8 offset-2">
-                <div class="card bg-cardgame">
-                    <div class="card-header">
-                        {{ coment.player.pseudo }}
-                    </div>
-                    <div class="card-body">
-                        <p class="card-text">{{ coment.content }}</p>
-                        {% if is_granted('ROLE_ADMIN') %}
+            {% for coment in article.coments %}
+                <div class="col-12 col-md-8 mx-auto my-3">
+                    <div class="card bg-cardgame">
+                        <div class="card-header">
+                            {{ coment.player.pseudo }}
+                        </div>
+                        <div class="card-body">
+                            <p class="card-text">{{ coment.content }}</p>
+                            {% if is_granted('ROLE_ADMIN') %}
 
-                            <form method="post" action="{{ path('comment_delete', {'id': coment.id}) }}"
-                                  onsubmit="return confirm('Etes vous sure de vouloir supprimer ce message?');">
-                                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ coment.id) }}">
-                                <button class="btn btn-danger">Delete</button>
-                            </form>
-                        {% endif %}
+                                <form method="post" action="{{ path('comment_delete', {'id': coment.id}) }}"
+                                      onsubmit="return confirm('Etes vous sure de vouloir supprimer ce message?');">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ coment.id) }}">
+                                    <button class="btn btn-danger">Delete</button>
+                                </form>
+                            {% endif %}
+                        </div>
                     </div>
                 </div>
-            </div>
+            {% endfor %}
         </div>
-        {% endfor %}
     </div>
 {% endblock %}

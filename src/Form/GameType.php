@@ -7,6 +7,7 @@ use FOS\CKEditorBundle\Form\Type\CKEditorType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\File;
@@ -32,6 +33,9 @@ class GameType extends AbstractType
 
             ])
             ->add('adress')
+            ->add('disclaimer',TextareaType::class,[
+                'required' => false
+            ])
             ->add('postcode')
             ->add('city')
             ->add('banner', FileType::class, [

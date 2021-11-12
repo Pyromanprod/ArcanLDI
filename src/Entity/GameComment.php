@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use App\Repository\GameCommentRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+
 
 #[ORM\Entity(repositoryClass: GameCommentRepository::class)]
 #[ORM\HasLifecycleCallbacks]
@@ -14,7 +16,13 @@ class GameComment
     #[ORM\Column(type: 'integer')]
     private $id;
 
-    #[ORM\Column(type: 'string', length: 255)]
+    #[ORM\Column(type: 'text')]
+    #[Assert\Length(
+        min: 30,
+        max: 10000,
+        minMessage: 'votre commentaire doit faire au minimum  {{ limit }} caractère de long',
+        maxMessage: 'votre commentaire peut faire au maximum   {{ limit }} caractère de long',
+    )]
     private $content;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'gameComments')]

@@ -85,7 +85,7 @@ class GameController extends AbstractController
             ;
             $entityManager->persist($role);
             $entityManager->flush();
-            return $this->redirectToRoute('admin_jeu', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('survey_index', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->renderForm('game/new.html.twig', [
@@ -125,9 +125,6 @@ class GameController extends AbstractController
 
             return $this->redirectToRoute('game_show', [
                 'slug'=> $game->getSlug(),
-                'form' => $form,
-                'comment' => $comment,
-                'game' => $game,
             ], Response::HTTP_SEE_OTHER);
 
         }

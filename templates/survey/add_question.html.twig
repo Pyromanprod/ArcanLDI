@@ -27,6 +27,7 @@
                 }) }}
                 <button type="submit" class="btn btn-outline-primary">Ajouter la question</button>
                 {{ form_end(form) }}
+                <a class="btn-outline-success btn mt-3" href="{{ path('survey_view', {'id': survey.id}) }}">terminer</a>
             </div>
 
 
@@ -44,5 +45,5 @@
     </div>
 {% endblock %}
 
-    {% block title %}Add Question{% endblock %}
+    {% block title %}Ajout Question{% endblock %}
 

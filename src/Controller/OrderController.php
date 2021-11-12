@@ -68,7 +68,7 @@ class OrderController extends AbstractController
         if ($order->getPlayer()->getEmail() == $this->getUser()->getUserIdentifier()) {
             $form = $this->createForm(UserRefundFormType::class, $order);
             $form->handleRequest($request);
-            if ($form->isSubmitted() && $form->isValid() && $order->getPlayer() == $this->getUser() && $order->getTicket()->getGame()->getDateEnd() < new \DateTime()) {
+            if ($form->isSubmitted() && $form->isValid() && $order->getPlayer() == $this->getUser() && $order->getTicket()->getGame()->getDateStart() > new \DateTime()) {
                 $email = (new Email())
                     ->from('jesuis@uneadresse.fr')
                     ->to($this->getUser()->getUserIdentifier())
@@ -80,6 +80,7 @@ class OrderController extends AbstractController
                 return $this->redirectToRoute('home');
             }
             return $this->renderForm('order/user_refund.html.twig', [
+                'disclaimer' => $order->getTicket()->getGame()->getDisclaimer(),
                 'form' => $form
             ]);
 
@@ -158,8 +159,6 @@ class OrderController extends AbstractController
     }
 
 
-
-
     #[Route('/{id}/paiement', name: 'checkout', methods: ['GET', 'POST'])]
     #[IsGranted('ROLE_USER')]
     public function checkout(Order $order, $stripeSK, EntityManagerInterface $entityManager): Response
@@ -207,7 +206,7 @@ class OrderController extends AbstractController
 
     #[Route('-success-url/{id}/', name: 'success', methods: ['GET', 'POST'])]
     #[IsGranted('ROLE_USER')]
-    public function success(Request $request, Order $order, $stripeSK, EntityManagerInterface $entityManager,RoleGroupeRepository $groupeRepository,MailerInterface $mailer): Response
+    public function success(Request $request, Order $order, $stripeSK, EntityManagerInterface $entityManager, RoleGroupeRepository $groupeRepository, MailerInterface $mailer): Response
     {
 
         Stripe::setApiKey($stripeSK);
@@ -222,8 +221,8 @@ class OrderController extends AbstractController
             $email = (new Email())
                 ->from('jesuis@uneadresse.fr')
                 ->to($order->getPlayer()->getEmail())
-                ->subject('Achat d\'un ticket ArcanLDI '.' jeu '.$order->getTicket()->getGame()->getName().' ticket '.$order->getTicket()->getName())
-                ->text('vous avez bien acheter un ticket '.$order->getTicket()->getName().' pour le jeu' .$order->getTicket()->getGame()->getName() );
+                ->subject('Achat d\'un ticket ArcanLDI ' . ' jeu ' . $order->getTicket()->getGame()->getName() . ' ticket ' . $order->getTicket()->getName())
+                ->text('vous avez bien acheter un ticket ' . $order->getTicket()->getName() . ' pour le jeu' . $order->getTicket()->getGame()->getName());
             $mailer->send($email);
             $this->addFlash('success', 'ticket acheter avec succés');
 
@@ -234,7 +233,7 @@ class OrderController extends AbstractController
 
     #[Route('-refund/{id}', name: 'refund', methods: ['GET', 'POST'])]
     #[IsGranted('ROLE_ADMIN')]
-    public function refund($stripeSK, Order $order, EntityManagerInterface $entityManager, Request $request,MailerInterface $mailer): Response
+    public function refund($stripeSK, Order $order, EntityManagerInterface $entityManager, Request $request, MailerInterface $mailer): Response
     {
         if ($this->isCsrfTokenValid('refund' . $order->getId(), $request->request->get('_token'))) {
             Stripe::setApiKey($stripeSK);
@@ -243,14 +242,24 @@ class OrderController extends AbstractController
             ]);
             //remise dans le stock d'un ticket remboursé et supression de l'order
             $order->getTicket()->setStock($order->getTicket()->getStock() + 1);
+            foreach ($order->getPlayer()->getRoleGroupes() as $role){
+                $order->getPlayer()->removeRoleGroupe($role);
+            }
             $entityManager->remove($order);
             $entityManager->flush();
-
-            $email = (new Email())
-                ->from('jesuis@uneadresse.fr')
-                ->to($order->getPlayer()->getEmail())
-                ->subject('remboursement ArcanLDI '.' jeu '.$order->getTicket()->getGame()->getName().' ticket '.$order->getTicket()->getName())
-                ->text('votre demande de remboursement a été accepté');
+            if ($request->request->get('reason')) {
+                $email = (new Email())
+                    ->from('jesuis@uneadresse.fr')
+                    ->to($order->getPlayer()->getEmail())
+                    ->subject('remboursement ArcanLDI ' . ' jeu ' . $order->getTicket()->getGame()->getName() . ' ticket ' . $order->getTicket()->getName())
+                    ->text($request->request->get('reason'));
+            } else {
+                $email = (new Email())
+                    ->from('jesuis@uneadresse.fr')
+                    ->to($order->getPlayer()->getEmail())
+                    ->subject('remboursement ArcanLDI ' . ' jeu ' . $order->getTicket()->getGame()->getName() . ' ticket ' . $order->getTicket()->getName())
+                    ->text('votre demande de remboursement a été accepté');
+            }
             $mailer->send($email);
 
             $this->addFlash('success', 'ticket remboursé avec succés');
@@ -264,24 +273,23 @@ class OrderController extends AbstractController
 
     #[Route('-reject-refund/{id}', name: 'reject_refund', methods: ['GET', 'POST'])]
     #[IsGranted('ROLE_ADMIN')]
-    public function rejectRefund(Order $order, EntityManagerInterface $entityManager, Request $request,MailerInterface $mailer): Response
+    public function rejectRefund(Order $order, EntityManagerInterface $entityManager, Request $request, MailerInterface $mailer): Response
     {
         if ($this->isCsrfTokenValid('rejectRefund' . $order->getId(), $request->request->get('_token'))) {
-            if ($request->request->get('reason')){
+            if ($request->request->get('reason')) {
                 $email = (new Email())
                     ->from('jesuis@uneadresse.fr')
                     ->to($order->getPlayer()->getEmail())
-                    ->subject('remboursement ArcanLDI '.' jeu '.$order->getTicket()->getGame()->getName().' ticket '.$order->getTicket()->getName())
+                    ->subject('remboursement ArcanLDI ' . ' jeu ' . $order->getTicket()->getGame()->getName() . ' ticket ' . $order->getTicket()->getName())
                     ->text($request->request->get('reason'));
-                $mailer->send($email);
-            }else{
-            $email = (new Email())
-                ->from('jesuis@uneadresse.fr')
-                ->to($order->getPlayer()->getEmail())
-                ->subject('remboursement ArcanLDI')
-                ->text('Votre demande de remboursement a été refusé');
-            $mailer->send($email);
+            } else {
+                $email = (new Email())
+                    ->from('jesuis@uneadresse.fr')
+                    ->to($order->getPlayer()->getEmail())
+                    ->subject('remboursement ArcanLDI')
+                    ->text('Votre demande de remboursement a été refusé');
             }
+            $mailer->send($email);
             $order->setRefundRequest('rejected');
             $entityManager->flush();
             $this->addFlash('success', 'la demmande de remboursement a bien etais refusé');

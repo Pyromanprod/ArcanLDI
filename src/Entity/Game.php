@@ -87,6 +87,9 @@ class Game
     #[ORM\OneToMany(mappedBy: 'game', targetEntity: GameComment::class, orphanRemoval: true)]
     private $gameComments;
 
+    #[ORM\Column(type: 'text', nullable: true)]
+    private $disclaimer;
+
 
     public function getSlug(): ?string
     {
@@ -376,6 +379,18 @@ class Game
     public function setIsPublished(bool $isPublished): self
     {
         $this->isPublished = $isPublished;
+
+        return $this;
+    }
+
+    public function getDisclaimer(): ?string
+    {
+        return $this->disclaimer;
+    }
+
+    public function setDisclaimer(?string $disclaimer): self
+    {
+        $this->disclaimer = $disclaimer;
 
         return $this;
     }
