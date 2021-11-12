@@ -47,6 +47,9 @@
                 }
             }) }}
             {% if ticket.cgv %}
+                {{ form_label(form.cgv, 'CGV (.pdf)',{
+                    'label_attr': {'class': 'text-ivoire'}
+                }) }}
                 {{ form_row(form.cgv, {
                     label: 'CGV',
                     attr: {
@@ -59,8 +62,11 @@
                 }) }}
 
             {% else %}
+                {{ form_label(form.cgv, 'CGV (.pdf)',{
+                    'label_attr': {'class': 'text-ivoire'}
+                }) }}
                 {{ form_widget(form.cgv, {
-                    label: 'Bannière',
+
                     attr: {
                         required: 'required',
                         placeholder: '',
