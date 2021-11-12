@@ -15,7 +15,7 @@
                         <p class="card-text">email: {{ user.email }}</p>
                         <p class="card-text"> role du joueur :
                             {% if user.roleGroupes %}
-                            {% for role in user.roleGroupes %}
+                            {% for role in roles %}
                         </p>
                         <form class="d-inline" method="post"
                               action="{{ path('role_delete', {'pseudo': user.pseudo, 'id': role.id} ) }}"

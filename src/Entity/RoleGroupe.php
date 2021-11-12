@@ -36,6 +36,11 @@ class RoleGroupe
     #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'roleGroupes')]
     private $player;
 
+    public function __toString(): string
+    {
+        return $this->getName();
+    }
+
     public function __construct()
     {
         $this->articles = new ArrayCollection();

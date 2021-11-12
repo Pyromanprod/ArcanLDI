@@ -18,7 +18,6 @@ class NewsType extends AbstractType
                 'config_name' => 'game',
                 'purify_html' => true,
             ])
-            //TODO:AJOUTER CKEDITOR
         ;
     }
 

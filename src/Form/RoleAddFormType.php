@@ -13,9 +13,10 @@ class RoleAddFormType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
+
             ->add('name',EntityType::class,[
                 'class' => 'App\Entity\RoleGroupe',
-                'choice_label' => 'name',
+                'choices' => $options['choice'],
                 'multiple' => 'true',
                 'expanded' => 'true'
             ])
@@ -25,7 +26,8 @@ class RoleAddFormType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => RoleGroupe::class,
+            'data_class' => null,
+            'choice' => array()
         ]);
     }
 }

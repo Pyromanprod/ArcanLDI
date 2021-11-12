@@ -6,6 +6,7 @@ use App\Entity\Ticket;
 use App\Entity\User;
 use App\Form\UserType;
 use App\Repository\GameRepository;
+use App\Repository\RoleGroupeRepository;
 use App\Repository\TicketRepository;
 use App\Repository\UserRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -33,11 +34,12 @@ class UserController extends AbstractController
 
     #[Route('/{id}/ticket', name: 'user_index_ticket', methods: ['GET'])]
     #[IsGranted('ROLE_ADMIN')]
-    public function indexticket(Ticket $ticket,UserRepository $userRepository,TicketRepository $ticketRepository): Response
+    public function indexticket(Ticket $ticket,UserRepository $userRepository,TicketRepository $ticketRepository,RoleGroupeRepository $groupeRepository): Response
     {
 
         return $this->render('user/inde_ticket.html.twig', [
             'users' => $userRepository->findplayer($ticket),
+            'roles' => $groupeRepository->findAllPlayerRoleButPublic($userRepository->findplayer($ticket)),
             'tickets' => $ticket
         ]);
     }

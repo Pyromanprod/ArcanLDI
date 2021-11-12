@@ -59,7 +59,7 @@
                                     {{ comment.author.pseudo }}
                                 </div>
                                 <div class="card-body">
-                                    <p class="card-text">{{ comment.content }}</p>
+                                    <p class="card-text">{{ comment.content|purify|raw }}</p>
                                 </div>
                             </div>
                         </div>

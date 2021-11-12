@@ -76,10 +76,12 @@ class RoleGroupeController extends AbstractController
     }
     //ajout role de groupe a un utilisateur
     #[Route('/{id}/ajouter', name: 'role_groupe_add', methods: ['GET','POST'])]
-    public function add(Request $request, User $user, OrderRepository $orderRepository): Response
+    public function add(Request $request, User $user, OrderRepository $orderRepository,RoleGroupeRepository $groupeRepository): Response
     {
 
-        $form = $this->createForm(RoleAddFormType::class);
+        $form = $this->createForm(RoleAddFormType::class,[],[
+            'choice'=> $groupeRepository->findOnlyNotUsed($user->getRoleGroupes()->getValues()) ,
+        ]);
         $form->handleRequest($request);
         $id = $orderRepository->findOneByPlayer($user)->getTicket()->getId();
         if ($form->isSubmitted() && $form->isValid()) {

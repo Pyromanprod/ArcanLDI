@@ -25,11 +25,36 @@ class RoleGroupeRepository extends ServiceEntityRepository
      * @return RoleGroupe[] Returns an array of RoleGroupe objects
      */
 
+    public function findOnlyNotUsed($roles)
+    {
+        foreach ($roles as $role) {
+            $qb = $this->createQueryBuilder('r')
+                ->andWhere('r.name != :val')
+                ->andWhere('r.name != :public')
+                ->setParameter('public', 'public')
+                ->setParameter('val', $role->getName());
+        }
+        return $qb->getQuery()->getResult();
+    }
+
     public function findAllButPublic()
     {
+
         return $this->createQueryBuilder('r')
-            ->andWhere('r.name != :val')
-            ->setParameter('val', 'public')
+            ->andWhere('r.name != :public')
+            ->setParameter('public', 'public')
+            ->getQuery()
+            ->getResult();
+    }
+    public function findAllPlayerRoleButPublic($player)
+    {
+
+        return $this->createQueryBuilder('r')
+            ->join('r.player','p')
+            ->where('p = :player')
+            ->andWhere('r.name != :public')
+            ->setParameter('player',$player)
+            ->setParameter('public', 'public')
             ->getQuery()
             ->getResult();
     }

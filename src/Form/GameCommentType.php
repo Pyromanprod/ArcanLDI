@@ -3,8 +3,8 @@
 namespace App\Form;
 
 use App\Entity\GameComment;
+use FOS\CKEditorBundle\Form\Type\CKEditorType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -13,7 +13,7 @@ class GameCommentType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('content',TextareaType::class)
+            ->add('content',CKEditorType::class)
         ;
     }
 

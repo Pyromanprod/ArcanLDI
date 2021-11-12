@@ -38,7 +38,7 @@
                             {{ coment.player.pseudo }}
                         </div>
                         <div class="card-body">
-                            <p class="card-text">{{ coment.content }}</p>
+                            <p class="card-text">{{ coment.content|purify|raw}}</p>
                             {% if is_granted('ROLE_ADMIN') %}
 
                                 <form method="post" action="{{ path('comment_delete', {'id': coment.id}) }}"
