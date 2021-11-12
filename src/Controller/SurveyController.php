@@ -152,7 +152,7 @@ class SurveyController extends AbstractController
 
     #[Route('/accepter-les-cgv/{id}', name: 'is_cgv')]
     #[isGranted('ROLE_USER')]
-    public function accepte_cgv(Request $request,EntityManagerInterface $em, Order $order): Response
+    public function accepte_cgv(Request $request, EntityManagerInterface $em, Order $order): Response
     {
         $form = $this->createForm(IsCgvFormType::class, $order);
         $form->handleRequest($request);
@@ -182,7 +182,7 @@ class SurveyController extends AbstractController
 
         //si les CGV ne sont pas accépter on accéde pas au formulaire
 
-        if (!$order->getIsCgv()){
+        if (!$order->getIsCgv()) {
 
             return $this->redirectToRoute('survey_is_cgv', ['id' => $order->getId()]);
         }
@@ -266,9 +266,28 @@ class SurveyController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
 
             $entityManager = $this->getDoctrine()->getManager();
-            $answer->setQuestion($question)
-                ->setContent($form->get('content')->getData())
-                ->setPlayer($this->getUser()); //bug phpstorm
+
+            //si réponse facultative et pas de réponse on rempli le champs par une chaine vide
+            if ($question->getOptional() && !$form->get('content')->getData()) {
+                $answer->setQuestion($question)
+                    ->setContent('')
+                    ->setPlayer($this->getUser()); //bug phpstorm
+            } else {
+                //si la reponse est obligatoire et que
+                // la réponse vide
+                // on renvoie sur la même question avec un message d'erreur
+                if (!$form->get('content')->getData()){
+                    $this->addFlash('error', 'Réponse obligatoire');
+                    return $this->redirectToRoute('survey_suvey_for_ticket', [
+                        'id' => $order->getId(),
+                    ], Response::HTTP_SEE_OTHER);
+
+                }
+                //Si tout est ok on rempli avec la réponse de l'utilisateur
+                $answer->setQuestion($question)
+                    ->setContent($form->get('content')->getData())
+                    ->setPlayer($this->getUser()); //bug phpstorm
+            }
 
             $entityManager->persist($answer);
             $entityManager->flush();
@@ -309,7 +328,7 @@ class SurveyController extends AbstractController
     public function delete(Request $request, Survey $survey): Response
     {
 
-        if ($this->isCsrfTokenValid('delete'.$survey->getId(), $request->request->get('csrf_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $survey->getId(), $request->request->get('csrf_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($survey);
             $entityManager->flush();

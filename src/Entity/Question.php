@@ -41,6 +41,9 @@ class Question
     #[Assert\GreaterThanOrEqual(0)]
     private $orderBy;
 
+    #[ORM\Column(type: 'boolean')]
+    private $optional;
+
     public function __construct()
     {
         $this->choices = new ArrayCollection();
@@ -167,6 +170,18 @@ class Question
     public function setOrderBy(?int $orderBy): self
     {
         $this->orderBy = $orderBy;
+
+        return $this;
+    }
+
+    public function getOptional(): ?bool
+    {
+        return $this->optional;
+    }
+
+    public function setOptional(bool $optional): self
+    {
+        $this->optional = $optional;
 
         return $this;
     }

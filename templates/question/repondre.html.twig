@@ -6,14 +6,22 @@
             <div class="col-12 col-md-8 col-lg-6 mx-auto">
                 <div class="mb-2">
                     <h2>
-
                         {{ question.content }} ?
                     </h2>
+                    {{ question.optional ? '<p class="text-info">(facultative)</p>' }}
                 </div>
+
+                {# TERNAIRE POUR VERIFIE SI ON MET UN REQUIRED OU PAS #}
                 {{ form_start(form) }}
-                {{ form_row(form.content, {
+                {{ question.optional ?
+                form_row(form.content, {
                     'label': 'Réponse'
+                }) :
+                form_row(form.content, {
+                    'label': 'Réponse',
+                    'attr': {'required': true}
                 }) }}
+
                 <button type="submit" class="btn btn-primary">Répondre</button>
                 {{ form_end(form) }}
             </div>
