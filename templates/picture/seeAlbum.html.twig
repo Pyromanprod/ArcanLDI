@@ -1,0 +1,28 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+    <div class="container">
+        <div class="row">
+            {% for photo in game.pictures %}
+                <div class="col-lg-3 col-md-4 col-xs-6 thumb">
+                    <a class="thumbnail" href="{{ asset(game_album_directory~'/'~game.slug~'/'~photo.name) }}" data-image-id="" data-toggle="modal" data-title="Im so nice"
+                       data-image="{{ asset(game_album_directory~'/'~game.slug~'/'~photo.name) }}"
+                       data-target="#image-gallery">
+                        <img class="img-thumbnail"
+                             src="{{ asset(game_album_directory~'/'~game.slug~'/'~photo.name)|imagine_filter('gallery') }}"
+                             alt="Another alt text">
+                    </a>
+                </div>
+            {% endfor %}
+
+        </div>
+
+
+    </div>
+
+{% endblock %}
+
+{% block title %}Album Photo (nom du jeu){% endblock %}
+
+
