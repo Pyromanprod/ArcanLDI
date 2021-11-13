@@ -6,6 +6,7 @@
 parameters:
     google_recaptcha.private_key: '%env(GOOGLE_RECAPTCHA_PRIVATE_KEY)%'
     game.photo.directory: '%kernel.project_dir%/public/img/uploads/gamebanner/'
+    game.album.directory: '%kernel.project_dir%/public/img/uploads/album/'
     user.photo.directory: '%kernel.project_dir%/public/img/user/'
     game.cgv.directory: '%kernel.project_dir%/public/cgv/'
 

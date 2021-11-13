@@ -3,7 +3,9 @@
 namespace App\Service;
 
 use App\Entity\Game;
+use App\Entity\Picture;
 use App\Entity\Ticket;
+use phpDocumentor\Reflection\Types\Array_;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
@@ -40,7 +42,44 @@ class uploadGamePhoto
             );
         return $newFileName;
     }
+    public function uploadAlbum(Array $photos, Game $game): array
+    {
+        // dossier du jeu dans le game.photo.directory
+        $directory = $this->controller->get('game.album.directory');
 
+        //si le dossier game.photo.directory n'existe pas
+        if (!file_exists($directory)) {
+            //on le créer
+            mkdir($directory);
+        }
+        // dossier du jeu dans le game.photo.directory
+        $directory .= $game->getSlug();
+
+        //si le dossier game.photo.directory n'existe pas
+        if (!file_exists($directory)) {
+            //on le créer
+            mkdir($directory);
+        }
+        
+
+        foreach ($photos as $photo) {
+            //on assure l'unicité du nom
+            do {
+                $nameFile = md5(uniqid()) . '.' . $photo->guessExtension();
+            } while (file_exists($directory . $nameFile));
+            //envoie des photos
+            $photo->move($directory,
+                $nameFile
+            );
+            $picture = new Picture();
+            $picture->setName($nameFile)
+                ->setGame($game);
+            $listePicture[]= $picture;
+
+        }
+
+        return $listePicture;
+    }
     public function uploadCGVTicket(UploadedFile $cgv, Ticket $ticket): String
     {
         // dossier du jeu dans le game.photo.directory

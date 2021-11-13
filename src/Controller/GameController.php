@@ -162,6 +162,7 @@ class GameController extends AbstractController
     }
 
     #[Route('/{id}/', name: 'game_delete', methods: ['POST'])]
+    #[isGranted('ROLE_ADMIN')]
     public function delete(Game $game, Request $request): Response
     {
         if ($this->isCsrfTokenValid('delete' . $game->getId(), $request->request->get('_token'))) {
@@ -173,89 +174,48 @@ class GameController extends AbstractController
         return $this->redirectToRoute('admin_jeu', [], Response::HTTP_SEE_OTHER);
     }
 
-    #[Route('/ajouter-photo/{slug}', name: 'game_add_album_Photo', methods: ['POST', 'GET'])]
-    public function addAlbumPhoto(Request $request, Game $game): Response
-    {
-        $form = $this->createForm(AlbumPhotoFormType::class);
-        $form->handleRequest($request);
-        // dossier du jeu dans le game.photo.directory
-        $directory = $this->getParameter('game.photo.directory') . $game->getName() . '/album_photo/';
-        if ($form->isSubmitted()) {
-
-            //            TODO: Factoriser envoie de photo
-
-            // dossier du jeu dans le game.photo.directory
-            $directory = $this->getParameter('game.photo.directory') . $game->getName() . '/album_photo/';
-            //si le dossier n'exist pas
-            if (!file_exists($directory)) {
-                //on le créer
-                mkdir($directory);
-            }
-            //récupération de la photo si il y a
-            $photos = $form->get('photos')->getData();
-
-            foreach ($photos as $photo) {
-                //on assure l'unicité du nom
-                do {
-                    $nameFile = md5(uniqid()) . '.' . $photo->guessExtension();
-                } while (file_exists($directory . $nameFile));
-                //envoie des photos
-                $photo->move($directory,
-                    $nameFile
-                );
-                $picture = new Picture();
-                $picture->setName($nameFile)
-                    ->setGame($game);
-
-            }
-            $this->getDoctrine()->getManager()->flush();
-            return $this->redirectToRoute('game_index', [], Response::HTTP_SEE_OTHER);
-        }
-        return $this->renderForm('game/add_album_photo.html.twig', [
-            'form' => $form,
-        ]);
-    }
-
-    #[Route('/ajouter-video/{slug}', name: 'game_add_album_video', methods: ['POST', 'GET'])]
-    public function addAlbumVideo(Request $request, Game $game): Response
-    {
-        $form = $this->createForm(AlbumVideoFormType::class);
-        $form->handleRequest($request);
-        // dossier du jeu dans le game.photo.directory
-        $directory = $this->getParameter('game.photo.directory') . $game->getName() . '/album_photo/';
-        if ($form->isSubmitted()) {
-
-            // dossier du jeu dans le game.photo.directory
-            $directory = $this->getParameter('game.photo.directory') . $game->getName() . '/album_video/';
-            //si le dossier n'exist pas
-            if (!file_exists($directory)) {
-                //on le créer
-                mkdir($directory);
-            }
-            //récupération de la photo si il y a
-            $videos = $form->get('video')->getData();
-
-            foreach ($videos as $video) {
-                //on assure l'unicité du nom
-                do {
-                    $nameFile = md5(uniqid()) . '.' . $video->guessExtension();
-                } while (file_exists($directory . $nameFile));
-                //envoie des photos
-                $video->move($directory,
-                    $nameFile
-                );
-                $video = new Video();
-                $video->setName($nameFile)
-                    ->setGame($game);
-
-            }
-            $this->getDoctrine()->getManager()->flush();
-            return $this->redirectToRoute('game_index', [], Response::HTTP_SEE_OTHER);
-        }
-        return $this->renderForm('game/add_album_video.html.twig', [
-            'form' => $form,
-        ]);
-    }
+// A VOIR SI ON MET EN PLACE
+//
+//    #[Route('/ajouter-video/{slug}', name: 'game_add_album_video', methods: ['POST', 'GET'])]
+//    public function addAlbumVideo(Request $request, Game $game): Response
+//    {
+//        $form = $this->createForm(AlbumVideoFormType::class);
+//        $form->handleRequest($request);
+//        // dossier du jeu dans le game.photo.directory
+//        $directory = $this->getParameter('game.photo.directory') . $game->getName() . '/album_photo/';
+//        if ($form->isSubmitted()) {
+//
+//            // dossier du jeu dans le game.photo.directory
+//            $directory = $this->getParameter('game.photo.directory') . $game->getName() . '/album_video/';
+//            //si le dossier n'exist pas
+//            if (!file_exists($directory)) {
+//                //on le créer
+//                mkdir($directory);
+//            }
+//            //récupération de la photo si il y a
+//            $videos = $form->get('video')->getData();
+//
+//            foreach ($videos as $video) {
+//                //on assure l'unicité du nom
+//                do {
+//                    $nameFile = md5(uniqid()) . '.' . $video->guessExtension();
+//                } while (file_exists($directory . $nameFile));
+//                //envoie des photos
+//                $video->move($directory,
+//                    $nameFile
+//                );
+//                $video = new Video();
+//                $video->setName($nameFile)
+//                    ->setGame($game);
+//
+//            }
+//            $this->getDoctrine()->getManager()->flush();
+//            return $this->redirectToRoute('game_index', [], Response::HTTP_SEE_OTHER);
+//        }
+//        return $this->renderForm('game/add_album_video.html.twig', [
+//            'form' => $form,
+//        ]);
+//    }
 
 
 }

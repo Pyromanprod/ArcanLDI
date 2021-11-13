@@ -51,7 +51,7 @@ class GameType extends AbstractType
                             'image/gif',
                             'image/webp',
                         ],
-                        'mimeTypesMessage' => 'Fichier accépté : "jpeg, jpg, png, gif"',
+                        'mimeTypesMessage' => 'Fichier accépté : "jpeg, jpg, png, gif, webp"',
                         'maxSizeMessage' => 'Merci de ne pas dépasser {{ limit }} {{ suffixe }}',
 
                     ])
