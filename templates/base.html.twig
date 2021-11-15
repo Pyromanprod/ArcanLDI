@@ -15,8 +15,10 @@
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
     {% block stylsheet %}{% endblock %}
     <title>{% block title %}{% endblock %} - Arcan, Les démons d'ivoire</title>
+
 </head>
 <body class="bg-dark text-light">
+    {% block test %}{% endblock %}
 <nav class="navbar navbar-expand-lg navbar-dark bg-black">
     <div class="container-fluid">
         <a class="navbar-brand" href="{{ path('home') }}"><img

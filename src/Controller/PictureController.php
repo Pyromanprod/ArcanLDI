@@ -44,7 +44,7 @@ class PictureController extends AbstractController
     public function seeAlbum(Request $request, Game $game): Response
     {
 
-        return $this->render('picture/seeAlbum.html.twig', [
+        return $this->render('picture/testgallery.html.twig', [
             'game'=>$game,
         ]);
 

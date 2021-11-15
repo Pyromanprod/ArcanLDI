@@ -1,12 +1,23 @@
 {% block body %}
     <div class="container-fluid">
         <div class="row">
-                <h1 class="text-center">Qui somme nous</h1>
+            <h1 class="text-center">Qui somme nous</h1>
 
         </div>
-        <div class="col-12 col-md-10 mx-auto ckeditor presentation">
-            {{ presentation.content|purify|raw }}
-        </div>
+        {% if presentation %}
+
+            <div class="col-12 col-md-10 mx-auto ckeditor presentation">
+                {{ presentation.content|purify|raw }}
+            </div>
+
+        {% else %}
+            <div class="col-12 col-md-10 mx-auto ckeditor presentation">
+                <p class="alert-warning alert">Pas encore de présentation <a href="{{ path('presentation_new') }}">
+                        cliquez ici pour en créer une
+                    </a></p>
+            </div>
+
+        {% endif %}
     </div>
 
 {% endblock %}
