@@ -14,15 +14,13 @@
     {# STYLE PERSO #}
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
 
-
-    {% block stylsheet %}{% endblock %}
     <title>Accueil - Arcan, Les démons d'ivoire</title>
 
 
 </head>
 <body class="bg-dark text-light">
 
-{% block body %}
+
     <div id='hero'>
         <div class='layer-bg layer parallax' data-depth='0.15'></div>
 
@@ -32,8 +30,9 @@
         </div>
     {% endif %}
 
+
         {% if app.session.flashBag.has('error') %}
-            <div class="container">
+            <div class="container position-absolute top-0 start-50 translate-middle-x flash">
                 <div class="row">
                     {% for message in app.flashes('error') %}
                         <div class="alert alert-danger alert-dismissible fade show text-center col-12 p-4 m-0"
@@ -46,7 +45,7 @@
             </div>
         {% endif %}
         {% if app.session.flashBag.has('success') %}
-            <div class="container">
+            <div class="container position-absolute top-0 start-50 translate-middle-x flash">
                 <div class="row">
                     {% for message in app.flashes('success') %}
                         <div class="alert alert-success alert-dismissible fade show text-center col-12 p-4 m-0"
@@ -56,6 +55,12 @@
                         </div>
                     {% endfor %}
                 </div>
+            </div>
+        {% endif %}
+        {% if requestedRefund and is_granted('ROLE_ADMIN') %}
+            <div class="text-center position-fixed top-0 start-50 translate-middle-x first-layer">
+                <a class="btn btn-warning" href="{{ path('order_refund_requested') }}">Demandes de
+                    remboursement</a>
             </div>
         {% endif %}
         {# <div class='layer-overlay layer parallax' data-depth='0.85'></div> #}
@@ -93,11 +98,6 @@
     </div>
 
 
-
-
-
-{% endblock %}
-{% block script %}
     {# BOOTSTRAP #}
     <script src="{{ asset('js/bootstrap.bundle.min.js') }}"></script>
     {# GSAP #}
@@ -113,4 +113,5 @@
 
 
     <script src="{{ asset('js/paralaxe.js') }}"></script>
-{% endblock %}
+    <script src="{{ asset('js/flash.js') }}"></script>
+
