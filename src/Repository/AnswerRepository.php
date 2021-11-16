@@ -3,11 +3,12 @@
 namespace App\Repository;
 
 use App\Entity\Answer;
+use App\Entity\Game;
 use App\Entity\Question;
+use App\Entity\Ticket;
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
-use phpDocumentor\Reflection\Types\Boolean;
 
 /**
  * @method Answer|null find($id, $lockMode = null, $lockVersion = null)
@@ -23,7 +24,6 @@ class AnswerRepository extends ServiceEntityRepository
     }
 
 
-
     public function findByUserQuestion(User $user, Question $question): bool
     {
         $response = $this->createQueryBuilder('a')
@@ -32,13 +32,40 @@ class AnswerRepository extends ServiceEntityRepository
             ->setParameter('user', $user)
             ->setParameter('question', $question)
             ->getQuery()
-            ->getResult()
-        ;
-        if ($response){
-           return true;
-        }else{
+            ->getResult();
+        if ($response) {
+            return true;
+        } else {
             return false;
         }
+    }
+    public function findByQuestionPlayer(Question $question, User $player)
+    {
+        return $this->createQueryBuilder('a')
+
+            ->andWhere('a.question = :question')
+            ->andWhere('a.player = :player')
+            ->setParameter('question', $question)
+            ->setParameter('player', $player)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
+
+    public function findByGame(Game $game, Ticket $ticket)
+    {
+        return $this->createQueryBuilder('a')
+            ->join('a.question', 'question')
+            ->join('question.survey', 'survey')
+            ->join('survey.surveyTickets', 'survey_tickets')
+            ->join('survey_tickets.ticket', 'ticket')
+            ->join('ticket.game', 'game')
+            ->andWhere('game = :game')
+            ->andWhere('ticket = :ticket')
+            ->setParameter('game', $game)
+            ->setParameter('ticket', $ticket)
+            ->getQuery()
+            ->getResult();
     }
 
 

@@ -24,23 +24,6 @@
                         class: 'form-floating bg-dark text-ivoire'
                     }
                 }) }}
-                {{ form_row(registrationForm.birthDate,{
-                    label: 'Date de naissance',
-                    attr: {
-                        placeholder: '',
-                        class: 'bg-dark border-0 border-bottom border-ivoire rounded-0 text-light'
-                    },
-                    row_attr: {
-                        class: 'form-floating bg-dark text-ivoire'
-                    }}) }}
-
-                {{ form_row(registrationForm.photo, {
-                    attr: {
-                        placeholder: '',
-                        class: 'bg-dark border-0 border-bottom border-ivoire rounded-0 text-light'
-                    },
-                }) }}
-
                 {{ form_row(registrationForm.firstname, {
                     label: 'Prénom',
                     attr: {
@@ -51,6 +34,18 @@
                         class: 'form-floating bg-dark text-ivoire'
                     }
                 }) }}
+                {{ form_row(registrationForm.birthDate,{
+                    label: 'Date de naissance',
+                    attr: {
+                        placeholder: '',
+                        class: 'bg-dark border-0 border-bottom border-ivoire rounded-0 text-light'
+                    },
+                    row_attr: {
+                        class: 'form-floating bg-dark text-ivoire'
+                    }}) }}
+
+
+
                 {{ form_row(registrationForm.pseudo, {
                     label: 'Pseudo',
                     attr: {
@@ -60,6 +55,12 @@
                     row_attr: {
                         class: 'form-floating bg-dark text-ivoire'
                     }
+                }) }}
+                {{ form_row(registrationForm.photo, {
+                    attr: {
+                        placeholder: '',
+                        class: 'bg-dark border-0 border-bottom border-ivoire rounded-0 text-light'
+                    },
                 }) }}
                 {{ form_row(registrationForm.email, {
                     label: 'Mail',
@@ -71,6 +72,7 @@
                         class: 'form-floating bg-dark text-ivoire'
                     }
                 }) }}
+
                 {{ form_row(registrationForm.plainPassword, {
                     label: 'Mot de passe',
                     attr: {
