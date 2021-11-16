@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit Membership{% endblock %}
+
+{% block body %}
+
+    <div class="container">
+        <div class="row">
+            <div class="col-12 col-md-8 mx-auto">
+                <h1>Modifier la cotisation</h1>
+
+                 {{ include('membership/_form.html.twig', {'button_label': 'modifier'}) }}
+
+
+                <a class="btn btn-outline-warning" href="{{ path('membership_index') }}">Annuler</a>
+
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}

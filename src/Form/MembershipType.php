@@ -2,25 +2,25 @@
 
 namespace App\Form;
 
-use App\Entity\Coment;
-use FOS\CKEditorBundle\Form\Type\CKEditorType;
+use App\Entity\Membership;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class ComentFormType extends AbstractType
+class MembershipType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('content',CKEditorType::class)
+            ->add('price')
+            ->add('year')
         ;
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => Coment::class,
+            'data_class' => Membership::class,
         ]);
     }
 }

@@ -2,7 +2,8 @@
 
 namespace App\Repository;
 
-use App\Entity\RoleGroupe;
+
+use App\Entity\MembershipAssociation;
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -45,6 +46,55 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             ->setParameter(':ticket',$ticket)
             ->getQuery()
             ->getResult();
+    }
+
+
+    /**
+     * @return User[]
+     */
+    public function findPlayerIn($membership): array
+    {
+        return $this->createQueryBuilder('a')
+            ->Join('a.membershipAssociations','m')
+            ->where('m.member = a')
+            ->andWhere('m.membership = :membership')
+            ->setParameter(':membership',$membership)
+            ->getQuery()
+            ->getResult();
+    }
+
+
+    public function findByPlayersNotPaid($membership)
+    {
+        return $this->createQueryBuilder('a')
+            ->Join('a.membershipAssociations','m')
+            ->where('m.member = a')
+            ->andWhere('m.membership = :membership')
+            ->andWhere('m.paid = 0')
+            ->setParameter(':membership',$membership)
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * @return User[]
+     */
+    public function findPlayerNotIn($players): array
+    {
+
+            if ($players == null ){
+               return $this->findAll();
+            }else{
+            $qb = $this->createQueryBuilder('a')
+                ->where('a NOT IN (:player)')
+                ->setParameter('player',$players);
+
+
+            return $qb->getQuery()->getResult();
+            }
+
+
+
     }
 
     public function findRoleArticle( $role, User $user){

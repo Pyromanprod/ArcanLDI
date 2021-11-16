@@ -3,9 +3,13 @@
 namespace App\Controller;
 
 use App\Entity\Game;
+use App\Entity\Membership;
+use App\Entity\MembershipAssociation;
 use App\Entity\News;
 use App\Entity\Order;
 use App\Entity\Presentation;
+use App\Entity\User;
+use App\Form\MemberAssociationType;
 use App\Repository\GameRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -23,12 +27,17 @@ class MainController extends AbstractController
         $reposnews = $this->getDoctrine()->getRepository(News::class);
         $presentationRepository = $this->getDoctrine()->getRepository(Presentation::class);
         $order = $this->getDoctrine()->getRepository(Order::class);
+        $member = $this->getDoctrine()->getRepository(MembershipAssociation::class);
+        $membership = $this->getDoctrine()->getRepository(Membership::class);
         $orders = $order->findRefundRequestedOrder();
         $allGames = $repos->findLastThree();
         $news = $reposnews->findLastThree();
+        $paid = $member->findByPlayerNotPaid($this->getUser(),$membership->findOneBylast());
+
         $presentation = $presentationRepository->findOneBy([], ['id'=>'DESC']);
         return $this->render('main/index.html.twig',
             [
+                'paid'=> $paid,
                 'requestedRefund' => $orders,
                 'news' => $news,
                 'allGames' => $allGames,

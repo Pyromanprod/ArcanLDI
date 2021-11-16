@@ -83,6 +83,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'author', targetEntity: GameComment::class, orphanRemoval: true)]
     private $gameComments;
 
+    #[ORM\OneToMany(mappedBy: 'member', targetEntity: MembershipAssociation::class, orphanRemoval: true)]
+    private $membershipAssociations;
+
     public function __construct()
     {
         $this->orders = new ArrayCollection();
@@ -92,6 +95,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->newsComments = new ArrayCollection();
         $this->news = new ArrayCollection();
         $this->gameComments = new ArrayCollection();
+        $this->membershipAssociations = new ArrayCollection();
+    }
+    public function __toString(): string
+    {
+        return $this->getEmail();
     }
 
     public function getId(): ?int
@@ -469,6 +477,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($gameComment->getAuthor() === $this) {
                 $gameComment->setAuthor(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|MembershipAssociation[]
+     */
+    public function getMembershipAssociations(): Collection
+    {
+        return $this->membershipAssociations;
+    }
+
+    public function addMembershipAssociation(MembershipAssociation $membershipAssociation): self
+    {
+        if (!$this->membershipAssociations->contains($membershipAssociation)) {
+            $this->membershipAssociations[] = $membershipAssociation;
+            $membershipAssociation->setMember($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMembershipAssociation(MembershipAssociation $membershipAssociation): self
+    {
+        if ($this->membershipAssociations->removeElement($membershipAssociation)) {
+            // set the owning side to null (unless already changed)
+            if ($membershipAssociation->getMember() === $this) {
+                $membershipAssociation->setMember(null);
             }
         }
 

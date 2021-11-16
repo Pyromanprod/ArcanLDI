@@ -31,7 +31,7 @@
                                         {{ comment.author.pseudo }}
                                     </div>
                                     <div class="card-body">
-                                        <p class="card-text">{{ comment.content }}</p>
+                                        <div class="card-text">{{ comment.content}}</div>
                                         {% if is_granted('ROLE_ADMIN') %}
 
                                             <form method="post"

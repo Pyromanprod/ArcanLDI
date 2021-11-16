@@ -24,10 +24,10 @@ class Game
     #[ORM\Column(type: 'text')]
     private $description;
 
-    #[ORM\Column(type: 'datetime', nullable: true)]
+    #[ORM\Column(type: 'datetime', )]
     private $dateStart;
 
-    #[ORM\Column(type: 'datetime', nullable: true)]
+    #[ORM\Column(type: 'datetime')]
     private $dateEnd;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]

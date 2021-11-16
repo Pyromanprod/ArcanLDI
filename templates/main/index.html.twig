@@ -27,6 +27,10 @@
         <div class='layer-bg layer parallax' data-depth='0.15'></div>
 
 {% include('main/navbar.html.twig') %}
+    {% if paid %}
+        <div class="alert-warning p-3 text-center">vous avez la cotisation a <a class="btn btn-outline-primary" href="{{ path('checkout_membership', {'id': paid.membership.id}) }}">payer</a>
+        </div>
+    {% endif %}
 
         {% if app.session.flashBag.has('error') %}
             <div class="container">

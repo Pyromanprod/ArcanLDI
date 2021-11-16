@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Ajouter des membres a la cotisation{% endblock %}
+
+{% block body %}
+
+    <div class="container">
+        <div class="row">
+            <div class="text-center" id="searchmember">
+                <label for="search">recherche</label>
+                <input type="text" id="search" class="search form-text">
+            </div>
+            <div class="col-12 col-md-8 mx-auto">
+                <h1>Ajouter des membres a la cotisation</h1>
+
+                {{ form_start(form) }}
+                {{ form_widget(form) }}
+                <button class="btn btn-outline-success" type="submit">Sauvegarder</button>
+                {{ form_end(form) }}
+
+
+                <a class="btn btn-outline-warning" href="{{ path('membership_index') }}">Annuler</a>
+
+            </div>
+        </div>
+    </div>
+    {% block script %}
+        <script src="{{ asset('js/search.js') }}"></script>
+    {% endblock %}
+{% endblock %}

@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Membership index{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <h1 class="text-center">Cotisation !</h1>
+        <a class="btn btn-outline-primary" href="{{ path('membership_new') }}">créer une nouvelle cotisation</a>
+        <div class="row">
+
+            {% for membership in memberships %}
+                <div class="col-12 col-md-4 mx-auto">
+                    <div class="card col-10 mx-auto bg-cardgame p-0 my-2 card-zoom">
+                        <div class="card-body">
+                            <h5 class="card-title"> année {{ membership.year }}</h5>
+                            <p class="card-text"> prix{{ membership.price }}</p>
+                            {% if is_granted('ROLE_ADMIN') %}
+                            <a class="btn btn-outline-light mb-3 me-2"
+                               href="{{ path('membership_show', {'id': membership.id}) }}">voir
+                                la liste des membre qui n'ont pas encore payer</a>
+                                <a class="btn btn-outline-light mb-3 me-2"
+                                   href="{{ path('add_member', {'id': membership.id}) }}">ajouter des membre a cette cotisation</a>
+                                <a class="btn btn-outline-light mb-3 me-2"
+                                   href="{{ path('membership_showall', {'id': membership.id}) }}">liste des membre</a>
+                                <a href="{{ path('membership_edit', {'id': membership.id}) }} "
+                                   class="btn btn-outline-warning mb-3 me-2">Modifier</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+            {% else %}
+                <p class="alert-warning"> pas encore de cotisation</p>
+            {% endfor %}
+        </div>
+
+    </div>
+
+{% endblock %}

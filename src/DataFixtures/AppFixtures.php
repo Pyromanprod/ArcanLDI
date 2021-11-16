@@ -72,6 +72,8 @@ class AppFixtures extends Fixture
             $gdn
                 ->setName('le jeu')
                 ->setDescription($faker->paragraph('10'))
+                ->setDateStart($faker->dateTimeBetween('+20 days','+25 days'))
+                ->setDateEnd($faker->dateTimeBetween('+30 days','+30 days'))
                 ->setIsPublished(false)
                 ->setBanner('something.jpg');
             $manager->persist($gdn);

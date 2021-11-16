@@ -21,7 +21,10 @@
             <div class="col-12 col-md-8 mx-auto">
                 {{ form_start(form) }}
                 {{ form_row(form.content,{
-                    'label': 'commentaire'
+                    'label': 'commentaire',
+                    'attr': {
+                        'row' : '20'
+                    }
                 }) }}
                 {{ form_widget(form) }}
                 <button type="submit" class="btn btn-primary">Envoyer un commentaire</button>
@@ -38,7 +41,7 @@
                             {{ coment.player.pseudo }}
                         </div>
                         <div class="card-body">
-                            <p class="card-text">{{ coment.content|purify|raw}}</p>
+                            <div class="card-text ckeditor">{{ coment.content|purify|raw}}</div>
                             {% if is_granted('ROLE_ADMIN') %}
 
                                 <form method="post" action="{{ path('comment_delete', {'id': coment.id}) }}"
