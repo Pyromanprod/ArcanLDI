@@ -22,8 +22,9 @@ liip_imagine:
         gallery:
             quality: 75
             filters:
-                scale:
-                    dim: [ 400, 400 ]
+                fixed:
+                    height: 400
+                    width: 400
 
 
         profil:
@@ -31,3 +32,9 @@ liip_imagine:
             filters:
                 scale:
                     dim: [ 700, 700 ]
+
+        gallery-full:
+            quality: 75
+            filters:
+                scale:
+                    dim: [ 800, 500 ]

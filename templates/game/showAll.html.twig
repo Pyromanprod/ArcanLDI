@@ -1,8 +1,11 @@
-<div class="row p-0 m-0">
+<div class="row p-0 m-0 hidden">
     <h1 class="text-center mb-4">Tous nos jeux</h1>
     {% for game in allGames %}
-        <div class="col-12 col-md-4 mx-auto">
-            <div class="card col-12 col-md-11 mx-auto bg-cardgame p-0 my-2 card-zoom">
+
+{#        TERNAIRE POUR LE COL MD EN FONCTION DU NOMBRE DE JEU#}
+    <div class="col-12 {{ allGames|length <=2 ? 'col-md-6': 'col-md-4' }} mx-auto">
+
+            <div class="card col-12 mx-auto bg-cardgame p-0 my-2 card-zoom thegame">
                 <a href="{{ path('game_show', {'slug': game.slug}) }}" class="text-decoration-none text-light d-inline">
                     <img src="{{ asset(game_photo_directory~game.banner)|imagine_filter('banner_game') }}"
                          class="card-img-top" alt="">
@@ -27,7 +30,7 @@
                 </a>
             </div>
         </div>
-    {% else %}
-        <div class="alert alert-warning">Pas de jeux enregistré</div>
-    {% endfor %}
-</div>
+        {% else %}
+            <div class="alert alert-warning">Pas de jeux enregistré</div>
+        {% endfor %}
+    </div>

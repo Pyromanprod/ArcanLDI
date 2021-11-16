@@ -4,11 +4,17 @@
 body{
     font-family: 'Roboto', sans-serif;
 }
+.header{
+
+    height:50vh;
+}
 .bg-header{
+
     background-image: url("../img/accueil.jpg");
     background-size: cover;
     background-position: center;
     height: 50vh;
+    width: 100%;
 }
 .bg-header h1{
     font-family: 'Fira Sans', sans-serif;
@@ -27,9 +33,11 @@ body{
     transition: all 200ms;
 }
 .card-zoom:hover{
-    transform: scale(1.01);
-    cursor: pointer;
-    box-shadow: rgba(0, 0, 0, 0.63) 3px 3px 10px;
+    -webkit-transform: scale(1.05);
+    -moz-transform: scale(1.05);
+    -o-transform: scale(1.05);
+    -ms-transform: scale(1.05);
+    transform: scale(1.05);
 }
 
 .text-ivoire{
@@ -58,19 +66,93 @@ body{
 
 
 
-/*GALLERY*/
+/*paralaxe*/
 
-.btn:focus, .btn:active, button:focus, button:active {
-    outline: none !important;
-    box-shadow: none !important;
+
+
+
+
+#hero {
+    height: 800px;
+    overflow: hidden;
+    position: relative;
+    max-width: 1920px;
+    margin: 0 auto;
+}
+#content {
+    /*background-color: #ffffff;*/
+}
+.layer {
+    background-position: bottom center;
+    background-size: auto;
+    background-repeat: no-repeat;
+    width: 100%;
+    height: 800px;
+    position: fixed;
+    z-index: -1;
 }
 
-#image-gallery .modal-footer{
-    display: block;
+#hero-mobile {
+    display: none;
+    background: url("../img/accueil.jpg") no-repeat center bottom / cover;
+    height: 320px;
 }
 
-.thumb{
-    margin-top: 15px;
-    margin-bottom: 15px;
+.first-section {
+    padding: 50px 0 20px 0;
+}
+.text-header {
+    font-size: 50px;
+    text-align: center;
+}
+h1 {
+    line-height: 120%;
+    margin-bottom: 30px;
+}
+p {
+    color: #ede0d5;
+    font-size: 18px;
+    line-height: 150%;
 }
 
+#hero, .layer {
+    min-height: 50vh;
+}
+
+.layer-bg {
+    background-image: url('../img/accueil.jpg');
+    background-size: cover;
+    background-position: center;
+}
+.layer-1 {
+    width: 100vw;
+    height: 100vh;
+}
+.title {
+
+}
+.blood {
+    background-image: url('../img/blood.png');
+    background-position: bottom;
+    opacity: 0.5;
+}
+.hidden{
+    overflow: hidden;
+}
+.layer-4 {
+    background-image: url('https://s3-us-west-2.amazonaws.com/s.cdpn.io/272781/ilu_01.png');
+}
+.layer-overlay {
+    /*background-image: url('../img/overlay.png');*/
+    background-color: rgba(0, 0, 0, 0.58);
+}
+
+
+@media only screen and (max-width: 768px) {
+    .layer-1 {
+        background-position: 26% bottom;
+    }
+    .layer-3 {
+        background-position: 35% bottom;
+    }
+}

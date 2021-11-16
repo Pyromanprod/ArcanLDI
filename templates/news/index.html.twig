@@ -16,7 +16,7 @@
         <div class="row">
 
             {% for news in news %}
-                <div class="col-12 col-md-4 mx-auto">
+                <div class="col-12 {{ news|length <=2 ? 'col-md-6': 'col-md-4' }} mx-auto">
                     <div class="card col-10 mx-auto bg-cardgame p-0 my-2 card-zoom">
                         <a href="{{ path('news_show', {'slug': news.slug}) }}"
                            class="text-decoration-none text-light d-inline">

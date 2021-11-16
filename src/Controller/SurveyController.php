@@ -197,6 +197,7 @@ class SurveyController extends AbstractController
             $listeQuestion = $questionRepository->findOrderBy($surveyTicket->getSurvey());
 
             foreach ($listeQuestion as $question) {
+                //si le joueur n'a pas encore répondu a cette question
                 if (!$answerRepository->findByUserQuestion($user, $question)) {
                     // envoie d'un hash composer de
                     // l'id de la question
@@ -220,7 +221,7 @@ class SurveyController extends AbstractController
 
         }
         return $this->redirectToRoute('checkout', ['id' => $order->getId()]);
-        //TODO: pensé a faire une vérif des orders sans paiement de plus de 7 jours (delete order + answer etc...)
+        //TODO: faire une vérif des orders sans paiement de plus de 7 jours (delete order + answer etc...)
     }
 
     #[Route('/question/{id}/{idOrder}/{hash}', name: 'answer')]

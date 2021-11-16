@@ -11,126 +11,21 @@
           crossorigin="anonymous" referrerpolicy="no-referrer"/>
     {# BOOTSTRAP #}
     <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}">
-    {# STYLE PERSO #}
+{#     STYLE PERSO #}
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+
+
+
     {% block stylsheet %}{% endblock %}
     <title>{% block title %}{% endblock %} - Arcan, Les démons d'ivoire</title>
+
 
 </head>
 <body class="bg-dark text-light">
     {% block test %}{% endblock %}
-<nav class="navbar navbar-expand-lg navbar-dark bg-black">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="{{ path('home') }}"><img
-                    src="{{ asset('img/Logo Asso.jpg')|imagine_filter('logo_nav') }}" alt="" width="100"></a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
-                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        {# A GAUCHE #}
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item">
-                    <a class="nav-link {{ route == 'home' ? 'active' }}" aria-current="page"
-                       href="{{ path('home') }}">Arcan</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link {{ route == 'game_index' ? 'active' }}" aria-current="page"
-                       href="{{ path('game_index') }}">Nos Jeux</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link {{ route == 'news_index' ? 'active' }}" aria-current="page"
-                       href="{{ path('news_index') }}">Nos Actus</a>
-                </li>
-            </ul>
 
-            {# A DROITE #}
-            <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                {% if app.user %}
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle me-2" href="{{ path('home') }}" id="navbarDropdown"
-                           role="button"
-                           data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user"></i>
-                        </a>
-                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <li><a class="dropdown-item" href="{{ path('user_show_profile') }}">Profile</a></li>
-                            <li>
-                                <hr class="dropdown-divider">
-                            </li>
-                            <li><a class="dropdown-item" href="{{ path('user_order') }}">Mes commandes</a></li>
-                            <li>
-                                <hr class="dropdown-divider">
-                            </li>
-                            <li><a class="dropdown-item" href="{{ path('article_index') }}">Mes discussions</a></li>
-                            <li>
-                                <hr class="dropdown-divider">
-                            </li>
-                            <li><a class="dropdown-item" href="{{ path('app_logout') }}">Deconnexion</a></li>
-                        </ul>
-                    </li>
-                    {% if is_granted('ROLE_ADMIN') %}
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle me-2" href="{{ path('home') }}" id="navbarDropdown"
-                               role="button"
-                               data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-tools me-1"></i> Admin
-                            </a>
-                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <li><a class="dropdown-item" href="{{ path('admin_jeu') }}">Jeux</a></li>
-                                <li>
-                                    <hr class="dropdown-divider">
-                                </li>
-                                <li><a class="dropdown-item" href="{{ path('user_index') }}">Joueurs</a></li>
-                                <li>
-                                    <hr class="dropdown-divider">
-                                </li>
-                                <li><a class="dropdown-item" href="{{ path('order_index') }}">Commandes</a></li>
-                                <li>
-                                    <hr class="dropdown-divider">
-                                </li>
-                                <li><a class="dropdown-item" href="{{ path('ticket_index') }}">Tickets</a></li>
-                                <li>
-                                    <hr class="dropdown-divider">
-                                </li>
-                                <li><a class="dropdown-item" href="{{ path('role_groupe_index') }}">Groupes</a></li>
-                                <li>
-                                    <hr class="dropdown-divider">
-                                </li>
-                                <li><a class="dropdown-item" href="{{ path('survey_index') }}">Questionnaires</a></li>
-                                <li>
-                                    <hr class="dropdown-divider">
-                                </li>
-                                <li><a class="dropdown-item" href="{{ path('article_index') }}">Discussions</a></li>
-                                <li>
-                                    <hr class="dropdown-divider">
-                                </li>
-                                <li><a class="dropdown-item" href="{{ path('news_index') }}">Actualités</a></li>
-                                    <hr class="dropdown-divider">
-                                </li>
-                                <li><a class="dropdown-item" href="{{ path('presentation_index') }}">Présentation</a></li>
-                            </ul>
-                        </li>
-                    {% endif %}
-                {% else %}
-                    <li class="nav-item">
-                        <a class="nav-link {{ route == 'app_login' ? 'active' }}" aria-current="page"
-                           href="{{ path('app_login') }}">Se connecter</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link {{ route == 'app_register' ? 'active' }}" aria-current="page"
-                           href="{{ path('app_register') }}">Créer un compte</a>
-                    </li>
-                {% endif %}
-            </ul>
-            <form class="d-flex" method="GET" action="{{ path('search') }}">
-                <input type="text" name="q" id="search"
-                       class="form-control bg-black border-0 border-bottom border-ivoire rounded-0 text-light"
-                       placeholder="Rechercher" required>
+    {% include('main/navbar.html.twig') %}
 
-                <button class="btn text-ivoire border-ivoire ms-2" type="submit"><i class="fas fa-search"></i></button>
-            </form>
-        </div>
-    </div>
-</nav>
 {% if app.session.flashBag.has('error') %}
     <div class="container">
         <div class="row">
@@ -158,8 +53,12 @@
 {% block body %}
 
 {% endblock %}
-<script src="{{ asset('js/bootstrap.bundle.min.js') }}"></script>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
-<script src="{{ asset('js/gallery.js') }}"></script>
+
+    {% block script %}
+
+    {% endblock %}
+
+    <script src="{{ asset('js/bootstrap.bundle.min.js') }}"></script>
+
 </body>
 </html>
