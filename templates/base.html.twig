@@ -11,9 +11,8 @@
           crossorigin="anonymous" referrerpolicy="no-referrer"/>
     {# BOOTSTRAP #}
     <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}">
-{#     STYLE PERSO #}
+    {# STYLE PERSO #}
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
-
 
 
     {% block stylsheet %}{% endblock %}
@@ -22,9 +21,9 @@
 
 </head>
 <body class="bg-dark text-light">
-    {% block test %}{% endblock %}
+{% block test %}{% endblock %}
 
-    {% include('main/navbar.html.twig') %}
+{% include('main/navbar.html.twig') %}
 
 {% if app.session.flashBag.has('error') %}
     <div class="container">
@@ -50,11 +49,16 @@
         </div>
     </div>
 {% endif %}
-{% block body %}
+<div class="min-vh-100">
 
-{% endblock %}
+    {% block body %}
+
+    {% endblock %}
+</div>
+{% include('main/footer.html.twig') %}
 <script src="{{ asset('js/bootstrap.bundle.min.js') }}"></script>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 
 {% block script %}{% endblock %}
 </body>

@@ -18,28 +18,27 @@
             {% for news in news %}
                 <div class="col-12 {{ news|length <=2 ? 'col-md-6': 'col-md-4' }} mx-auto">
                     <div class="card col-10 mx-auto bg-cardgame p-0 my-2 card-zoom">
-                        <a href="{{ path('news_show', {'slug': news.slug}) }}"
-                           class="text-decoration-none text-light d-inline">
-                            <img src="{{ asset("img/news/"~news.photo~"/banner.jpg")|imagine_filter('banner_game') }}"
-                                 class="card-img-top" alt="">
-                            <div class="card-body">
-                                <h5 class="card-title">{{ news.title }}</h5>
-                                <p class="card-text">{{ news.content|purify|striptags|excerpt(20) }}</p>
-                                <a class="btn btn-outline-light mb-3 me-2"
-                                   href="{{ path('news_show', {'slug': news.slug}) }}">voir
-                                    plus</a>
-                                {% if is_granted('ROLE_ADMIN') %}
 
-                                    <a href="{{ path('news_edit', {'id': news.id}) }} "
-                                       class="btn btn-outline-warning mb-3 me-2">Modifier</a>
-                                    <form method="post" action="{{ path('news_delete', {'id': news.id}) }}"
-                                          onsubmit="return confirm('Voulez-vou vraiment supprimer {{ news.title }}');">
-                                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ news.id) }}">
-                                        <button class="btn btn-outline-danger mb-3 me-2">supprimer</button>
-                                    </form>
-                                {% endif %}
-                            </div>
-                        </a>
+                        <img src="{{ asset("img/news/"~news.photo~"/banner.jpg")|imagine_filter('banner_game') }}"
+                             class="card-img-top" alt="">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ news.title }}</h5>
+                            <p class="card-text">{{ news.content|purify|striptags|excerpt(20) }}</p>
+                            <a class="btn btn-outline-light mb-3 me-2"
+                               href="{{ path('news_show', {'slug': news.slug}) }}">voir
+                                plus</a>
+                            {% if is_granted('ROLE_ADMIN') %}
+
+                                <a href="{{ path('news_edit', {'id': news.id}) }} "
+                                   class="btn btn-outline-warning mb-3 me-2">Modifier</a>
+                                <form method="post" action="{{ path('news_delete', {'id': news.id}) }}"
+                                      onsubmit="return confirm('Voulez-vou vraiment supprimer {{ news.title }}');">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ news.id) }}">
+                                    <button class="btn btn-outline-danger mb-3 me-2">supprimer</button>
+                                </form>
+                            {% endif %}
+                        </div>
+                      
                     </div>
                 </div>
             {% else %}

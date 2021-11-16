@@ -21,8 +21,8 @@ $(function () {
         autoAlpha: 0,
         scrollTrigger: {
             trigger: ".thegame",
-            start: "10% bottom",
-            end: '+=400',
+            start: "20% bottom",
+            end: '+=40%',
             // markers: true,
             scrub: true,
         }

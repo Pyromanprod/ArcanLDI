@@ -44,7 +44,7 @@ class PictureController extends AbstractController
     public function seeAlbum(Request $request, Game $game): Response
     {
 
-        return $this->render('picture/testgallery.html.twig', [
+        return $this->render('picture/seeAlbum.html.twig', [
             'game'=>$game,
         ]);
 
@@ -59,6 +59,6 @@ class PictureController extends AbstractController
             $entityManager->flush();
         }
 
-        return $this->redirectToRoute('picture_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('home', [], Response::HTTP_SEE_OTHER);
     }
 }
