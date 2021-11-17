@@ -33,12 +33,12 @@ class GameRepository extends ServiceEntityRepository
         ;
     }
 
-    public function findLastThree()
+    public function findLast()
     {
         return $this->createQueryBuilder('g')
             ->orderBy('g.createdAt', 'DESC')
             ->where('g.isPublished = 1')
-            ->setMaxResults(3)
+            ->setMaxResults(1)
             ->getQuery()
             ->getResult()
             ;

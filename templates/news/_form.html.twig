@@ -22,7 +22,7 @@
         }
 
     }) }}
-    <button class="btn btn-primary">{{ button_label|default('Créer') }}</button>
+    <button class="btn {{ button_color|default('btn-outline-success') }}">{{ button_label|default('Créer') }}</button>
 {{ form_end(form) }}
 
         </div>

@@ -3,6 +3,8 @@
 
 body{
     font-family: 'Roboto', sans-serif;
+    color: #ede0d5;
+
 }
 .header{
 
@@ -23,14 +25,19 @@ body{
     background-color: rgba(0, 0, 0, 0.58);
 }
 .bg-cardgame{
-    background-color: rgba(255, 255, 255, 0.19);
+    background-color: #111519;
+    border-color: #D2C8BE;
+}
+.bg-cardgame .card-header{
+    background-color: #D2C8BE ;
+    color: black;
 }
 
-.bg-header-card{
-    background-color: rgba(0, 0, 0, 0.39);
-}
 .card-zoom{
     transition: all 200ms;
+}
+.border-black{
+    border: black 3px solid;
 }
 .card-zoom:hover{
     -webkit-transform: scale(1.05);
@@ -41,32 +48,34 @@ body{
 }
 
 .text-ivoire{
-    color: rgba(255, 236, 156, 0.84);
+    color: #C0B796;
 }
 .border-ivoire{
     border-color: rgba(255, 236, 156, 0.84)!important;
 }
 
 .bg-ivoire{
-    background-color: rgba(255, 236, 156, 0.44) !important;
+    background-color: #C0B796 !important;
 }
 .ckeditor img{
 
-    max-width: 75vw;
+    max-width: 30vw;
     height: auto!important;
     margin: 0 30px;
 
 }
 .presentation{
     min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
 }
 .first-layer{
     z-index: 9999;
 }
-
+.bg-perso{
+    background-color: rgb(29, 33, 37);
+}
+.bg-titre{
+    background-color: #000000;
+}
 
 
 /*paralaxe*/
@@ -147,7 +156,7 @@ p {
 }
 .layer-overlay {
     /*background-image: url('../img/overlay.png');*/
-    background-color: rgba(0, 0, 0, 0.58);
+    background-color: rgba(0, 0, 0, 0.15);
 }
 
 

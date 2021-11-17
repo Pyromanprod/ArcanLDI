@@ -1,7 +1,11 @@
 <div class="container-fluid">
+    <div class="text-center">
+
+    <a href="{{ path('game_index') }}" class="btn btn-outline-light me-3">Retour liste des jeux</a>
+
+    </div>
     <div class="row">
         <div class="col-12 col-md-10 mx-auto">
-
 
             {{ form_start(form) }}
             {{ form_row(form.name, {
@@ -108,7 +112,8 @@
                 ) }}
 
             {% endif %}
-            <button id='boutonCreer' class="btn btn-outline-light mt-3">Créer</button>
+            <button class="btn btn-primary my-3 {{ button_color|default('btn-outline-success') }}">{{ button_label|default('Créer') }}</button>
+
             {{ form_end(form) }}
         </div>
     </div>

@@ -1,23 +1,21 @@
 {% block body %}
-    <div class="container-fluid mt-3">
-        <div class="row">
-            <h2 class="text-center h1">Qui sommes-nous ?</h2>
 
-        </div>
-        {% if presentation %}
 
-            <div class="col-12 col-md-10 mx-auto ckeditor presentation">
-                {{ presentation.content|purify|raw }}
-            </div>
 
-        {% else %}
-            <div class="col-12 col-md-10 mx-auto ckeditor presentation">
-                <p class="alert-warning alert">Pas encore de présentation <a href="{{ path('presentation_new') }}">
-                        cliquez ici pour en créer une
-                    </a></p>
-            </div>
+            {% if presentation %}
 
-        {% endif %}
-    </div>
+                <div class="col-12 mx-auto ckeditor presentation">
+                    {{ presentation.content|purify|raw }}
+                </div>
+
+            {% else %}
+                <div class="col-12 col-md-10 mx-auto ckeditor presentation">
+                    <p class="alert-warning alert">Pas encore de présentation <a href="{{ path('presentation_new') }}">
+                            cliquez ici pour en créer une
+                        </a></p>
+                </div>
+
+            {% endif %}
+
 
 {% endblock %}

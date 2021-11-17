@@ -1,11 +1,17 @@
 <div class="container-fluid">
+    <div class="text-center">
+
+        <a href="{{ path('ticket_index') }}" class="btn btn-outline-light mb-3 me-3">Retour a la liste des tickets</a>
+
+
+    </div>
     <div class="row">
         <div class="col-12 col-md-6 mx-auto">
 
 
             {{ form_start(form) }}
             {{ form_row(form.name, {
-                label: 'Nom du tickey',
+                label: 'Nom du ticket',
                 attr: {
                     placeholder: '',
                     class: 'bg-dark border-0 border-bottom border-ivoire rounded-0 text-light'
@@ -51,37 +57,32 @@
                     'label_attr': {'class': 'text-ivoire'}
                 }) }}
                 {{ form_row(form.cgv, {
-                    label: 'CGV',
+                    label: false,
                     attr: {
                         placeholder: '',
                         class: 'bg-dark border-0 border-bottom border-ivoire rounded-0 text-light'
                     },
-                    row_attr: {
-                        class: 'form-floating bg-dark text-ivoire mb-3'
-                    }
+
                 }) }}
 
             {% else %}
                 {{ form_label(form.cgv, 'CGV (.pdf)',{
                     'label_attr': {'class': 'text-ivoire'}
                 }) }}
-                {{ form_widget(form.cgv, {
-
+                {{ form_row(form.cgv, {
+                    label: false,
                     attr: {
                         required: 'required',
                         placeholder: '',
                         class: 'bg-dark border-0 border-bottom border-ivoire rounded-0 text-light',
 
                     },
-                    row_attr: {
-                        class: 'form-floating bg-dark text-ivoire mb-3'
-                    }
+
                 }
                 ) }}
             {% endif %}
-            <button class="btn btn-primary mt-3">{{ button_label|default('Créer') }}</button>
-            <a class="btn btn-warning mt-3" href="{{ path('ticket_index') }}">Annuler</a>
-            {{ form_end(form) }}
+            <button class="btn {{ button_color|default('btn-outline-success') }} mt-3">{{ button_label|default('Créer') }}</button>
+
         </div>
     </div>
 </div>

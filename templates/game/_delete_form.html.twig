@@ -1,5 +1,5 @@
 <form method="post" action="{{ path('game_delete', {'id': game.id}) }}"
-      onsubmit="return confirm('Voulez-vou vraiment supprimer {{ game.name }}');">
+      onsubmit="return confirm('Voulez-vou vraiment supprimer {{ game.name }}');" class="d-inline">
     <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ game.id) }}">
-    <button class="btn btn-outline-danger mb-3 me-2">Delete</button>
+    <button class="btn btn-outline-danger mb-3">Supprimer</button>
 </form>

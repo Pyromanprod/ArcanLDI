@@ -6,9 +6,13 @@
     <div class="container">
         <div class="row">
             <h1 class="text-center">Créer une Actualité</h1>
+            <div class="text-center">
+
+                <a class="btn-outline-light btn" href="{{ path('news_index') }}">Retour à la liste des Actualités</a>
+            </div>
             <div class="col-8 offset-2">
                 {{ include('news/_form.html.twig') }}
-                <a href="{{ path('news_index') }}">Retour à la liste des Actualités</a>
+
             </div>
         </div>
     </div>

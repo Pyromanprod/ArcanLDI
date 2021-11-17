@@ -19,7 +19,7 @@
                     label: 'Liste déroulante',
                     attr: {
                         placeholder: '',
-                        class: 'bg-ivoire border-ivoire text-light'
+                        class: 'border-ivoire text-light'
                     },
                     row_attr: {
                         class: 'form-floating bg-dark text-ivoire mb-3'
@@ -29,15 +29,15 @@
                     label: 'Facultative',
                     attr: {
                         placeholder: '',
-                        class: 'bg-ivoire border-ivoire text-light'
+                        class: 'border-ivoire text-light'
                     },
                     row_attr: {
                         class: 'form-floating bg-dark text-ivoire mb-3'
                     }
                 }) }}
-                <button type="submit" class="btn btn-outline-primary">Ajouter la question</button>
+                <button type="submit" class="btn btn-outline-success">Ajouter la question</button>
                 {{ form_end(form) }}
-                <a class="btn-outline-success btn mt-3" href="{{ path('survey_view', {'id': survey.id}) }}">terminer</a>
+                <a class="btn-outline-light btn mt-3" href="{{ path('survey_view', {'id': survey.id}) }}">terminer</a>
             </div>
 
 

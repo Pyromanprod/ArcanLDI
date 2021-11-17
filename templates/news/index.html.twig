@@ -9,18 +9,20 @@
 
             <div class="col-12 col-md-3 col-lg-2 mx-auto">
                 {% if is_granted('ROLE_ADMIN') %}
-                    <a class="btn btn-primary w-100" href="{{ path('news_new') }}">Créer une nouvelle actualité</a>
+                    <a class="btn btn-outline-info w-100" href="{{ path('news_new') }}">Créer une nouvelle actualité</a>
                 {% endif %}
             </div>
         </div>
         <div class="row">
 
             {% for news in news %}
-                <div class="col-12 {{ news|length <=2 ? 'col-md-6': 'col-md-4' }} mx-auto">
+                <div class="col-12 {{ news|length <=2 ? 'col-md-6': 'col-md-4' }} mx-auto mt-5">
                     <div class="card col-10 mx-auto bg-cardgame p-0 my-2 card-zoom">
 
-                        <img src="{{ asset("img/news/"~news.photo~"/banner.jpg")|imagine_filter('banner_game') }}"
-                             class="card-img-top" alt="">
+                        <div class="card-header">
+                            <h5 class="text-center">{{ news.title }}</h5>
+                        </div>
+
                         <div class="card-body">
                             <h5 class="card-title">{{ news.title }}</h5>
                             <p class="card-text">{{ news.content|purify|striptags|excerpt(20) }}</p>
@@ -38,7 +40,7 @@
                                 </form>
                             {% endif %}
                         </div>
-                      
+
                     </div>
                 </div>
             {% else %}

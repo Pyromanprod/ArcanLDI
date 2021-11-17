@@ -1,6 +1,6 @@
 <form method="post" action="{{ path('refund', {'id': order.id}) }}" onsubmit="return confirm('Etes vous sure de vouloir remboursé cette commande?');">
     <label class="form-label" for="reason">Raison du remboursement (facultative)</label>
-    <textarea class="form-text" name="reason" id="reason" cols="50" rows="5"></textarea>
+    <textarea class="form-text d-block w-100 mb-3" name="reason" id="reason" rows="5"></textarea>
     <input type="hidden" name="_token" value="{{ csrf_token('refund' ~ order.id) }}">
-    <button class="btn btn-danger">Rembourser le ticket</button>
+    <button class="btn btn-outline-danger">Rembourser le ticket</button>
 </form>

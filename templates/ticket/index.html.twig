@@ -7,7 +7,7 @@
         <div class="row mt-5">
 
             <div class="col-12 text-center mb-3">
-                <a href="{{ path('ticket_new') }}" class="btn btn-outline-success">Nouveau ticket</a>
+                <a href="{{ path('ticket_new') }}" class="btn btn-outline-info">Nouveau ticket</a>
             </div>
         </div>
 
@@ -43,20 +43,18 @@
                             <li class="list-group-item bg-transparent text-light">En Stock
                                 : {{ ticket.stock }}</li>
                             <li class="list-group-item bg-transparent text-light">
-                                <a class="btn btn-outline-light mb-3 me-2" href="{{ path('ticket_show', {'id': ticket.id}) }}">Ajouter
-                                    questionnaire</a>
-                                <a class="btn btn-outline-warning mb-3 me-2" href="{{ path('ticket_edit', {'id': ticket.id}) }}">Modifier</a>
-                                <a class="btn btn-outline-info mb-3 me-2"
-                                   href="{{ path('survey_ticket_ordered', {'id': ticket.id}) }}">Ordonner
-                                    les questionnaires</a>
-                                {{ include('ticket/_delete_form.html.twig') }}
+
                             </li>
                         </ul>
                     </div>
                     <div class="card-footer list-group-item bg-transparent text-light">
-                        <p class="text-info text-end blockquote-footer m-0">
-                            Créé le : {{ ticket.createdAt ? ticket.createdAt|date('d-m-Y') : '' }}
-                        </p>
+                        <a class="btn btn-outline-light mb-3 me-2" href="{{ path('ticket_show', {'id': ticket.id}) }}">Ajouter
+                            questionnaire</a>
+                        <a class="btn btn-outline-warning mb-3 me-2" href="{{ path('ticket_edit', {'id': ticket.id}) }}">Modifier</a>
+                        <a class="btn btn-outline-info mb-3 me-2"
+                           href="{{ path('survey_ticket_ordered', {'id': ticket.id}) }}">Ordonner
+                            les questionnaires</a>
+                        {{ include('ticket/_delete_form.html.twig') }}
                     </div>
                 </div>
 

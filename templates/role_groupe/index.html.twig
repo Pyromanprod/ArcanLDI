@@ -4,29 +4,33 @@
 
 {% block body %}
     <div class="container">
-        <h1 class="text-center">Role de groupe</h1>
-        <a class="btn btn-primary my-5" href="{{ path('role_groupe_new') }}">Créer un nouveau role</a>
+
+        <h1 class="text-center">Rôle de groupe</h1>
+        <div class="text-center">
+            <a class="btn btn-outline-info my-5" href="{{ path('role_groupe_new') }}">Créer un nouveau rôle</a>
+        </div>
+
         <div class="row">
 
             {% for role in role_groupes %}
                 <div class="card bg-cardgame col-12 col-md-4 p-0 mx-auto">
                     <div class="card-header bg-header-card">
-                        <h1>{{ role.name }}</h1>
+                        <h5 class="text-center">{{ role.name }}</h5>
                     </div>
                     <div class="card-body">
                         <ul class="list-group list-group-flush ">
-                            <li class="list-group-item bg-transparent text-light">créer le
+                            <li class="list-group-item bg-transparent text-light">Jeu
+                                : {{ role.game.name }} </li>
+                            <li class="list-group-item bg-transparent text-light">Créé le
                                 : {{ role.createdAt ? role.createdAt|date('d-m-Y') : '' }} </li>
-                            <li class="list-group-item bg-transparent text-light">jeu
-                                : {{ role.game.name}} </li>
 
                         </ul>
                     </div>
                     {% if is_granted('ROLE_ADMIN') %}
-                    <div class="card-footer list-group-item bg-transparent text-light">
-                        <a class="btn btn-warning" href="{{ path('role_groupe_edit', {'id': role.id}) }}">modifier</a>
-                        {{ include('role_groupe/_delete_form.html.twig') }}
-                    </div>
+                        <div class="card-footer list-group-item bg-transparent text-light">
+                            <a class="btn btn-outline-warning" href="{{ path('role_groupe_edit', {'id': role.id}) }}">modifier</a>
+                            {{ include('role_groupe/_delete_form.html.twig') }}
+                        </div>
                     {% endif %}
                 </div>
 

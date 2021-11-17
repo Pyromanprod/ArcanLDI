@@ -23,8 +23,8 @@
                             <td>{{ member.pseudo }}</td>
                             <td>{{ member.email }}</td>
                             {% if membership %}
-                            <td><a onclick="alert('etes vous sûr?')" class="btn-outline-warning btn" href="{{ path('manual_payment', {'id': membership, 'user': member.id}) }}">paiement hors site</a>
-                            <a onclick="alert('etes vous sûr?')" class="btn-outline-danger btn" href="{{ path('manual_payment', {'id': membership, 'user': member.id}) }}">retirer de la cotisation</a></td>
+                            <td><a onclick="return confirm('etes vous sûr?')" class="btn-outline-success btn me-3" href="{{ path('manual_payment', {'id': membership, 'user': member.id}) }}">paiement hors site</a>
+                            <a onclick="return confirm('etes vous sûr?')" class="btn-outline-danger btn" href="{{ path('manual_payment', {'id': membership, 'user': member.id}) }}">retirer de la cotisation</a></td>
                             {% endif %}
                         </tr>
                     {% endfor %}

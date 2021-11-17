@@ -77,7 +77,7 @@ class OrderController extends AbstractController
                 $mailer->send($email);
                 $order->getTicket()->setStock($order->getTicket()->getStock()+1);
                 $entityManager->flush();
-                $this->addFlash('success', 'demande de remboursement effectuer');
+                $this->addFlash('success', 'demande de remboursement effectuée');
                 return $this->redirectToRoute('home');
             }
             return $this->renderForm('order/user_refund.html.twig', [
@@ -124,18 +124,18 @@ class OrderController extends AbstractController
                     //si la date de paiement est null on renvoie vers le questionnaire avec le message flash
                     if ($reservation->getDatePaid() == NULL) {
 
-                        $this->addFlash('error', 'vous devez finir le questionnaire pour acheter le ticket');
+                        $this->addFlash('error', 'vous devez terminer le questionnaire pour acheter le ticket');
 
                         return $this->redirectToRoute('survey_suvey_for_ticket', [
                             'id' => $reservation->getId(),
                         ], Response::HTTP_SEE_OTHER);
                     } else {
 
-                        $this->addFlash('error', 'vous ne pouvez acheter qu\'un seul ticket par jeu de role');
+                        $this->addFlash('error', 'vous ne pouvez acheter qu\'un seul ticket par jeu de rôle');
                     }
                     return $this->redirectToRoute('home');
                     //si la reservation n'existe pas alors celle ci se
-                    // créer et est flush dans la base donées
+                    // créer et est flush dans la base de données
                 } else {
 
                     $entityManager = $this->getDoctrine()->getManager();
@@ -187,7 +187,7 @@ class OrderController extends AbstractController
         } else {
             $entityManager->remove($order);
             $entityManager->flush();
-            $this->addFlash('error', 'le ticket est epuisé');
+            $this->addFlash('error', 'le ticket est épuisé');
 
             return $this->redirectToRoute('home');
         }
@@ -199,7 +199,7 @@ class OrderController extends AbstractController
     {
 
 
-        $this->addFlash('error', 'Achat annuler');
+        $this->addFlash('error', 'Achat annulé');
 
         return $this->redirectToRoute('home');
 
@@ -257,13 +257,13 @@ class OrderController extends AbstractController
                     ->from('contact@arcanlesdemondivoire.fr')
                     ->to($order->getPlayer()->getEmail())
                     ->subject('remboursement ArcanLDI ' . ' jeu ' . $order->getTicket()->getGame()->getName() . ' ticket ' . $order->getTicket()->getName())
-                    ->text('votre demande de remboursement a été accepté');
+                    ->text('votre demande de remboursement a été acceptée');
             }
             $mailer->send($email);
 
             $this->addFlash('success', 'ticket remboursé avec succès');
         } else {
-            $this->addFlash('error', 'une erreur c\'est produite veuillez réessayer');
+            $this->addFlash('error', 'une erreur s\'est produite veuillez réessayer');
         }
         return $this->redirectToRoute('home');
 
@@ -288,14 +288,14 @@ class OrderController extends AbstractController
                     ->from('contact@arcanlesdemondivoire.fr')
                     ->to($order->getPlayer()->getEmail())
                     ->subject('remboursement ArcanLDI')
-                    ->text('Votre demande de remboursement a été refusé');
+                    ->text('Votre demande de remboursement a été refusée');
             }
             $mailer->send($email);
             $order->setRefundRequest('rejected');
             $entityManager->flush();
-            $this->addFlash('success', 'la demande de remboursement a bien été refusé');
+            $this->addFlash('success', 'la demande de remboursement a été refusée');
         } else {
-            $this->addFlash('error', 'une erreur c\'est produite veuillez réessayer');
+            $this->addFlash('error', 'une erreur s\'est produite veuillez réessayer');
         }
         return $this->redirectToRoute('home');
 

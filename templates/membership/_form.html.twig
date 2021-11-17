@@ -1,4 +1,24 @@
 {{ form_start(form) }}
-    {{ form_widget(form) }}
-    <button class="btn btn-outline-success">{{ button_label|default('créer') }}</button>
+    {{ form_row(form.price, {
+        label: 'Prix',
+        attr: {
+            placeholder: '',
+            class: 'bg-dark border-0 border-bottom border-ivoire rounded-0 text-light'
+        },
+        row_attr: {
+            class: 'form-floating bg-dark text-ivoire mb-3'
+        }
+    }) }}
+    {{ form_row(form.year, {
+        label: 'Année',
+        attr: {
+            placeholder: '',
+            class: 'bg-dark border-0 border-bottom border-ivoire rounded-0 text-light'
+        },
+        row_attr: {
+            class: 'form-floating bg-dark text-ivoire mb-3'
+        }
+    }) }}
+    <button class="btn btn-outline-success {{ button_color|default('btn-outline-success') }}">{{ button_label|default('créer') }}</button>
+<a class="btn btn-outline-light d-inline-block ms-3" href="{{ path('membership_index') }}">Annuler</a>
 {{ form_end(form) }}

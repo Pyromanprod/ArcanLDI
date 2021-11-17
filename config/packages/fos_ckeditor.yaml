@@ -3,6 +3,7 @@ fos_ck_editor:
     configs:
         game:
             toolbar: 'toolbarGame'
+            height: '500px'
     toolbars:
         configs:
             toolbarGame: [
@@ -49,7 +50,7 @@ fos_ck_editor:
                 ],
 
             ]
-            my_toolbar_2: [ "@document", "/", "@tool" ]
+
 twig:
     form_themes:
         - '@FOSCKEditor/Form/ckeditor_widget.html.twig'

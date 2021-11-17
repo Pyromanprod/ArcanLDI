@@ -23,13 +23,13 @@
                     label: 'Formulaire Général',
                     attr: {
                         placeholder: '',
-                        class: 'bg-ivoire border-ivoire text-light'
+                        class: 'border-ivoire text-dark'
                     },
                     row_attr: {
                         class: 'form-floating bg-dark text-ivoire mb-3'
                     }
                 }) }}
-                <button type="submit" class="btn btn-outline-primary mb-5">Créer</button>
+                <button type="submit" class="btn btn-outline-success mb-5">Créer</button>
                 {{ form_end(form) }}
                 <h2>Les questionnaires déjà présent</h2>
                 {% for survey in listeSurvey %}
@@ -41,7 +41,7 @@
                         <div class="col-12 col-lg-3">
 
                             <a href="{{ path('survey_view', {'id': survey.id, }) }}"
-                               class="btn btn-outline-primary">Voir</a>
+                               class="btn btn-outline-light">Voir</a>
                         </div>
                         <div class="col-12 col-lg-3">
 

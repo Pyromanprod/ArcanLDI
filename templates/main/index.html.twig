@@ -14,11 +14,12 @@
     {# STYLE PERSO #}
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
 
-    <title>Accueil - Arcan, Les démons d'ivoire</title>
+    <title>Accueil - Arcan, Jeux de roles grandeur nature GN</title>
+
 
 
 </head>
-<body class="bg-dark text-light">
+<body class="text-light">
 
 
 <div id='hero'>
@@ -72,33 +73,44 @@
     <div class="layer parallax blood" data-depth='0.50'>
 
     </div>
-    <div class=" row layer parallax title h-100" data-depth='0.90'>
-        <h1 class="my-auto text-center">Arcan Les Démons D'Ivoire</h1>
+    <div class="row layer parallax title h-100" data-depth='0.80'>
+        <div class="col-6 mx-auto">
+
+            <img src="{{ asset('img/LOGO.png') }}" alt="Arcan Les Démons D'Ivoire" class="w-100 opacity-50">
+        </div>
+
     </div>
 
 </div>
 
-<div id='content' class="bg-dark">
+<div id='content' class="bg-perso">
     <div class='container'>
-{#        PRESENTATION#}
-        <section>
-            <div class='row'>
-                {% include 'presentation/show.html.twig' %}
-            </div>
-        </section>
-{#        JEU#}
-        <section>
-            <div class='row'>
-                {% include 'game/showAll.html.twig' %}
-            </div>
-        </section>
+        <div class="row">
 
-{#        ACTU#}
-        <section>
-            <div class='row'>
+            {# PRESENTATION #}
+            <section class="col-12 col-lg-9">
+
+                <h2 class="text-center fs-1 m-0 col-12 py-3">Qui sommes-nous ?</h2>
+                {% include 'presentation/show.html.twig' %}
+
+            </section>
+            {# JEU #}
+            <aside class="col-12 col-lg-3">
+
+
+                <h2 class="text-center fs-3 m-0 col-12 py-3 px-0">Dernier événement</h2>
+
+                {% include 'game/showAll.html.twig' %}
+                <h2 class="text-center fs-3 m-0 col-12 py-3 px-0">Derniere actu</h2>
+
+
+                {# ACTU #}
+
+
                 {% include 'news/showAll.html.twig' %}
-            </div>
-        </section>
+            </aside>
+
+        </div>
     </div>
 </div>
 

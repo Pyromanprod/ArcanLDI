@@ -4,7 +4,12 @@
 
     <div class="container-fluid">
         <div class="col-12 col-md-6 col-lg-4 mx-auto">
+            <div class="text-center">
 
+                <a class="btn btn-outline-info col-12 col-md-5 mx-auto mt-3"
+                   href='{{ path('survey_add_question', {'id': question.survey.id}) }}'>Créer une
+                    nouvelle question</a>
+            </div>
             {{ form_start(form) }}
             {{ form_row(form.content, {
                 label: 'Choix',
@@ -16,8 +21,9 @@
                     class: 'form-floating bg-dark text-ivoire mb-3'
                 }
             }) }}
-            <button type="submit" class="btn btn-outline-primary">Ajouter</button>
+            <button type="submit" class="btn btn-outline-success">Ajouter</button>
             {{ form_end(form) }}
+
             <div class="row">
 
                 <div class="col-12 ">
@@ -26,22 +32,17 @@
                 </div>
             </div>
             {% for choix in question.choices %}
-                <div class="row mt-2 border border-ivoire p-2 rounded-2">
+                <div class="row mt-2 p-2 rounded-2">
                     <form action="{{ path('survey_delete_choice', {'id': choix.id}) }}"
                           onsubmit="return confirm('Etes-vous sûr de vouloir supprimer {{ choix.content }}')">
-                        <button type="submit" class="btn btn-outline-danger ms-3">Supprimer</button>
                         {{ choix.content }}
+                        <button type="submit" class="btn btn-outline-danger ms-3">Supprimer</button>
                         <input type="hidden" name="csrf_token" value="{{ csrf_token(choix.id~'delete') }}">
                     </form>
                 </div>
             {% else %}
                 <p> Pas de encore choix</p>
             {% endfor %}
-            <div class="row mt-4">
-                <a class="btn btn-outline-warning col-12 col-md-5 mx-auto"
-                   href='{{ path('survey_add_question', {'id': question.survey.id}) }}'>Nouvelle
-                    Question</a>
-            </div>
         </div>
     </div>
 {% endblock %}

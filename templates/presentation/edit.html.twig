@@ -1,12 +1,14 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Edit Presentation{% endblock %}
+{% block title %}Modifier la Presentation{% endblock %}
 
 {% block body %}
-    <h1>Edit Presentation</h1>
+    <h1 class="text-center">Modifier la Presentation</h1>
+    <div class="text-center">
 
-    {{ include('presentation/_form.html.twig', {'button_label': 'Modifier'}) }}
+        <a class="btn-outline-light btn" href="{{ path('home') }}">Retour à l'accueil</a>
+    </div>
+    {{ include('presentation/_form.html.twig', {'button_label': 'Modifier', 'button_color': 'btn-outline-warning'}) }}
 
-    <a href="{{ path('presentation_index') }}">back to list</a>
 
 {% endblock %}

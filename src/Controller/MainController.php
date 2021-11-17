@@ -30,7 +30,7 @@ class MainController extends AbstractController
         $member = $this->getDoctrine()->getRepository(MembershipAssociation::class);
         $membership = $this->getDoctrine()->getRepository(Membership::class);
         $orders = $order->findRefundRequestedOrder();
-        $allGames = $repos->findLastThree();
+        $allGames = $repos->findLast();
         $news = $reposnews->findLastThree();
         $paid = $member->findByPlayerNotPaid($this->getUser(),$membership->findOneBylast());
 

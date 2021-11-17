@@ -4,38 +4,42 @@
 
 {% block body %}
     <div class="container">
-    <h1 class="text-center">Liste des commandes</h1>
+        <h1 class="text-center">Liste des commandes</h1>
         <div class="row">
             {% for order in orders %}
-                <div class="card bg-cardgame col-12 col-md-4 mx-auto p-0 my-3">
-                    <div class="card-header bg-header-card">
-                        <h5>Ticket pour le jeu : {{ order.ticket.game.name }}</h5>
-                    </div>
-                    <div class="card-body">
-                        <ul class="list-group list-group-flush ">
-                            <li class="list-group-item bg-transparent text-light">Acheter par
-                                : {{ order.player.pseudo }}</li>
-                            <li class="list-group-item bg-transparent text-light">Prix : {{ order.total }} €</li>
-                            {% if is_granted('ROLE_ADMIN') and order.datePaid %}
-                            {% elseif order.refundRequest %}
-                                <li class="list-group-item bg-transparent text-light">vous ne pouvez plus faire de
-                                    demande de remboursement sur ce ticket
-                                </li>
-                            {% elseif order.datePaid is null %}
-                            {% else %}
-                                <li class="list-group-item bg-transparent text-light"><a class="btn btn-danger"
-                                                                                         href="{{ path('user_refund', {'id': order.id}) }}">Demander
-                                        un remboursement</a></li>
-                            {% endif %}
-                            <li class="list-group-item bg-transparent text-light">
+                <div class="col-12 col-md-4">
 
-                                {% if order.datePaid %}
-                                    Payé le {{ order.datePaid|date('d-m-Y') }}
+                    <div class="card bg-cardgame col-11 mx-auto p-0 my-3">
+                        <div class="card-header bg-header-card">
+                            <h5>Ticket pour le jeu : {{ order.ticket.game.name }}</h5>
+                        </div>
+                        <div class="card-body">
+                            <ul class="list-group list-group-flush ">
+                                <li class="list-group-item bg-transparent text-light">Acheter par
+                                    : {{ order.player.pseudo }}</li>
+                                <li class="list-group-item bg-transparent text-light">Prix : {{ order.total }} €</li>
+                                {% if is_granted('ROLE_ADMIN') and order.datePaid %}
+
+                                {% elseif order.refundRequest %}
+                                    <li class="list-group-item bg-transparent text-light">vous ne pouvez plus faire de
+                                        demande de remboursement sur ce ticket
+                                    </li>
+                                {% elseif order.datePaid is null %}
                                 {% else %}
-                                    En cours de paiement
+                                    <li class="list-group-item bg-transparent text-light"><a class="btn btn-danger"
+                                                                                             href="{{ path('user_refund', {'id': order.id}) }}">Demander
+                                            un remboursement</a></li>
                                 {% endif %}
-                            </li>
-                        </ul>
+                                <li class="list-group-item bg-transparent text-light">
+
+                                    {% if order.datePaid %}
+                                        Payé le {{ order.datePaid|date('d-m-Y') }}
+                                    {% else %}
+                                        En cours de paiement
+                                    {% endif %}
+                                </li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
 

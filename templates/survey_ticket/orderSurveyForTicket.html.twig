@@ -31,8 +31,8 @@
             </div>
             <div class="col-12 col-md-8 text-center">
                 <div class="col-12 text-center mb-3">
-                    <a href="{{ path('ticket_new') }}" class="btn btn-outline-success">Nouveau ticket</a>
-                    <a class="btn btn-outline-light" href="{{ path('ticket_show', {'id': ticket.id}) }}">Ajouter
+                    <a href="{{ path('ticket_new') }}" class="btn btn-outline-info">Nouveau ticket</a>
+                    <a class="btn btn-outline-info" href="{{ path('ticket_show', {'id': ticket.id}) }}">Ajouter
                         des questionnaires</a>
                     <a class="btn btn-outline-light" href="{{ path('ticket_index') }}">revenir a la liste des
                         ticket</a>
@@ -60,13 +60,17 @@
                                     </label>
                                 </td>
                             </tr>
+                        <button class="btn btn-outline-success mx-auto" type="submit">Valider l'ordre</button>
                         {% else %}
-                            Pas de questionnaire
-                            <assocé></assocé>
+                            <tr>
+                                <td colspan="2">
+                                    Pas de questionnaire associé
+                                </td>
+                            </tr>
+
                         {% endfor %}
 
                     </table>
-                        <button class="btn btn-outline-primary mx-auto" type="submit">Valider l'ordre</button>
 
                 </form>
             </div>
