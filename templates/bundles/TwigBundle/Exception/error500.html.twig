@@ -1,0 +1,24 @@
+{# Utilisation du squelette de page base.html.twig #}
+{% extends 'base.html.twig' %}
+
+{# Titre de la page #}
+{% block title %}ERREUR 500 : Internal Server Error{% endblock %}
+
+{# Contenu de la page #}
+{% block body %}
+
+    <div class="container-fluid">
+
+        <div class="row">
+
+            <h1 class="text-center fs-1 fw-bold pt-5">ERREUR 500 : Problème interne au site web</h1>
+
+            <div class="col-12 text-center">
+                <p class="h1">le jeu de role a déraillé</p>
+            </div>
+
+        </div>
+
+    </div>
+
+{% endblock %}
