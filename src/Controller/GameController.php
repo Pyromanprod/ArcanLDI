@@ -13,6 +13,7 @@ use App\Form\GameCommentType;
 use App\Form\GameType;
 use App\Repository\GameCommentRepository;
 use App\Repository\GameRepository;
+use App\Repository\UserRepository;
 use App\Service\uploadGamePhoto;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -81,8 +82,7 @@ class GameController extends AbstractController
             $game->setIsPublished(false);
             $entityManager->persist($game);
             $role->setGame($game)
-                ->setName('public')
-            ;
+                ->setName('public');
             $entityManager->persist($role);
             $entityManager->flush();
             return $this->redirectToRoute('survey_index', [], Response::HTTP_SEE_OTHER);
@@ -95,39 +95,42 @@ class GameController extends AbstractController
     }
 
     #[Route('/{slug}', name: 'game_show', methods: ['GET', 'POST'])]
-    public function show(Game $game, GameCommentRepository $commentRepository, Request $request, RateLimiterFactory $anonymousApiLimiter, GameRepository $gameRepository): Response
+    public function show(Game $game, GameCommentRepository $commentRepository, Request $request, RateLimiterFactory $anonymousApiLimiter, GameRepository $gameRepository, UserRepository $userRepository): Response
     {
+        $form = null;
         $gameComment = new GameComment();
-        $form = $this->createForm(GameCommentType::class, $gameComment);
-        $form->handleRequest($request);
         $limiter = $anonymousApiLimiter->create($request->getClientIp());
         $comment = $commentRepository->findByGame($game);
+        if ($userRepository->findPlayerByGame($game,$this->getUser())) {
+            $form = $this->createForm(GameCommentType::class, $gameComment);
+            $form->handleRequest($request);
+            if ($form->isSubmitted() && $form->isValid()) {
+                if (!$gameRepository->findPlayerGame($game, $this->getUser())) {
+                    $this->addFlash('error', 'vous ne pouvez pas écrire un commentaire pour un jeu ou vous n\'avez pas participé');
+                    return $this->redirectToRoute('game_show', [
+                        'slug' => $game->getSlug(),
+                        'form' => $form,
+                        'comment' => $comment,
+                        'game' => $game,
+                    ], Response::HTTP_SEE_OTHER);
+                }
+                if (false === $limiter->consume(1)->isAccepted()) {
+                    throw new TooManyRequestsHttpException();
+                }
+                $gameComment
+                    ->setAuthor($this->getUser())
+                    ->setGame($game);
+                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager->persist($gameComment);
+                $entityManager->flush();
 
-        if ($form->isSubmitted() && $form->isValid() ) {
-            if (!$gameRepository->findPlayerGame($game, $this->getUser())){
-                $this->addFlash('error','vous ne pouvez pas écrire un commentaire pour un jeu ou vous n\'avez pas participé');
                 return $this->redirectToRoute('game_show', [
-                    'slug'=> $game->getSlug(),
-                    'form' => $form,
-                    'comment' => $comment,
-                    'game' => $game,
+                    'slug' => $game->getSlug(),
                 ], Response::HTTP_SEE_OTHER);
-            }
-            if (false === $limiter->consume(1)->isAccepted()) {
-                throw new TooManyRequestsHttpException();
-            }
-            $gameComment
-                ->setAuthor($this->getUser())
-                ->setGame($game);
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($gameComment);
-            $entityManager->flush();
 
-            return $this->redirectToRoute('game_show', [
-                'slug'=> $game->getSlug(),
-            ], Response::HTTP_SEE_OTHER);
-
+            }
         }
+
         return $this->renderForm('game/show.html.twig', [
             'form' => $form,
             'comment' => $comment,
