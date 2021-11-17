@@ -73,7 +73,8 @@
                     }
                 }) }}
 
-                {{ form_row(registrationForm.plainPassword, {
+                {{ form_row(registrationForm.plainPassword.first, {
+
                     label: 'Mot de passe',
                     attr: {
                         placeholder: '',
@@ -82,6 +83,18 @@
                     row_attr: {
                         class: 'form-floating bg-dark text-ivoire'
                     }
+                }) }}
+                {{ form_row(registrationForm.plainPassword.second, {
+
+                    label: 'Confirmation du mot de passe',
+                    attr: {
+                        placeholder: '',
+                        class: 'bg-dark border-0 border-bottom border-ivoire rounded-0 text-light'
+                    },
+                    row_attr: {
+                        class: 'form-floating bg-dark text-ivoire'
+                    }
+
                 }) }}
                 <div id="passWordHelp" class="form-text">
                     Minimum :
