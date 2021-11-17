@@ -70,11 +70,12 @@ class OrderController extends AbstractController
             $form->handleRequest($request);
             if ($form->isSubmitted() && $form->isValid() && $order->getPlayer() == $this->getUser() && $order->getTicket()->getGame()->getDateStart() > new \DateTime()) {
                 $email = (new Email())
-                    ->from('jesuis@uneadresse.fr')
+                    ->from('contact@arcanlesdemondivoire.fr')
                     ->to($this->getUser()->getUserIdentifier())
                     ->subject('remboursement ArcanLDI')
                     ->text('votre demande de remboursement a bien été prise en compte');
                 $mailer->send($email);
+                $order->getTicket()->setStock($order->getTicket()->getStock()+1);
                 $entityManager->flush();
                 $this->addFlash('success', 'demande de remboursement effectuer');
                 return $this->redirectToRoute('home');
@@ -219,12 +220,12 @@ class OrderController extends AbstractController
             $order->setPaymentIntent($session->payment_intent);
             $entityManager->flush();
             $email = (new Email())
-                ->from('jesuis@uneadresse.fr')
+                ->from('contact@arcanlesdemondivoire.fr')
                 ->to($order->getPlayer()->getEmail())
                 ->subject('Achat d\'un ticket ArcanLDI ' . ' jeu ' . $order->getTicket()->getGame()->getName() . ' ticket ' . $order->getTicket()->getName())
-                ->text('vous avez bien acheter un ticket ' . $order->getTicket()->getName() . ' pour le jeu' . $order->getTicket()->getGame()->getName());
+                ->text('vous avez bien acheté un ticket ' . $order->getTicket()->getName() . ' pour le jeu' . $order->getTicket()->getGame()->getName());
             $mailer->send($email);
-            $this->addFlash('success', 'ticket acheter avec succés');
+            $this->addFlash('success', 'ticket acheté avec succès');
 
         }
         return $this->redirectToRoute('home');
@@ -240,8 +241,6 @@ class OrderController extends AbstractController
             Refund::create([
                 'payment_intent' => $order->getPaymentIntent(),
             ]);
-            //remise dans le stock d'un ticket remboursé et supression de l'order
-            $order->getTicket()->setStock($order->getTicket()->getStock() + 1);
             foreach ($order->getPlayer()->getRoleGroupes() as $role){
                 $order->getPlayer()->removeRoleGroupe($role);
             }
@@ -249,22 +248,22 @@ class OrderController extends AbstractController
             $entityManager->flush();
             if ($request->request->get('reason')) {
                 $email = (new Email())
-                    ->from('jesuis@uneadresse.fr')
+                    ->from('contact@arcanlesdemondivoire.fr')
                     ->to($order->getPlayer()->getEmail())
                     ->subject('remboursement ArcanLDI ' . ' jeu ' . $order->getTicket()->getGame()->getName() . ' ticket ' . $order->getTicket()->getName())
                     ->text($request->request->get('reason'));
             } else {
                 $email = (new Email())
-                    ->from('jesuis@uneadresse.fr')
+                    ->from('contact@arcanlesdemondivoire.fr')
                     ->to($order->getPlayer()->getEmail())
                     ->subject('remboursement ArcanLDI ' . ' jeu ' . $order->getTicket()->getGame()->getName() . ' ticket ' . $order->getTicket()->getName())
                     ->text('votre demande de remboursement a été accepté');
             }
             $mailer->send($email);
 
-            $this->addFlash('success', 'ticket remboursé avec succés');
+            $this->addFlash('success', 'ticket remboursé avec succès');
         } else {
-            $this->addFlash('error', 'une erreur c\'est produite veuillez reessayer');
+            $this->addFlash('error', 'une erreur c\'est produite veuillez réessayer');
         }
         return $this->redirectToRoute('home');
 
@@ -276,15 +275,17 @@ class OrderController extends AbstractController
     public function rejectRefund(Order $order, EntityManagerInterface $entityManager, Request $request, MailerInterface $mailer): Response
     {
         if ($this->isCsrfTokenValid('rejectRefund' . $order->getId(), $request->request->get('_token'))) {
+            //remise dans le stock d'un ticket remboursé et supression de l'order
+            $order->getTicket()->setStock($order->getTicket()->getStock() - 1);
             if ($request->request->get('reason')) {
                 $email = (new Email())
-                    ->from('jesuis@uneadresse.fr')
+                    ->from('contact@arcanlesdemondivoire.fr')
                     ->to($order->getPlayer()->getEmail())
                     ->subject('remboursement ArcanLDI ' . ' jeu ' . $order->getTicket()->getGame()->getName() . ' ticket ' . $order->getTicket()->getName())
                     ->text($request->request->get('reason'));
             } else {
                 $email = (new Email())
-                    ->from('jesuis@uneadresse.fr')
+                    ->from('contact@arcanlesdemondivoire.fr')
                     ->to($order->getPlayer()->getEmail())
                     ->subject('remboursement ArcanLDI')
                     ->text('Votre demande de remboursement a été refusé');
@@ -292,9 +293,9 @@ class OrderController extends AbstractController
             $mailer->send($email);
             $order->setRefundRequest('rejected');
             $entityManager->flush();
-            $this->addFlash('success', 'la demmande de remboursement a bien etais refusé');
+            $this->addFlash('success', 'la demande de remboursement a bien été refusé');
         } else {
-            $this->addFlash('error', 'une erreur c\'est produite veuillez reessayer');
+            $this->addFlash('error', 'une erreur c\'est produite veuillez réessayer');
         }
         return $this->redirectToRoute('home');
 

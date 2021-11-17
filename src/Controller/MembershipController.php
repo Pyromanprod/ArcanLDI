@@ -102,12 +102,12 @@ class MembershipController extends AbstractController
             $asso->setPaid('1');
             $entityManager->flush();
             $email = (new Email())
-                ->from('jesuis@uneadresse.fr')
+                ->from('contact@arcanlesdemondivoire.fr')
                 ->to($this->getUser()->getUserIdentifier())
-                ->subject('cotisation payer ' . ' année ' . $membership->getYear() )
-                ->text('votre cotisation a bien été payer');
+                ->subject('cotisation payée ' . ' année ' . $membership->getYear() )
+                ->text('votre cotisation a bien été payée');
             $mailer->send($email);
-            $this->addFlash('success', 'cotisation payer avec succés');
+            $this->addFlash('success', 'cotisation payée avec succès');
 
         }
         return $this->redirectToRoute('home');

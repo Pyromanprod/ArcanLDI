@@ -17,7 +17,6 @@
                                 : {{ order.player.pseudo }}</li>
                             <li class="list-group-item bg-transparent text-light">Prix : {{ order.total }} €</li>
                             {% if is_granted('ROLE_ADMIN') and order.datePaid %}
-                                <li class="list-group-item bg-transparent text-light">{{ include('order/_refund_form.html.twig') }}</li>
                             {% elseif order.refundRequest %}
                                 <li class="list-group-item bg-transparent text-light">vous ne pouvez plus faire de
                                     demande de remboursement sur ce ticket
