@@ -26,7 +26,13 @@
 
                         </ul>
                     </div>
-                    {% if is_granted('ROLE_ADMIN') %}
+                    {% if is_granted('ROLE_MODERATOR') %}
+                        <div class="card-footer list-group-item bg-transparent text-light">
+                            <a class="btn btn-outline-info" href="{{ path('role_groupe_add', {'id': role.id}) }}">ajouter des joueurs à ce rôle</a>
+                        </div>
+                        <div class="card-footer list-group-item bg-transparent text-light">
+                            <a class="btn btn-outline-info" href="{{ path('show_role_player_list', {'id': role.id}) }}">Liste des joueurs avec ce rôle</a>
+                        </div>
                         <div class="card-footer list-group-item bg-transparent text-light">
                             <a class="btn btn-outline-warning" href="{{ path('role_groupe_edit', {'id': role.id}) }}">modifier</a>
                             {{ include('role_groupe/_delete_form.html.twig') }}

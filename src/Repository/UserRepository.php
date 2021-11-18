@@ -48,6 +48,35 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             ->getQuery()
             ->getResult();
     }
+
+    public function findPlayerWithoutRole($game,$role){
+        return $this->createQueryBuilder('a')
+            ->innerJoin('a.orders','b')
+            ->innerJoin('b.ticket','c')
+            ->innerJoin('a.roleGroupes','d')
+            ->where('b.datePaid is NOT NULL')
+            ->andWhere('c.game = :game')
+            ->andWhere(' :role NOT MEMBER OF a.roleGroupes')
+            ->setParameter(':game',$game)
+            ->setParameter(':role',$role)
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function findPlayerWithRole($game,$role){
+        return $this->createQueryBuilder('a')
+            ->innerJoin('a.orders','b')
+            ->innerJoin('b.ticket','c')
+            ->innerJoin('a.roleGroupes','d')
+            ->where('b.datePaid is NOT NULL')
+            ->andWhere('c.game = :game')
+            ->andWhere(' :role  MEMBER OF a.roleGroupes')
+            ->setParameter(':game',$game)
+            ->setParameter(':role',$role)
+            ->getQuery()
+            ->getResult();
+    }
+
     public function findPlayerByRole(){
         return $this->createQueryBuilder('a')
             ->where('a.roles LIKE :role')

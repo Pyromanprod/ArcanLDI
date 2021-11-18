@@ -79,12 +79,11 @@ class UserController extends AbstractController
 
     #[Route('/{id}/ticket', name: 'user_index_ticket', methods: ['GET'])]
     #[IsGranted('ROLE_MODERATOR')]
-    public function indexticket(Ticket $ticket,UserRepository $userRepository,RoleGroupeRepository $groupeRepository): Response
+    public function indexticket(Ticket $ticket,UserRepository $userRepository): Response
     {
 
         return $this->render('user/inde_ticket.html.twig', [
             'users' => $userRepository->findplayer($ticket),
-            'roles' => $groupeRepository->findAllPlayerRoleButPublic($userRepository->findplayer($ticket)),
             'tickets' => $ticket
         ]);
     }

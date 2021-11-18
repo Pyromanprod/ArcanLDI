@@ -15,7 +15,7 @@ class RoleAddFormType extends AbstractType
         $builder
 
             ->add('name',EntityType::class,[
-                'class' => 'App\Entity\RoleGroupe',
+                'class' => 'App\Entity\User',
                 'choices' => $options['choice'],
                 'multiple' => 'true',
                 'expanded' => 'true'

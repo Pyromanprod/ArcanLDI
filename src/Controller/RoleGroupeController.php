@@ -9,6 +9,7 @@ use App\Form\RoleAddFormType;
 use App\Form\RoleGroupeType;
 use App\Repository\OrderRepository;
 use App\Repository\RoleGroupeRepository;
+use App\Repository\UserRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -51,14 +52,17 @@ class RoleGroupeController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'role_groupe_show', methods: ['GET'])]
+    #[Route('/{id}/joueur-liste', name: 'show_role_player_list', methods: ['GET'])]
     #[IsGranted('ROLE_MODERATOR')]
-    public function show(RoleGroupe $roleGroupe): Response
+    public function showRolePlayerList(RoleGroupe $role,UserRepository $userRepository): Response
     {
-        return $this->render('role_groupe/show.html.twig', [
-            'role_groupe' => $roleGroupe,
+       $player = $userRepository->findPlayerWithRole($role->getGame(),$role);
+        return $this->render('role_groupe/player_list.html.twig', [
+            'players' => $player,
+            'role' => $role,
         ]);
     }
+
 
     #[Route('/{id}/edit', name: 'role_groupe_edit', methods: ['GET','POST'])]
     #[IsGranted('ROLE_MODERATOR')]
@@ -78,29 +82,28 @@ class RoleGroupeController extends AbstractController
             'form' => $form,
         ]);
     }
-    //ajout role de groupe a un utilisateur
+    //ajout d'un player a role de groupe
     #[Route('/{id}/ajouter', name: 'role_groupe_add', methods: ['GET','POST'])]
     #[IsGranted('ROLE_MODERATOR')]
-    public function add(Request $request, User $user, OrderRepository $orderRepository,RoleGroupeRepository $groupeRepository): Response
+    public function add(Request $request, RoleGroupe $role, UserRepository $userRepository): Response
     {
-
         $form = $this->createForm(RoleAddFormType::class,[],[
-            'choice'=> $groupeRepository->findOnlyNotUsed($user->getRoleGroupes()->getValues()) ,
+            'choice'=> $userRepository->findPlayerWithoutRole($role->getGame(),$role),
         ]);
         $form->handleRequest($request);
-        $id = $orderRepository->findOneByPlayer($user)->getTicket()->getId();
         if ($form->isSubmitted() && $form->isValid()) {
-            foreach ($form->get('name')->getData() as $role){
-            $user->addRoleGroupe($role);
+            foreach ($form->get('name')->getData() as $player){
+            $player->addRoleGroupe($role);
             }
             $this->getDoctrine()->getManager()->flush();
 
-            return $this->redirectToRoute('user_index',[
-                'id' => $id
+            return $this->redirectToRoute('role_groupe_index',[
+                'id' => $role->getId()
             ], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->renderForm('role_groupe/_add.html.twig', [
+        return $this->renderForm('role_groupe/show.html.twig', [
+            'role' => $role,
             'form' => $form,
         ]);
     }
@@ -136,9 +139,8 @@ class RoleGroupeController extends AbstractController
             $this->addFlash('error','role non retirer');
         }
 
-        return $this->redirectToRoute('user_index_ticket', [
-            'id' => $id
-
+        return $this->redirectToRoute('show_role_player_list', [
+            'id' => $roleGroupe->getId(),
         ], Response::HTTP_SEE_OTHER);
     }
 }

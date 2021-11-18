@@ -1,0 +1,58 @@
+{% extends 'base.html.twig' %}
+{% block title %}Liste des joueurs pour le groupe {{ role }}{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <h1 class="text-center">Liste des joueurs pour le groupe {{ role }}</h1>
+        <div class="row">
+            <div class="col-12 col-md-8 mx-auto">
+                <div class="text-center my-5">
+                    <a class="btn btn-outline-light" href="{{ path('role_groupe_index') }}">retour a la liste des
+                        groupes</a>
+                </div>
+                {% if players %}
+                <div class="row">
+                    <div class="text-center" id="searchmember">
+                        <label for="search">recherche</label>
+                        <input type="text" id="search" class="search form-text">
+                    </div>
+                    <table class="table table-striped table-dark">
+                        <thead>
+                        <tr>
+                            <th>Email</th>
+                            <th>Pseudo</th>
+                            <th>Action</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for player in players %}
+
+                            <tr>
+                                <td class="searching">{{ player.email }}</td>
+                                <td>{{ player.pseudo }}</td>
+                                <td>
+                                    <form class="d-inline" method="post"
+                                          action="{{ path('role_delete', {'pseudo': player.pseudo, 'id': role.id} ) }}"
+                                          onsubmit="return confirm('etes vous sur de vouloir retirer ce role?');">
+                                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ role.id) }}">
+                                        <button class="btn btn-outline-danger">retirer le joueur du groupe
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                    {% else %}
+                        <p class="alert-warning p-3 text-center"> Aucun joueurs dans ce groupe !
+                            <a class="btn btn-outline-info" href="{{ path('role_groupe_add', {'id': role.id}) }}">ajoutez-en</a>
+                        </p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+    {% block script %}
+        <script src="{{ asset('js/search.js') }}"></script>
+    {% endblock %}

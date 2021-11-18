@@ -14,7 +14,11 @@
                 <h1>Ajouter des membres a la cotisation</h1>
 
                 {{ form_start(form) }}
-                {{ form_widget(form) }}
+                {{ form_widget(form.member,{
+                    label_attr:{
+                        class:'searching'
+                    }
+                }) }}
                 <button class="btn btn-outline-success" type="submit">Sauvegarder</button>
                 {{ form_end(form) }}
 
