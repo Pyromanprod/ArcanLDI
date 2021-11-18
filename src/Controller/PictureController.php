@@ -6,6 +6,7 @@ use App\Entity\Game;
 use App\Entity\Picture;
 use App\Form\AlbumPhotoFormType;
 use App\Repository\PictureRepository;
+use App\Repository\GameRepository;
 use App\Service\uploadGamePhoto;
 use Knp\Component\Pager\PaginatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -44,7 +45,7 @@ class PictureController extends AbstractController
     }
 
     #[Route('/{slug}', name: 'see_album', methods: ['POST', 'GET'])]
-    public function seeAlbum(Request $request, Game $game,PaginatorInterface $paginator,PictureRepository $pictureRepository): Response
+    public function seeAlbum(Request $request,GameRepository $gameRepository, Game $game,PaginatorInterface $paginator,PictureRepository $pictureRepository): Response
     {
         $requestedPage = $request->query->getInt('page', 1);
         if($requestedPage < 1){
@@ -56,9 +57,14 @@ class PictureController extends AbstractController
             16
         );
 
+        $participated = false;
+        if ($gameRepository->findPlayerGame($game, $this->getUser())){
+            $participated=true;
+        }
         return $this->render('picture/seeAlbum.html.twig', [
             'pictures'=>$picture,
             'game' => $game,
+            'participated' => $participated,
         ]);
 
     }
@@ -73,5 +79,48 @@ class PictureController extends AbstractController
         }
 
         return $this->redirectToRoute('home', [], Response::HTTP_SEE_OTHER);
+    }
+
+    #[Route('/download/{id}', name: 'download_album', methods: ['POST', 'GET'])]
+    public function download(Request $request, GameRepository $gameRepository, Game $game): Response
+    {
+
+        // Redirect avec message d'erreur si le joueur n'a pas participé a ce jeu
+        if (!$gameRepository->findPlayerGame($game, $this->getUser())){
+            $this->addFlash('error', 'Vous n\'avez pas participé a ce jeu');
+            return $this->redirectToRoute('see_album', ['slug'=>$game->getSlug()]);
+        }
+
+        $zip = new \ZipArchive();
+        $zipName = $game->getSlug() . '.zip';
+        $dossier = $this->getParameter('game.album.directory') . $game->getSlug();
+
+        if ($zip->open($zipName, \ZipArchive::CREATE)) {
+
+            $photos = $game->getPictures();
+
+
+            foreach ($photos as $photo) {
+                $zip->addFile($dossier . '/' . $photo->getName(), $game->getSlug() . "/" . $photo->getName());
+            }
+            $zip->close();
+
+            $content = file_get_contents($zipName);
+            $response = new Response();
+
+            //set headers
+            $response->headers->set('Content-Type', 'application/zip');
+            $response->headers->set('Content-Disposition', 'attachment;filename="' . $zipName);
+
+            $response->setContent($content);
+            unlink($zipName);
+            return $response;
+
+
+
+        }
+
+
+        return $this->redirectToRoute('see_album', ['slug' => $game->getSlug()]);
     }
 }
