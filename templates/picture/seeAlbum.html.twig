@@ -10,6 +10,12 @@
         </div>
 
         <div class="gallery">
+                <div class="col-12 col-md-3">
+
+                    <a href="{{ path('video_see_video', {'slug': game.slug}) }}"
+                       class="btn btn-outline-light mb-3 me-2"> Gallerie vidéo
+                    </a>
+                </div>
             <div class="row">
                 {% for photo in game.pictures %}
 
@@ -22,6 +28,14 @@
                     </div>
 
                 {% endfor %}
+                {% for video in game.videos %}
+
+                    <div class="embed-responsive embed-responsive-16by9">
+                        <iframe class="embed-responsive-item"
+                                src="https://www.youtube.com/embed/{{ video.name }}" allowfullscreen></iframe>
+                    </div>
+                {% endfor %}
+
             </div>
 
 
@@ -33,7 +47,7 @@
 {% endblock %}
 
 {% block script %}
-{#    LIGHTBOX#}
+    {# LIGHTBOX #}
     <script src="{{ asset('librairie/dist/simple-lightbox.min.js') }}"></script>
     <script src="{{ asset('librairie/dist/simple-lightbox.legacy.min.js') }}"></script>
     <script src="{{ asset('librairie/dist/simple-lightbox.jquery.min.js') }}"></script>

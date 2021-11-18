@@ -42,7 +42,9 @@
                                        class="btn btn-outline-success mb-3 me-2">Publier</a>
                                 {% endif %}
                                 <a href="{{ path('game_add_album_Photo', {'id': game.id}) }} "
-                                   class="btn btn-outline-info mb-3 me-2">Ajouter album</a>
+                                   class="btn btn-outline-info mb-3 me-2">Ajouter photos</a>
+                                <a href="{{ path('video_game_add_album_video', {'id': game.id}) }} "
+                                   class="btn btn-outline-info mb-3 me-2">Ajouter vidéos</a>
                                 <a href="{{ path('extract_answer', {'id': game.id}) }} "
                                    class="btn btn-outline-success mb-3 me-2">extraire les réponses</a>
                                 {% include('game/_delete_form.html.twig') %}

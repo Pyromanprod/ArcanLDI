@@ -4,10 +4,8 @@ namespace App\Controller;
 
 use App\Entity\Game;
 use App\Entity\GameComment;
-use App\Entity\Picture;
 use App\Entity\RoleGroupe;
 use App\Entity\Video;
-use App\Form\AlbumPhotoFormType;
 use App\Form\AlbumVideoFormType;
 use App\Form\GameCommentType;
 use App\Form\GameType;
@@ -18,6 +16,7 @@ use App\Service\uploadGamePhoto;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\TooManyRequestsHttpException;
@@ -176,49 +175,5 @@ class GameController extends AbstractController
 
         return $this->redirectToRoute('admin_jeu', [], Response::HTTP_SEE_OTHER);
     }
-
-// A VOIR SI ON MET EN PLACE
-//
-//    #[Route('/ajouter-video/{slug}', name: 'game_add_album_video', methods: ['POST', 'GET'])]
-//    public function addAlbumVideo(Request $request, Game $game): Response
-//    {
-//        $form = $this->createForm(AlbumVideoFormType::class);
-//        $form->handleRequest($request);
-//        // dossier du jeu dans le game.photo.directory
-//        $directory = $this->getParameter('game.photo.directory') . $game->getName() . '/album_photo/';
-//        if ($form->isSubmitted()) {
-//
-//            // dossier du jeu dans le game.photo.directory
-//            $directory = $this->getParameter('game.photo.directory') . $game->getName() . '/album_video/';
-//            //si le dossier n'exist pas
-//            if (!file_exists($directory)) {
-//                //on le créer
-//                mkdir($directory);
-//            }
-//            //récupération de la photo si il y a
-//            $videos = $form->get('video')->getData();
-//
-//            foreach ($videos as $video) {
-//                //on assure l'unicité du nom
-//                do {
-//                    $nameFile = md5(uniqid()) . '.' . $video->guessExtension();
-//                } while (file_exists($directory . $nameFile));
-//                //envoie des photos
-//                $video->move($directory,
-//                    $nameFile
-//                );
-//                $video = new Video();
-//                $video->setName($nameFile)
-//                    ->setGame($game);
-//
-//            }
-//            $this->getDoctrine()->getManager()->flush();
-//            return $this->redirectToRoute('game_index', [], Response::HTTP_SEE_OTHER);
-//        }
-//        return $this->renderForm('game/add_album_video.html.twig', [
-//            'form' => $form,
-//        ]);
-//    }
-
 
 }

@@ -1,11 +1,34 @@
 {% extends 'base.html.twig' %}
 
+
 {% block body %}
-    {{ form_start(form) }}
-    {{ form_row(form.video) }}
-    {{ form_errors(form) }}
-    <button type="submit" class="btn btn-outline-primary">Envoyer</button>
-    {{ form_end(form) }}
+    <div class="container">
+        <div class="text-center mt-5">
+
+            <a href="{{ path('game_index') }}" class="btn btn-outline-light me-3">Retour liste des jeux</a>
+            <a href="https://www.youtube.com/" class="btn btn-outline-light me-3" target="_blank"><i class="fab fa-youtube"></i> Accéder sur Youtube</a>
+
+        </div>
+        <div class="row">
+            <div class="col-12 col-md-6 mx-auto">
+
+                {{ form_start(form) }}
+                {{ form_row(form.name, {
+                    label: 'url youtube (d\'autre site pourrait ne pas afficher la vidéo correctement)',
+                    attr: {
+                        placeholder: '',
+                        class: 'bg-dark border-0 border-bottom border-ivoire rounded-0 text-light'
+                    },
+                    row_attr: {
+                        class: 'form-floating bg-dark text-ivoire mb-3'
+                    }
+                }) }}
+                {{ form_errors(form) }}
+                <button type="submit" class="btn btn-outline-info">Ajouter</button>
+                {{ form_end(form) }}
+            </div>
+        </div>
+    </div>
 {% endblock %}
 
 {% block title %}Ajouter Album video{% endblock %}

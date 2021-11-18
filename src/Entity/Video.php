@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\VideoRepository;
 use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: VideoRepository::class)]
 #[ORM\HasLifecycleCallbacks]
@@ -16,7 +17,7 @@ class Video
     private $id;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private $name;
+   private $name;
 
     #[ORM\ManyToOne(targetEntity: Game::class, inversedBy: 'videos')]
     #[ORM\JoinColumn(nullable: false)]
