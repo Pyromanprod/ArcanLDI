@@ -15,6 +15,12 @@
                     <a href="{{ path('video_see_video', {'slug': game.slug}) }}"
                        class="btn btn-outline-light mb-3 me-2"> Gallerie vidéo
                     </a>
+                    {% if participated %}
+
+                        <a href="{{ path('download_album', {'id': game.id}) }}"
+                           class="btn btn-outline-success mb-3 me-2"> Télécharger tout <i class="fas fa-file-archive"></i>
+                        </a>
+                    {% endif %}
                 </div>
             <div class="row">
                 {% for photo in game.pictures %}
@@ -28,13 +34,7 @@
                     </div>
 
                 {% endfor %}
-                {% for video in game.videos %}
 
-                    <div class="embed-responsive embed-responsive-16by9">
-                        <iframe class="embed-responsive-item"
-                                src="https://www.youtube.com/embed/{{ video.name }}" allowfullscreen></iframe>
-                    </div>
-                {% endfor %}
 
             </div>
 

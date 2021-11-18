@@ -1,11 +1,32 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    {{ form_start(form) }}
-    {{ form_row(form.photos) }}
-    {{ form_errors(form) }}
-    <button type="submit" class="btn btn-outline-primary">Envoyer</button>
-    {{ form_end(form) }}
+    <div class="container">
+        <div class="text-center mt-5">
+
+            <a href="{{ path('game_index') }}" class="btn btn-outline-light me-3">Retour liste des jeux</a>
+
+
+        </div>
+        <div class="row">
+            <div class="col-12 col-md-6 mx-auto">
+                {{ form_start(form) }}
+                {{ form_row(form.photos, {
+                    label: 'Photos',
+                    attr: {
+                        placeholder: '',
+                        class: 'bg-dark border-0 border-bottom border-ivoire rounded-0 text-light'
+                    },
+                    row_attr: {
+                        class: 'bg-dark text-ivoire mb-3'
+                    }
+                }) }}
+                {{ form_errors(form) }}
+                <button type="submit" class="btn btn-outline-info">Envoyer</button>
+                {{ form_end(form) }}
+            </div>
+        </div>
+    </div>
 {% endblock %}
 
 {% block title %}Ajouter Album Photo{% endblock %}
