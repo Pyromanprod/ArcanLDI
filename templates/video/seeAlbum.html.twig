@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Vidéo de {{ game.name }}{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="row text-center">
+            <h1>Vidéo de {{ game.name }}</h1>
+        </div>
+
+        <div class="gallery">
+            <div class="row">
+                <div class="col-12 col-md-3">
+
+                    <a href="{{ path('see_album', {'slug': game.slug}) }}"
+                       class="btn btn-outline-light mb-3 me-2"> Gallerie photo
+                    </a>
+                </div>
+                {% for video in game.videos %}
+
+                    <div class="embed-responsive embed-responsive-16by9">
+                        <iframe class="embed-responsive-item"
+                                src="https://www.youtube.com/embed/{{ video.name }}" allowfullscreen></iframe>
+                    </div>
+                {% endfor %}
+
+            </div>
+
+
+        </div>
+    </div>
+
+
+
+{% endblock %}
+
+
