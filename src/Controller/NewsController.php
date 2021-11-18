@@ -7,6 +7,7 @@ use App\Entity\NewsComment;
 use App\Form\NewsCommentType;
 use App\Form\NewsType;
 use App\Repository\NewsRepository;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -26,6 +27,7 @@ class NewsController extends AbstractController
     }
 
     #[Route('/new', name: 'news_new', methods: ['GET','POST'])]
+    #[IsGranted("ROLE_MODERATOR")]
     public function new(Request $request): Response
     {
         $news = new News();
@@ -77,6 +79,7 @@ class NewsController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'news_edit', methods: ['GET','POST'])]
+    #[IsGranted('ROLE_MODERATOR')]
     public function edit(Request $request, News $news): Response
     {
         $form = $this->createForm(NewsType::class, $news);
@@ -95,6 +98,7 @@ class NewsController extends AbstractController
     }
 
     #[Route('/{id}/', name: 'news_delete', methods: ['POST'])]
+    #[IsGranted('ROLE_MODERATOR')]
     public function delete(Request $request, News $news): Response
     {
         if ($this->isCsrfTokenValid('delete'.$news->getId(), $request->request->get('_token'))) {
@@ -107,6 +111,7 @@ class NewsController extends AbstractController
     }
 
     #[Route('/comment/{id}', name: 'news_comment_delete', methods: ['POST'])]
+    #[IsGranted('ROLE_MODERATOR')]
     public function deleteComment(Request $request, NewsComment $newsComment): Response
     {
         if ($this->isCsrfTokenValid('delete'.$newsComment->getId(), $request->request->get('_token'))) {

@@ -13,7 +13,7 @@
             <a class="btn btn-outline-light mb-3 me-2"
                href="{{ path('news_show', {'slug': news.slug}) }}">voir
                 plus</a>
-            {% if is_granted('ROLE_ADMIN') %}
+            {% if is_granted('ROLE_MODERATOR') %}
 
                 <a href="{{ path('news_edit', {'id': news.id}) }} "
                    class="btn btn-outline-warning mb-3 me-2">Modifier</a>

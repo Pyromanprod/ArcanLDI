@@ -51,21 +51,31 @@
                     </li>
                     {% if is_granted('ROLE_ADMIN') %}
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle me-2" href="{{ path('home') }}"
-                               id="adminDropdown"
-                               role="button"
-                               data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-tools me-1"></i>
-                                Admin
-                            </a>
-                            <ul class="dropdown-menu" aria-labelledby="adminDropdown">
-                                <li><a class="dropdown-item" href="{{ path('admin_jeu') }}">Jeux</a></li>
-                                <li>
-                                    <hr class="dropdown-divider">
-                                </li>
-                                <li><a class="dropdown-item" href="{{ path('user_index') }}">Joueurs</a></li>
-                                <li>
-                                    <hr class="dropdown-divider">
-                                </li>
+                        <a class="nav-link dropdown-toggle me-2" href="{{ path('home') }}"
+                           id="adminDropdown"
+                           role="button"
+                           data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-tools me-1"></i>
+                            Admin
+                        </a>
+                    {% elseif is_granted('ROLE_MODERATOR') and not is_granted('ROLE_ADMIN') %}
+                        <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle me-2" href="{{ path('home') }}"
+                           id="adminDropdown"
+                           role="button"
+                           data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-tools me-1"></i>
+                            Moderation
+                        </a>
+                    {% endif %}
+                    {% if is_granted('ROLE_MODERATOR') %}
+
+
+
+                        <ul class="dropdown-menu" aria-labelledby="adminDropdown">
+                            <li><a class="dropdown-item" href="{{ path('user_index') }}">Joueurs</a></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            {% if is_granted('ROLE_ADMIN') %}
                                 <li><a class="dropdown-item" href="{{ path('order_index') }}">Commandes</a></li>
                                 <li>
                                     <hr class="dropdown-divider">
@@ -74,31 +84,41 @@
                                 <li>
                                     <hr class="dropdown-divider">
                                 </li>
-                                <li><a class="dropdown-item" href="{{ path('role_groupe_index') }}">Groupes</a>
-                                </li>
+                                <li><a class="dropdown-item" href="{{ path('admin_jeu') }}">Jeux</a></li>
                                 <li>
                                     <hr class="dropdown-divider">
                                 </li>
                                 <li><a class="dropdown-item"
                                        href="{{ path('survey_index') }}">Questionnaires</a></li>
-                                <li>
-                                    <hr class="dropdown-divider">
-                                </li>
-                                <li><a class="dropdown-item" href="{{ path('article_index') }}">Discussions</a>
-                                </li>
-                                <li>
-                                    <hr class="dropdown-divider">
-                                </li>
-                                <li><a class="dropdown-item" href="{{ path('news_index') }}">Actualités</a></li>
-                                <li>
-                                    <hr class="dropdown-divider">
-                                </li>
-                                <li><a class="dropdown-item" href="{{ path('presentation_index') }}">Présentation</a></li>
+
                                 <li>
                                     <hr class="dropdown-divider">
                                 </li>
                                 <li><a class="dropdown-item" href="{{ path('membership_index') }}">Cotisation</a></li>
-                            </ul>
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+                                <li><a class="dropdown-item" href="{{ path('moderator_index') }}">Modération</a></li>
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+                            {% endif %}
+                            <li><a class="dropdown-item" href="{{ path('role_groupe_index') }}">Groupes</a>
+                            </li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="dropdown-item" href="{{ path('article_index') }}">Discussions</a>
+                            </li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="dropdown-item" href="{{ path('news_index') }}">Actualités</a></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="dropdown-item" href="{{ path('presentation_index') }}">Présentation</a></li>
+                        </ul>
                         </li>
                     {% endif %}
                 {% else %}

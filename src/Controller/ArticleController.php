@@ -26,7 +26,7 @@ class ArticleController extends AbstractController
     {
         $article = null;
 
-        if ($this->isGranted('ROLE_ADMIN')) {
+        if ($this->isGranted('ROLE_MODERATOR')) {
             $article = $articleRepository->findAll();
         } else {
             foreach ($this->getUser()->getRoleGroupes() as $role) {
@@ -40,7 +40,7 @@ class ArticleController extends AbstractController
     }
 
     #[Route('/new', name: 'article_new', methods: ['GET', 'POST'])]
-    #[IsGranted('ROLE_ADMIN')]
+    #[IsGranted('ROLE_MODERATOR')]
     public function new(Request $request,): Response
     {
         $article = new Article();
@@ -66,7 +66,7 @@ class ArticleController extends AbstractController
     {
         $coment = new Coment();
         $form = $this->createForm(ComentFormType::class, $coment);
-        if ($article->getRoleGroupe() == NULL || $userRepository->findRoleArticle($article->getRoleGroupe()->getId(), $this->getUser()) || $this->isGranted('ROLE_ADMIN')) {
+        if ($article->getRoleGroupe() == NULL || $userRepository->findRoleArticle($article->getRoleGroupe()->getId(), $this->getUser()) || $this->isGranted('ROLE_MODERATOR')) {
             $form->handleRequest($request);
             if ($form->isSubmitted() && $form->isValid()) {
                 $coment
@@ -94,6 +94,7 @@ class ArticleController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'article_edit', methods: ['GET', 'POST'])]
+    #[IsGranted('ROLE_MODERATOR')]
     public function edit(Request $request, Article $article): Response
     {
         $form = $this->createForm(ArticleType::class, $article);
@@ -112,6 +113,7 @@ class ArticleController extends AbstractController
     }
 
     #[Route('/{id}/delete', name: 'article_delete', methods: ['POST'])]
+    #[IsGranted('ROLE_MODERATOR')]
     public function delete(Request $request, Article $article): Response
     {
         if ($this->isCsrfTokenValid('delete' . $article->getId(), $request->request->get('_token'))) {
@@ -124,7 +126,7 @@ class ArticleController extends AbstractController
     }
 
     #[Route('/comment/{id}/delete', name: 'comment_delete', methods: ['POST'])]
-    #[IsGranted('ROLE_ADMIN')]
+    #[IsGranted('ROLE_MODERATOR')]
     public function deletecomment(Request $request, Coment $coment): Response
     {
         $id = $coment->getArticle()->getId();

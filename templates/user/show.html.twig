@@ -9,16 +9,20 @@
             <h1>{{ user.pseudo }}</h1>
         </div>
         <div class="card-body">
-                <img class="img-fluid" src="{{ asset('img/user/'~user.photo)|imagine_filter('profil') }}" alt=" photo de profile">
+            <img class="img-fluid" src="{{ asset('img/user/'~user.photo)|imagine_filter('profil') }}"
+                 alt=" photo de profile">
             <ul class="list-group list-group-flush ">
                 <li class="list-group-item bg-transparent text-light">Email : {{ user.email }} </li>
                 <li class="list-group-item bg-transparent text-light">Prenom : {{ user.firstname }}</li>
                 <li class="list-group-item bg-transparent text-light">nom : {{ user.lastname }}</li>
             </ul>
         </div>
-        <div class="card-footer list-group-item bg-transparent text-light">
-            {{ include('user/_delete_form.html.twig') }}
-        </div>
+        {% if if is_granted('ROLE_ADMIN') %}
+
+            <div class="card-footer list-group-item bg-transparent text-light">
+                {{ include('user/_delete_form.html.twig') }}
+            </div>
+        {% endif %}
     </div>
 
 {% endblock %}

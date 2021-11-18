@@ -17,10 +17,11 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 #[Route('/role')]
-#[IsGranted('ROLE_ADMIN')]
+#[IsGranted('ROLE_MODERATOR')]
 class RoleGroupeController extends AbstractController
 {
     #[Route('/', name: 'role_groupe_index', methods: ['GET'])]
+    #[IsGranted('ROLE_MODERATOR')]
     public function index(RoleGroupeRepository $roleGroupeRepository): Response
     {
         return $this->render('role_groupe/index.html.twig', [
@@ -29,6 +30,7 @@ class RoleGroupeController extends AbstractController
     }
 
     #[Route('/new', name: 'role_groupe_new', methods: ['GET','POST'])]
+    #[IsGranted('ROLE_MODERATOR')]
     public function new(Request $request): Response
     {
         $roleGroupe = new RoleGroupe();
@@ -50,6 +52,7 @@ class RoleGroupeController extends AbstractController
     }
 
     #[Route('/{id}', name: 'role_groupe_show', methods: ['GET'])]
+    #[IsGranted('ROLE_MODERATOR')]
     public function show(RoleGroupe $roleGroupe): Response
     {
         return $this->render('role_groupe/show.html.twig', [
@@ -58,6 +61,7 @@ class RoleGroupeController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'role_groupe_edit', methods: ['GET','POST'])]
+    #[IsGranted('ROLE_MODERATOR')]
     public function edit(Request $request, RoleGroupe $roleGroupe): Response
     {
         $form = $this->createForm(RoleGroupeType::class, $roleGroupe);
@@ -76,6 +80,7 @@ class RoleGroupeController extends AbstractController
     }
     //ajout role de groupe a un utilisateur
     #[Route('/{id}/ajouter', name: 'role_groupe_add', methods: ['GET','POST'])]
+    #[IsGranted('ROLE_MODERATOR')]
     public function add(Request $request, User $user, OrderRepository $orderRepository,RoleGroupeRepository $groupeRepository): Response
     {
 
@@ -101,6 +106,7 @@ class RoleGroupeController extends AbstractController
     }
 
     #[Route('/{id}', name: 'role_groupe_delete', methods: ['POST'])]
+    #[IsGranted('ROLE_MODERATOR')]
     public function delete(Request $request, RoleGroupe $roleGroupe): Response
     {
         if ($this->isCsrfTokenValid('delete'.$roleGroupe->getId(), $request->request->get('_token'))) {
@@ -116,9 +122,9 @@ class RoleGroupeController extends AbstractController
     #[Route('/delete/{pseudo}-{id}', name: 'role_delete', methods: ['POST','GET'])]
     #[ParamConverter('user', options: ['mapping' => ['pseudo' => 'pseudo']])]
     #[ParamConverter('roleGroupe', options: ['mapping' => ['id' => 'id']])]
+    #[IsGranted('ROLE_MODERATOR')]
     public function deleteRole(User $user,RoleGroupe $roleGroupe, Request $request): Response
     {
-        dump($user);
         $entityManager = $this->getDoctrine()->getRepository(Order::class);
         $id = $entityManager->findOneByPlayer($user)->getTicket()->getId();
 

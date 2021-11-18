@@ -7,7 +7,7 @@
     <div class="container">
         <h1 class="text-center">Liste de toutes les discussions</h1>
         <div class="text-center">
-            {% if is_granted('ROLE_ADMIN') %}
+            {% if is_granted('ROLE_MODERATOR') %}
                 <a class="btn btn-outline-info" href="{{ path('article_new') }}">Créer une nouvelle discussion</a>
             {% endif %}
         </div>
@@ -26,8 +26,8 @@
                                     <li class="list-group-item bg-transparent text-light">
                                         <a class="btn btn-outline-light"
                                            href="{{ path('article_show', {'id': article.id}) }}">afficher la
-                                            discution</a>
-                                        {% if is_granted('ROLE_ADMIN') %}
+                                            discussion</a>
+                                        {% if is_granted('ROLE_MODERATOR') %}
                                             <a class="btn-outline-warning btn mx-3" href="{{ path('article_edit', {'id': article.id}) }}">Modifier</a>
                                             {{ include('article/_delete_form.html.twig') }}
                                         {% endif %}

@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Moderation{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <h2 class="text-center">Modérateurs</h2>
+        <div class="text-center">
+            <h2>Ajouter modérateur</h2>
+            <form action="{{ path('moderator_Add_index') }}">
+                <label for="moderation"></label>
+                <input type="text" id="moderation" name="moderation" placeholder="Email">
+                <button class="btn-outline-info btn" type="submit">recherche</button>
+            </form>
+        </div>
+        <div class="row">
+            {% for user in users %}
+                <div class="card mx-auto my-3 bg-cardgame" style="width: 18rem;">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ user.pseudo }}</h5>
+                        <h6 class="card-subtitle mb-2 text-muted">{{ user.firstname }}  {{ user.lastname }}</h6>
+                        <p class="card-text">email: {{ user.email }}</p>
+
+                        {% for role in user.roles %}
+                            {% if role != "ROLE_MODERATOR" and role == "ROLE_USER" %}
+                                <form method="post" action="{{ path('moderator_Add', {'id': user.id}) }}" onsubmit="return confirm('Etes vous sûr de vouloir attribuer le rôle modérateur à ce compte');">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('add' ~ user.id) }}">
+                                    <button class="btn btn-outline-success">Ajouter a la moderation</button>
+                                </form>
+                            {% endif %}
+                        {% endfor %}
+
+                    </div>
+                </div>
+
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

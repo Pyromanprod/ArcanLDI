@@ -1,13 +1,14 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Edit Article{% endblock %}
+{% block title %}Modifier la discussion{% endblock %}
 
 {% block body %}
-    <h1>Edit Article</h1>
-
-    {{ include('article/_form.html.twig', {'button_label': 'Modifier'}) }}
-
-    <a class="btn btn-warning" href="{{ path('article_index') }}">Annuler</a>
-
-    {{ include('article/_delete_form.html.twig') }}
+    <div class="container">
+        <div class="row">
+            <div class="col-12 col-md-8 mx-auto">
+                <h1 class="text-center">Modifier la discussion</h1>
+                {{ include('article/_form.html.twig', {'button_label': 'Modifier','button_color': 'btn-outline-warning'}) }}
+            </div>
+        </div>
+    </div>
 {% endblock %}

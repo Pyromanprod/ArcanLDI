@@ -21,7 +21,7 @@ class UserController extends AbstractController
 {
 
     #[Route('/', name: 'user_index', methods: ['GET'])]
-    #[IsGranted('ROLE_ADMIN')]
+    #[IsGranted('ROLE_MODERATOR')]
     public function index(UserRepository $userRepository,TicketRepository $ticketRepository,GameRepository $gameRepository): Response
     {
         $tickets = $ticketRepository->findOneBydate(new \DateTime());
@@ -31,10 +31,55 @@ class UserController extends AbstractController
             'tickets' => $tickets
         ]);
     }
+    #[Route('/moderation', name: 'moderator_index', methods: ['GET'])]
+    #[IsGranted('ROLE_ADMIN')]
+    public function indexModerator(UserRepository $userRepository): Response
+    {
+
+
+        return $this->render('user/index_moderator.html.twig', [
+            'users' => $userRepository->findPlayerByRole(),
+        ]);
+    }
+    #[Route('/moderation/ajouter', name: 'moderator_Add_index', methods: ['GET'])]
+    #[IsGranted('ROLE_ADMIN')]
+    public function indexModeratorAdd(UserRepository $userRepository,Request $request): Response
+    {
+        $email = $request->get('moderation');
+
+        return $this->render('user/index_moderator_add.html.twig', [
+            'users' => $userRepository->findPlayerByEmail($email),
+        ]);
+    }
+    #[Route('/moderation/ajouter/{id}', name: 'moderator_Add', methods: ['GET','POST'])]
+    #[IsGranted('ROLE_ADMIN')]
+    public function ModeratorAdd(User $user,UserRepository $userRepository,Request $request): Response
+    {
+        if ($this->isCsrfTokenValid('add' . $user->getId(), $request->request->get('_token'))) {
+            $user->setRoles(["ROLE_MODERATOR"]);
+            $this->getDoctrine()->getManager()->flush();
+        }
+        return $this->redirectToRoute('moderator_index', [
+            'users' => $userRepository->findPlayerByRole(),
+        ]);
+    }
+
+    #[Route('/moderation/retirer/{id}', name: 'moderator_Delete', methods: ['GET','POST'])]
+    #[IsGranted('ROLE_ADMIN')]
+    public function ModeratorDelete(User $user,UserRepository $userRepository,Request $request): Response
+    {
+        if ($this->isCsrfTokenValid('delete' . $user->getId(), $request->request->get('_token'))) {
+            $user->setRoles([]);
+            $this->getDoctrine()->getManager()->flush();
+        }
+        return $this->redirectToRoute('moderator_index', [
+            'users' => $userRepository->findPlayerByRole(),
+        ]);
+    }
 
     #[Route('/{id}/ticket', name: 'user_index_ticket', methods: ['GET'])]
-    #[IsGranted('ROLE_ADMIN')]
-    public function indexticket(Ticket $ticket,UserRepository $userRepository,TicketRepository $ticketRepository,RoleGroupeRepository $groupeRepository): Response
+    #[IsGranted('ROLE_MODERATOR')]
+    public function indexticket(Ticket $ticket,UserRepository $userRepository,RoleGroupeRepository $groupeRepository): Response
     {
 
         return $this->render('user/inde_ticket.html.twig', [
@@ -63,7 +108,6 @@ class UserController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            //TODO:Attendre que renaud deigne me donner le service des photo
             $photo = $form->get('photo')->getData();
             if (!$photo){
                 $this->getDoctrine()->getManager()->flush();
@@ -110,7 +154,9 @@ class UserController extends AbstractController
     {
         return $this->render('user/show_profile.html.twig');
     }
+
     #[Route('/{id}', name: 'user_delete', methods: ['POST'])]
+    #[IsGranted('ROLE_ADMIN')]
     public function delete(Request $request, User $user): Response
     {
         if ($this->isCsrfTokenValid('delete' . $user->getId(), $request->request->get('_token'))) {

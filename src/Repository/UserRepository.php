@@ -48,6 +48,23 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             ->getQuery()
             ->getResult();
     }
+    public function findPlayerByRole(){
+        return $this->createQueryBuilder('a')
+            ->where('a.roles LIKE :role')
+            ->setParameter('role', '%"'.'ROLE_MODERATOR'.'"%')
+            ->getQuery()
+            ->getResult();
+    }
+    public function findPlayerByEmail($email){
+        return $this->createQueryBuilder('a')
+            ->where('a.email LIKE :email')
+            ->andWhere('a.roles NOT LIKE :role')
+            ->setParameter('email', '%'.$email.'%')
+            ->setParameter('role', '%"'.'ROLE_MODERATOR'.'"%')
+            ->getQuery()
+            ->getResult();
+    }
+
     public function findPlayerByGame($game,$player){
         return $this->createQueryBuilder('a')
             ->innerJoin('a.orders','b')
