@@ -102,6 +102,10 @@
                                 <li>
                                     <hr class="dropdown-divider">
                                 </li>
+                                <li><a class="dropdown-item" onclick="return confirm('cette action supprimera les groupes et les discussions associée a tous les jeux dont la date de fin est dépassée ')" href="{{ path('game_clear') }}">Nettoyage</a></li>
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
                             {% endif %}
                             <li><a class="dropdown-item" href="{{ path('role_groupe_index') }}">Groupes</a>
                             </li>

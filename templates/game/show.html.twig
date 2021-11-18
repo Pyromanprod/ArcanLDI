@@ -67,7 +67,7 @@
                 {% if date(game.dateEnd) < date() and form %}
                     {{ include('news_comment/_form.html.twig') }}
                 {% endif %}
-                {% for comment in game.gameComments %}
+                {% for comment in comments %}
                     <div class="row">
                         <div class="col-12 mt-3">
                             <div class="card bg-cardgame">
@@ -81,6 +81,12 @@
                         </div>
                     </div>
                 {% endfor %}
+            </div>
+            <div class="my-3 text-center">
+                <div class="d-inline-block">
+                    {# Affichage du menu permettant de naviguer entre les différentes pages #}
+                    {{ knp_pagination_render(comments) }}
+                </div>
             </div>
         </div>
     </div>

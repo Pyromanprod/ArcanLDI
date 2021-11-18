@@ -19,33 +19,33 @@ class ExtractAnswerController extends AbstractController
 
 //        dd($this->getDoctrine()->getRepository(Ticket::class)->findBySurveyTicket($game));
         $listeTicket = $game->getTickets();
-        $myVariableCSV = "";
+        $myVariableCSV = "\n\n\n######IMPORTER DANS GOOGLE SHEET POUR UN VRAI RENDU CHOISIR LA DETECTION AUTOMATIQUE DU SEPARATEUR######\n\n\n";
         foreach ($listeTicket as $ticket) {
             //Nom des colonnes en première lignes
             // le \n à la fin permets de faire un saut de ligne, super important en CSV
             // le point virgule sépare les données en colonnes
-            $myVariableCSV .= "\n".$game->getName() . ";\n";
-            $myVariableCSV .= $ticket->getName() . ";\n";
-            $myVariableCSV .= "Nom; Prénom; Mail;";
+            $myVariableCSV .= "\n".$game->getName() . ",\n";
+            $myVariableCSV .= $ticket->getName() . ",\n";
+            $myVariableCSV .= "Nom, Prénom, Mail,";
             $listeSurvey = $this->getDoctrine()->getRepository(Survey::class)->findBySurveyByTicket($ticket);
             foreach ($listeSurvey as $survey) {
                 $listeQuestion = $survey->getQuestion();
                 foreach ($listeQuestion as $key => $question) {
 
 
-                    $myVariableCSV .= $question->getContent() . ";";
+                    $myVariableCSV .= $question->getContent() . ",";
                 }
                 $players = $this->getDoctrine()->getRepository(User::class)->findplayer($ticket);
                 foreach ($players as $player) {
                     $myVariableCSV .= "\n";
-                    $myVariableCSV .= $player->getLastName() . ";" .
-                        $player->getFirstName() . ";" .
-                        $player->getEmail() . ";";
+                    $myVariableCSV .= $player->getLastName() . "," .
+                        $player->getFirstName() . "," .
+                        $player->getEmail() . ",";
                     foreach ($listeQuestion as $key => $question) {
                         $answer = $this->getDoctrine()
                             ->getRepository(Answer::class)
                             ->findByQuestionPlayer($question, $player);
-                        $myVariableCSV .= $answer->getContent() . ";";
+                        $myVariableCSV .= $answer->getContent() . ",";
 
                     }
                 }

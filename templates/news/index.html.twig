@@ -48,6 +48,10 @@
             {% else %}
                 <p class="alert alert-warning">pas encore d'actualité mais ça arrive</p>
             {% endfor %}
+            <div class="d-inline-block">
+                {# Affichage du menu permettant de naviguer entre les différentes pages #}
+                {{ knp_pagination_render(news) }}
+            </div>
         </div>
     </div>
 

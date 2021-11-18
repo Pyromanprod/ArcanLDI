@@ -7,14 +7,15 @@ use App\Entity\Coment;
 use App\Form\ArticleType;
 use App\Form\ComentFormType;
 use App\Repository\ArticleRepository;
-use App\Repository\GameRepository;
+use App\Repository\ComentRepository;
 use App\Repository\UserRepository;
-use Doctrine\ORM\EntityManager;
+use Knp\Component\Pager\PaginatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 
 #[Route('/article')]
@@ -62,10 +63,19 @@ class ArticleController extends AbstractController
     }
 
     #[Route('/{id}/article', name: 'article_show', methods: ['GET', 'POST'])]
-    public function show(Article $article, UserRepository $userRepository, Request $request): Response
+    public function show(Article $article, UserRepository $userRepository, Request $request,PaginatorInterface $paginator,ComentRepository $comentRepository): Response
     {
         $coment = new Coment();
         $form = $this->createForm(ComentFormType::class, $coment);
+        $requestedPage = $request->query->getInt('page', 1);
+        if($requestedPage < 1){
+            throw new NotFoundHttpException();
+        }
+        $comment = $paginator->paginate(
+            $comentRepository->findByArticle($article,['createdAt' => 'DESC']),
+            $requestedPage,
+            50
+        );
         if ($article->getRoleGroupe() == NULL || $userRepository->findRoleArticle($article->getRoleGroupe()->getId(), $this->getUser()) || $this->isGranted('ROLE_MODERATOR')) {
             $form->handleRequest($request);
             if ($form->isSubmitted() && $form->isValid()) {
@@ -86,6 +96,7 @@ class ArticleController extends AbstractController
             }
             return $this->renderForm('article/show.html.twig', [
                 'article' => $article,
+                'comments' => $comment,
                 'form' => $form
             ]);
 

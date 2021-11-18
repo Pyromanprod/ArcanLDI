@@ -18,11 +18,15 @@
 
         </div>
         <h2 class="text-center">Joueurs</h2>
+        <div class="text-center" id="searchmember">
+            <label for="search">recherche</label>
+            <input type="text" id="search" class="search form-text">
+        </div>
         <div class="row">
             {% for user in users %}
                 <div class="card mx-auto my-3 bg-cardgame" style="width: 18rem;">
                     <div class="card-body">
-                        <h5 class="card-title">{{ user.pseudo }}</h5>
+                        <h5 class="card-title searching">{{ user.pseudo }}</h5>
                         <h6 class="card-subtitle mb-2 text-muted">{{ user.firstname }}  {{ user.lastname }}</h6>
                         <p class="card-text">email: {{ user.email }}</p>
                         <a class="btn btn-outline-light" href="{{ path('user_show', {'id': user.id}) }}">Détails</a>
@@ -30,6 +34,15 @@
                 </div>
 
             {% endfor %}
+            <div class="my-3 text-center">
+                <div class="d-inline-block">
+                    {# Affichage du menu permettant de naviguer entre les différentes pages #}
+                    {{ knp_pagination_render(users) }}
+                </div>
+            </div>
         </div>
     </div>
+{% endblock %}
+{% block script %}
+    <script src="{{ asset('js/searchuser.js') }}"></script>
 {% endblock %}

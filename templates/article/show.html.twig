@@ -34,7 +34,7 @@
         </div>
 
         <div class="row mt-5">
-            {% for coment in article.coments %}
+            {% for coment in comments %}
                 <div class="col-12 col-md-8 mx-auto my-3">
                     <div class="card bg-cardgame">
                         <div class="card-header">
@@ -54,6 +54,12 @@
                     </div>
                 </div>
             {% endfor %}
+            <div class="my-3 text-center">
+                <div class="d-inline-block">
+                    {# Affichage du menu permettant de naviguer entre les différentes pages #}
+                    {{ knp_pagination_render(comments) }}
+                </div>
+            </div>
         </div>
     </div>
 {% endblock %}

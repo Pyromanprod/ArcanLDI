@@ -10,20 +10,20 @@
                 <p>{{ news.content|raw }}</p>
                 <p class="text-info"> Publier le {{ news.createdAt ? news.createdAt|date('d/m/Y à H\\hi') : '' }}</p>
 
-                <a class="btn-primary btn" href="{{ path('news_index') }}">Retour à la liste des Actualités</a>
+                <a class="btn-outline-light btn" href="{{ path('news_index') }}">Retour à la liste des Actualités</a>
                 {% if is_granted('ROLE_MODERATOR') %}
-                    <a class="btn btn-warning" href="{{ path('news_edit', {'id': news.id}) }}">Modifier</a>
+                    <a class="btn btn-outline-warning" href="{{ path('news_edit', {'id': news.id}) }}">Modifier</a>
                     <form class="d-inline" method="post" action="{{ path('news_delete', {'id': news.id}) }}"
                           onsubmit="return confirm('Voulez-vou vraiment supprimer {{ news.title }}');">
                         <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ news.id) }}">
-                        <button class="btn btn-danger">supprimer</button>
+                        <button class="btn btn-outline-danger">supprimer</button>
                     </form>
                 {% endif %}
             </div>
             <div class="row">
                 <div class="col-12 col-md-8 offset-md-2 mt-3">
                     {{ include('news_comment/_form.html.twig') }}
-                    {% for comment in news.newsComments %}
+                    {% for comment in comments %}
                         <div class="row">
                             <div class="col-12 mt-3">
                                 <div class="card bg-cardgame">
@@ -39,7 +39,7 @@
                                                   onsubmit="return confirm('Etes vous sure de vouloir supprimer ce message?');">
                                                 <input type="hidden" name="_token"
                                                        value="{{ csrf_token('delete' ~ comment.id) }}">
-                                                <button class="btn btn-danger">Supprimer le commentaire</button>
+                                                <button class="btn btn-outline-danger">Supprimer le commentaire</button>
                                             </form>
                                         {% endif %}
                                     </div>
@@ -47,6 +47,12 @@
                             </div>
                         </div>
                     {% endfor %}
+                </div>
+            </div>
+            <div class="my-3 text-center">
+                <div class="d-inline-block">
+                    {# Affichage du menu permettant de naviguer entre les différentes pages #}
+                    {{ knp_pagination_render(comments) }}
                 </div>
             </div>
         </div>

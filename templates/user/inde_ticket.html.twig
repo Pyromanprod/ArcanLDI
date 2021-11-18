@@ -18,6 +18,12 @@
                 </div>
 
             {% endfor %}
+            <div class="my-3 text-center">
+                <div class="d-inline-block">
+                    {# Affichage du menu permettant de naviguer entre les différentes pages #}
+                    {{ knp_pagination_render(users) }}
+                </div>
+            </div>
         </div>
     </div>
 

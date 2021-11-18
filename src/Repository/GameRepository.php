@@ -43,6 +43,7 @@ class GameRepository extends ServiceEntityRepository
             ->getResult()
             ;
     }
+
     public function findPlayerGame($game,$player)
     {
         return $this->createQueryBuilder('g')

@@ -16,6 +16,7 @@
         "exercise/htmlpurifier-bundle": "^3.1",
         "fakerphp/faker": "^1.16",
         "friendsofsymfony/ckeditor-bundle": "^2.3",
+        "knplabs/knp-paginator-bundle": "^5.7",
         "liip/imagine-bundle": "^2.7",
         "phpdocumentor/reflection-docblock": "^5.3",
         "sensio/framework-extra-bundle": "^6.1",

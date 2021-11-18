@@ -81,7 +81,8 @@
                 }
                 ) }}
             {% endif %}
-            <button class="btn {{ button_color|default('btn-outline-success') }} mt-3">{{ button_label|default('Créer') }}</button>
+            <button type="submit" class="btn {{ button_color|default('btn-outline-success') }} mt-3">{{ button_label|default('Créer') }}</button>
+            {{ form_end(form) }}
 
         </div>
     </div>

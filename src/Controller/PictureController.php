@@ -5,11 +5,14 @@ namespace App\Controller;
 use App\Entity\Game;
 use App\Entity\Picture;
 use App\Form\AlbumPhotoFormType;
+use App\Repository\PictureRepository;
 use App\Service\uploadGamePhoto;
+use Knp\Component\Pager\PaginatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 
 #[Route('/album-photo')]
@@ -41,11 +44,21 @@ class PictureController extends AbstractController
     }
 
     #[Route('/{slug}', name: 'see_album', methods: ['POST', 'GET'])]
-    public function seeAlbum(Request $request, Game $game): Response
+    public function seeAlbum(Request $request, Game $game,PaginatorInterface $paginator,PictureRepository $pictureRepository): Response
     {
+        $requestedPage = $request->query->getInt('page', 1);
+        if($requestedPage < 1){
+            throw new NotFoundHttpException();
+        }
+        $picture = $paginator->paginate(
+            $pictureRepository->findByGame($game,['createdAt'=>'DESC']),
+            $requestedPage,
+            16
+        );
 
         return $this->render('picture/seeAlbum.html.twig', [
-            'game'=>$game,
+            'pictures'=>$picture,
+            'game' => $game,
         ]);
 
     }

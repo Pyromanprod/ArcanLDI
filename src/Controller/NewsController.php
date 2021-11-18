@@ -6,11 +6,14 @@ use App\Entity\News;
 use App\Entity\NewsComment;
 use App\Form\NewsCommentType;
 use App\Form\NewsType;
+use App\Repository\NewsCommentRepository;
 use App\Repository\NewsRepository;
+use Knp\Component\Pager\PaginatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\TooManyRequestsHttpException;
 use Symfony\Component\RateLimiter\RateLimiterFactory;
 use Symfony\Component\Routing\Annotation\Route;
@@ -19,10 +22,19 @@ use Symfony\Component\Routing\Annotation\Route;
 class NewsController extends AbstractController
 {
     #[Route('/', name: 'news_index', methods: ['GET'])]
-    public function index(NewsRepository $newsRepository): Response
+    public function index(NewsRepository $newsRepository,PaginatorInterface $paginator,Request $request): Response
     {
+        $requestedPage = $request->query->getInt('page', 1);
+        if($requestedPage < 1){
+            throw new NotFoundHttpException();
+        }
+        $news = $paginator->paginate(
+            $newsRepository->findAll(),
+            $requestedPage,
+            30
+        );
         return $this->render('news/index.html.twig', [
-            'news' => $newsRepository->findAll(),
+            'news' => $news,
         ]);
     }
 
@@ -50,7 +62,7 @@ class NewsController extends AbstractController
     }
 
     #[Route('/{slug}', name: 'news_show', methods: ['GET','POST'])]
-    public function show(News $news, Request $request,RateLimiterFactory $anonymousApiLimiter): Response
+    public function show(News $news, Request $request,RateLimiterFactory $anonymousApiLimiter,PaginatorInterface $paginator,NewsCommentRepository $commentRepository): Response
     {
         $limiter = $anonymousApiLimiter->create($request->getClientIp());
 
@@ -58,7 +70,15 @@ class NewsController extends AbstractController
         $newsComment = new NewsComment();
         $form = $this->createForm(NewsCommentType::class, $newsComment);
         $form->handleRequest($request);
-
+        $requestedPage = $request->query->getInt('page', 1);
+        if($requestedPage < 1){
+            throw new NotFoundHttpException();
+        }
+        $comment = $paginator->paginate(
+            $commentRepository->findByNews($news,["createdAt"=>"DESC"]),
+            $requestedPage,
+            50
+        );
         if ($form->isSubmitted() && $form->isValid()) {
             if (false === $limiter->consume(1)->isAccepted()) {
             throw new TooManyRequestsHttpException();}
@@ -74,6 +94,7 @@ class NewsController extends AbstractController
         }
         return $this->renderForm('news/show.html.twig', [
             'news' => $news,
+            'comments'=> $comment,
             'form' => $form
         ]);
     }

@@ -17,7 +17,7 @@
                     </a>
                 </div>
             <div class="row">
-                {% for photo in game.pictures %}
+                {% for photo in pictures %}
 
                     <div class="mb-2 col-6 col-md-4 col-xl-3">
 
@@ -37,7 +37,12 @@
                 {% endfor %}
 
             </div>
-
+            <div class="my-3 text-center">
+                <div class="d-inline-block">
+                    {# Affichage du menu permettant de naviguer entre les différentes pages #}
+                    {{ knp_pagination_render(pictures) }}
+                </div>
+            </div>
 
         </div>
     </div>

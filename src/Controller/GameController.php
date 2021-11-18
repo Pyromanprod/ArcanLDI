@@ -14,11 +14,13 @@ use App\Repository\GameRepository;
 use App\Repository\UserRepository;
 use App\Service\uploadGamePhoto;
 use Doctrine\ORM\EntityManagerInterface;
+use Knp\Component\Pager\PaginatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\TooManyRequestsHttpException;
 use Symfony\Component\RateLimiter\RateLimiterFactory;
 use Symfony\Component\Routing\Annotation\Route;
@@ -94,12 +96,20 @@ class GameController extends AbstractController
     }
 
     #[Route('/{slug}', name: 'game_show', methods: ['GET', 'POST'])]
-    public function show(Game $game, GameCommentRepository $commentRepository, Request $request, RateLimiterFactory $anonymousApiLimiter, GameRepository $gameRepository, UserRepository $userRepository): Response
+    public function show(Game $game, GameCommentRepository $commentRepository, Request $request, RateLimiterFactory $anonymousApiLimiter, GameRepository $gameRepository, UserRepository $userRepository,PaginatorInterface $paginator): Response
     {
         $form = null;
         $gameComment = new GameComment();
         $limiter = $anonymousApiLimiter->create($request->getClientIp());
-        $comment = $commentRepository->findByGame($game);
+        $requestedPage = $request->query->getInt('page', 1);
+        if($requestedPage < 1){
+            throw new NotFoundHttpException();
+        }
+        $comment = $paginator->paginate(
+            $commentRepository->findByGame($game,['createdAt' => 'DESC']),
+            $requestedPage,
+            50
+        );
         if ($userRepository->findPlayerByGame($game,$this->getUser())) {
             $form = $this->createForm(GameCommentType::class, $gameComment);
             $form->handleRequest($request);
@@ -132,7 +142,7 @@ class GameController extends AbstractController
 
         return $this->renderForm('game/show.html.twig', [
             'form' => $form,
-            'comment' => $comment,
+            'comments' => $comment,
             'game' => $game,
         ]);
     }

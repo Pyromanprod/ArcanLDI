@@ -9,10 +9,12 @@ use App\Repository\GameRepository;
 use App\Repository\RoleGroupeRepository;
 use App\Repository\TicketRepository;
 use App\Repository\UserRepository;
+use Knp\Component\Pager\PaginatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 
 
@@ -22,12 +24,21 @@ class UserController extends AbstractController
 
     #[Route('/', name: 'user_index', methods: ['GET'])]
     #[IsGranted('ROLE_MODERATOR')]
-    public function index(UserRepository $userRepository,TicketRepository $ticketRepository,GameRepository $gameRepository): Response
+    public function index(UserRepository $userRepository,TicketRepository $ticketRepository,PaginatorInterface $paginator,Request $request): Response
     {
+        $requestedPage = $request->query->getInt('page', 1);
+        if($requestedPage < 1){
+            throw new NotFoundHttpException();
+        }
+        $user = $paginator->paginate(
+            $userRepository->findAll(),
+            $requestedPage,
+            48
+        );
         $tickets = $ticketRepository->findOneBydate(new \DateTime());
 
         return $this->render('user/index.html.twig', [
-            'users' => $userRepository->findAll(),
+            'users' => $user,
             'tickets' => $tickets
         ]);
     }
@@ -79,11 +90,20 @@ class UserController extends AbstractController
 
     #[Route('/{id}/ticket', name: 'user_index_ticket', methods: ['GET'])]
     #[IsGranted('ROLE_MODERATOR')]
-    public function indexticket(Ticket $ticket,UserRepository $userRepository): Response
+    public function indexticket(Ticket $ticket,UserRepository $userRepository,PaginatorInterface $paginator, Request $request): Response
     {
+        $requestedPage = $request->query->getInt('page', 1);
+        if($requestedPage < 1){
+            throw new NotFoundHttpException();
+        }
+        $user = $paginator->paginate(
+            $userRepository->findplayer($ticket),
+            $requestedPage,
+            48
+        );
 
         return $this->render('user/inde_ticket.html.twig', [
-            'users' => $userRepository->findplayer($ticket),
+            'users' => $user,
             'tickets' => $ticket
         ]);
     }
