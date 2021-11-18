@@ -26,12 +26,16 @@ liip_imagine:
                     height: 400
                     width: 400
 
-
         profil:
             quality: 75
             filters:
                 scale:
                     dim: [ 700, 700 ]
+        logo_mobil:
+            quality: 75
+            filters:
+                scale:
+                    dim: [ 400, 400 ]
 
         gallery-full:
             quality: 75

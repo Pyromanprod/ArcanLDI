@@ -1,11 +1,12 @@
+<div class="row p-0">
+
 {% for news in news %}
 
-    <div class="card col-12 mx-auto bg-cardgame card-zoom">
+    <div class="card p-0 col-12 mx-auto bg-cardgame card-zoom">
         <div class="card-header bg-header-card">
             <h5 class="text-center">{{ news.title }}</h5>
         </div>
         <div class="card-body">
-            {# <h5 class="card-title">{{ news.title }}</h5> #}
             <p class="card-text">{{ news.content|striptags|excerpt(20) }}</p>
 
         </div>
@@ -32,3 +33,4 @@
     <p class="alert alert-warning">pas encore d'actualité mais ça arrive</p>
 {% endfor %}
 
+</div>

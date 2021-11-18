@@ -85,11 +85,33 @@ body{
 
 
 #hero {
+    display: none;
     height: 800px;
     overflow: hidden;
     position: relative;
     max-width: 1920px;
     margin: 0 auto;
+}
+/*POUR LE BREAKPOINT MD*/
+@media screen and (min-width: 768px){
+    .for-mobile{
+        display: none;
+    }
+    #hero{
+        display: block;
+        height: 50vh;
+    }
+}
+
+/*POUR LE BREAKPOINT LG*/
+@media screen and (min-width: 992px){
+    .for-mobile{
+        display: none;
+    }
+    #hero{
+        display: block;
+        height: 800px;
+    }
 }
 #content {
     /*background-color: #ffffff;*/

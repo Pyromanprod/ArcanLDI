@@ -21,11 +21,11 @@ class NewsRepository extends ServiceEntityRepository
 
 
 
-    public function findLastThree()
+    public function findLast()
     {
         return $this->createQueryBuilder('n')
             ->orderBy('n.createdAt', 'DESC')
-            ->setMaxResults(3)
+            ->setMaxResults(1)
             ->getQuery()
             ->getResult()
         ;

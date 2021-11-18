@@ -17,15 +17,15 @@
     <title>Accueil - Arcan, Jeux de roles grandeur nature GN</title>
 
 
-
 </head>
 <body class="text-light">
 
 
 <div id='hero'>
-    <div class='layer-bg layer parallax' data-depth='0.15'></div>
 
+    <div class='layer-bg layer parallax' data-depth='0.30'></div>
     {% include('main/navbar.html.twig') %}
+
     {% if paid %}
         <div class="alert-warning p-3 text-center">vous avez la cotisation a <a class="btn btn-outline-primary"
                                                                                 href="{{ path('checkout_membership', {'id': paid.membership.id}) }}">payer</a>
@@ -70,10 +70,10 @@
     <div class="layer parallax layer-overlay" data-depth='1'>
 
     </div>
-    <div class="layer parallax blood" data-depth='0.50'>
+    <div class="layer parallax blood" data-depth='0.60'>
 
     </div>
-    <div class="row layer parallax title h-100" data-depth='0.80'>
+    <div class="row layer parallax title h-100" data-depth='0.70'>
         <div class="col-6 mx-auto">
 
             <img src="{{ asset('img/LOGO.png') }}" alt="Arcan Les Démons D'Ivoire" class="w-100 opacity-50">
@@ -83,6 +83,19 @@
 
 </div>
 
+{# LE MOBILE #}
+<div class="for-mobile">
+    {% include('main/navbar.html.twig') %}
+    <div class="container bg-perso">
+        <div class="row">
+            <div class="col-12">
+
+                <img src="{{ asset('img/LOGO.png')|imagine_filter('logo_mobil') }}" alt="" class="w-100">
+            </div>
+        </div>
+    </div>
+
+</div>
 <div id='content' class="bg-perso">
     <div class='container'>
         <div class="row">

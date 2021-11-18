@@ -15,27 +15,29 @@
         </div>
         <div class="row">
 
-            {% for news in news %}
-                <div class="col-12 {{ news|length <=2 ? 'col-md-6': 'col-md-4' }} mx-auto mt-5">
-                    <div class="card col-10 mx-auto bg-cardgame p-0 my-2 card-zoom">
+            {% for new in news %}
+
+                <div class="col-12 {{ news|length <= 2 ? 'col-md-6' : 'col-md-4' }} m-0 mt-5">
+
+                    <div class="card col-11 mx-auto bg-cardgame p-0 my-2 card-zoom">
 
                         <div class="card-header">
-                            <h5 class="text-center">{{ news.title }}</h5>
+                            <h5 class="text-center">{{ new.title }}</h5>
                         </div>
 
                         <div class="card-body">
-                            <h5 class="card-title">{{ news.title }}</h5>
-                            <p class="card-text">{{ news.content|purify|striptags|excerpt(20) }}</p>
+                            <h5 class="card-title">{{ new.title }}</h5>
+                            <p class="card-text">{{ new.content|purify|striptags|excerpt(20) }}</p>
                             <a class="btn btn-outline-light mb-3 me-2"
-                               href="{{ path('news_show', {'slug': news.slug}) }}">voir
+                               href="{{ path('news_show', {'slug': new.slug}) }}">voir
                                 plus</a>
                             {% if is_granted('ROLE_MODERATOR') %}
 
-                                <a href="{{ path('news_edit', {'id': news.id}) }} "
+                                <a href="{{ path('news_edit', {'id': new.id}) }} "
                                    class="btn btn-outline-warning mb-3 me-2">Modifier</a>
-                                <form method="post" action="{{ path('news_delete', {'id': news.id}) }}"
-                                      onsubmit="return confirm('Voulez-vou vraiment supprimer {{ news.title }}');">
-                                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ news.id) }}">
+                                <form method="post" action="{{ path('news_delete', {'id': new.id}) }}"
+                                      onsubmit="return confirm('Voulez-vou vraiment supprimer {{ new.title }}');">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ new.id) }}">
                                     <button class="btn btn-outline-danger mb-3 me-2">supprimer</button>
                                 </form>
                             {% endif %}

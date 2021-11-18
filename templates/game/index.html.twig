@@ -4,28 +4,58 @@
 
 {% block body %}
 
-    <div class="container-fluid p-0">
+    <div class="container">
+        <h1 class="text-center my-5"> Tous nos évenements</h1>
+        <div class="row">
 
-        <div class="row mt-5 p-0 m-0">
+            {% for game in allGames %}
+                <div class="col-12 {{ allGames|length <= 2 ? 'col-md-6' : 'col-md-4' }}">
 
-            {% if is_granted('ROLE_ADMIN') %}
-                <div class="col-12 text-center mb-3">
 
-                    <a class="btn btn-outline-info" href="{{ path('game_new') }}">Créer un nouveau jeu</a>
+                    <div class="card col-11 h-100 bg-cardgame card-zoom">
+                        <div class="card-header m-0 p-0">
+
+                            <a href="{{ path('game_show', {'slug': game.slug}) }}"
+                               class="text-decoration-none text-light d-inline">
+                                <img src="{{ asset(game_photo_directory~game.banner)|imagine_filter('banner_game') }}"
+                                     class="card-img-top" alt="">
+                            </a>
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">{{ game.name }}</h5>
+                            <p class="card-text">{{ game.description|purify|striptags|excerpt(20) }}</p>
+
+
+                        </div>
+                        <div class="card-footer">
+
+                            <a href="{{ path('game_show', {'slug': game.slug}) }}"
+                               class="btn btn-outline-light mb-3 me-2"> Voir plus
+                            </a>
+
+                            {% if is_granted('ROLE_ADMIN') %}
+
+                                <a href="{{ path('game_edit', {'id': game.id}) }} "
+                                   class="btn btn-outline-warning mb-3 me-2">Modifier</a>
+                                {% if game.isPublished == false %}
+                                    <a href="{{ path('publish_game', {'id': game.id}) }}?csrf_token={{ csrf_token('publish' ~ game.id) }}"
+                                       class="btn btn-outline-success mb-3 me-2">Publier</a>
+                                {% endif %}
+                                <a href="{{ path('game_add_album_Photo', {'id': game.id}) }} "
+                                   class="btn btn-outline-info mb-3 me-2">Ajouter album</a>
+                                <a href="{{ path('extract_answer', {'id': game.id}) }} "
+                                   class="btn btn-outline-success mb-3 me-2">extraire les réponses</a>
+                                {% include('game/_delete_form.html.twig') %}
+                            {% endif %}
+                        </div>
+                    </div>
+
                 </div>
-            {% endif %}
-        </div>
-        <div class="container-fluid p-0 m-0">
+            {% else %}
+                <div class="alert alert-warning">Pas de jeu enregistré</div>
+            {% endfor %}
 
-            <div class="row m-0 p-0">
-                <h2 class="text-center fs-1 m-0 col-12 py-3 px-0">Nos jeux</h2>
-
-            </div>
 
         </div>
-        {% include 'game/showAll.html.twig' %}
-
     </div>
-
-
 {% endblock %}
