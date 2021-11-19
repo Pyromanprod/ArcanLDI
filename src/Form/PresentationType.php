@@ -14,11 +14,8 @@ class PresentationType extends AbstractType
     {
         $builder
             ->add('content', CKEditorType::class, [
-                'config_name' => 'game',
                 'purify_html' => true,
-                'config'=>[
-                    'skin'=>'moono-dark'
-                ]
+
             ])
         ;
     }
