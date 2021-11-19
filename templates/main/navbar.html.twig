@@ -16,11 +16,11 @@
                 </li>
                 <li class="nav-item">
                     <a class="nav-link {{ route == 'game_index' ? 'active' }}" aria-current="page"
-                       href="{{ path('game_index') }}">Nos Jeux</a>
+                       href="{{ path('game_index') }}">Nos jeux</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link {{ route == 'news_index' ? 'active' }}" aria-current="page"
-                       href="{{ path('news_index') }}">Nos Actus</a>
+                       href="{{ path('news_index') }}">Nos actus</a>
                 </li>
             </ul>
 
@@ -33,7 +33,7 @@
                            data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user"></i>
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <li><a class="dropdown-item" href="{{ path('user_show_profile') }}">Profile</a></li>
+                            <li><a class="dropdown-item" href="{{ path('user_show_profile') }}">Profil</a></li>
                             <li>
                                 <hr class="dropdown-divider">
                             </li>
@@ -46,7 +46,7 @@
                             <li>
                                 <hr class="dropdown-divider">
                             </li>
-                            <li><a class="dropdown-item" href="{{ path('app_logout') }}">Deconnexion</a></li>
+                            <li><a class="dropdown-item" href="{{ path('app_logout') }}">Déconnexion</a></li>
                         </ul>
                     </li>
                     {% if is_granted('ROLE_ADMIN') %}
@@ -63,12 +63,10 @@
                            id="adminDropdown"
                            role="button"
                            data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-tools me-1"></i>
-                            Moderation
+                            Modération
                         </a>
                     {% endif %}
                     {% if is_granted('ROLE_MODERATOR') %}
-
-
 
                         <ul class="dropdown-menu" aria-labelledby="adminDropdown">
                             <li><a class="dropdown-item" href="{{ path('user_index') }}">Joueurs</a></li>
@@ -94,18 +92,15 @@
                                 <li>
                                     <hr class="dropdown-divider">
                                 </li>
-                                <li><a class="dropdown-item" href="{{ path('membership_index') }}">Cotisation</a></li>
+                                <li><a class="dropdown-item" href="{{ path('membership_index') }}">Cotisations</a></li>
                                 <li>
                                     <hr class="dropdown-divider">
                                 </li>
-                                <li><a class="dropdown-item" href="{{ path('moderator_index') }}">Modération</a></li>
+                                <li><a class="dropdown-item" href="{{ path('moderator_index') }}">Modérateurs</a></li>
                                 <li>
                                     <hr class="dropdown-divider">
                                 </li>
-                                <li><a class="dropdown-item" onclick="return confirm('cette action supprimera les groupes et les discussions associée a tous les jeux dont la date de fin est dépassée ')" href="{{ path('game_clear') }}">Nettoyage</a></li>
-                                <li>
-                                    <hr class="dropdown-divider">
-                                </li>
+
                             {% endif %}
                             <li><a class="dropdown-item" href="{{ path('role_groupe_index') }}">Groupes</a>
                             </li>
@@ -122,6 +117,10 @@
                                 <hr class="dropdown-divider">
                             </li>
                             <li><a class="dropdown-item" href="{{ path('presentation_index') }}">Présentation</a></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="dropdown-item" onclick="return confirm('Cette action supprimera les discussions et groupes associés à tous les jeux dont la date de fin est dépassée ')" href="{{ path('game_clear') }}">Nettoyage base de données</a></li>
                         </ul>
                         </li>
                     {% endif %}

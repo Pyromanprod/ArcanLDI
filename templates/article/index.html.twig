@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}discussion{% endblock %}
+{% block title %}Discussions{% endblock %}
 
 {% block body %}
 
@@ -17,15 +17,15 @@
                     {% if article %}
                         <div class="card bg-cardgame col-12 col-md-5 mx-auto p-0 my-3">
                             <div class="card-header bg-header-card">
-                                <h5> discussion : {{ article.title }}</h5>
+                                <h5> Discussion : {{ article.title }}</h5>
                             </div>
                             <div class="card-body">
                                 <ul class="list-group list-group-flush ">
-                                    <li class="list-group-item bg-transparent text-light">Role
+                                    <li class="list-group-item bg-transparent text-light">Rôle
                                         : {{ article.roleGroupe.name }}</li>
                                     <li class="list-group-item bg-transparent text-light">
                                         <a class="btn btn-outline-light"
-                                           href="{{ path('article_show', {'id': article.id}) }}">afficher la
+                                           href="{{ path('article_show', {'id': article.id}) }}">Afficher la
                                             discussion</a>
                                         {% if is_granted('ROLE_MODERATOR') %}
                                             <a class="btn-outline-warning btn mx-3" href="{{ path('article_edit', {'id': article.id}) }}">Modifier</a>
@@ -40,7 +40,7 @@
 
             </div>
             {% else %}
-            <p class="text-center alert-warning p-3 ">vous n'avez pas encore de discussions disponible</p>
+            <p class="text-center alert-warning p-3 ">vous n'avez pas encore de discussion disponible</p>
         {% endif %}
     </div>
 

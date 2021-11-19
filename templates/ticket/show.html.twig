@@ -15,9 +15,9 @@
             <div class="card-body">
                 <ul class="list-group list-group-flush ">
                     <li class="list-group-item bg-transparent text-light">Prix : {{ ticket.price }} €</li>
-                    <li class="list-group-item bg-transparent text-light">Pour le jeu
+                    <li class="list-group-item bg-transparent text-light">Jeu
                         : {{ ticket.game.name }}</li>
-                    <li class="list-group-item bg-transparent text-light">En Stock
+                    <li class="list-group-item bg-transparent text-light">Stock
                         : {{ ticket.stock }}</li>
                     <li class="list-group-item bg-transparent text-light">
                         <a class="btn btn-outline-warning mb-3 me-2"
@@ -38,10 +38,8 @@
 
                 <a href="{{ path('ticket_new') }}" class="btn btn-outline-info mb-3 me-2">Nouveau ticket</a>
             <a class="btn btn-outline-info mb-3 me-2"
-               href="{{ path('survey_ticket_ordered', {'id': ticket.id}) }}">Ordonner
-                les questionnaires</a>
-                <a class="btn btn-outline-light mb-3 me-2" href="{{ path('ticket_index') }}">Revenir a la liste des
-                    ticket</a>
+               href="{{ path('survey_ticket_ordered', {'id': ticket.id}) }}">Ordonner les questionnaires</a>
+                <a class="btn btn-outline-light mb-3 me-2" href="{{ path('ticket_index') }}">Retour liste tickets</a>
 
 
             {{ form_start(formgeneral) }}
@@ -61,7 +59,7 @@
 
             {{ form_start(formnotgeneral) }}
             {{ form_row(formnotgeneral.survey, {
-                'label': 'Questionnaires précis',
+                'label': 'Questionnaires spécifiques',
                 attr: {
                     placeholder: '',
                     class: 'bg-dark border-0 border-bottom border-ivoire rounded-0 text-light'

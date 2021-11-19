@@ -4,11 +4,11 @@
 
 {% block body %}
 
-    <div class="card bg-cardgame col-12 col-md-5 mx-auto">
-        <div class="card-header bg-header-card">
+    <div class="card bg-cardgame col-12 col-md-5 mx-auto my-5">
+        <div class="card-header bg-header-card text-center">
             <h1>{{ app.user.pseudo }}</h1>
         </div>
-        <img src="{{ asset('img/user/'~app.user.photo)|imagine_filter('profil') }}" class="card-img-top img-fluid" alt="Votre photo de profile">
+        <img src="{{ asset('img/user/'~app.user.photo)|imagine_filter('profil') }}" class="card-img-top img-fluid" alt="Votre photo de profil">
         <div class="card-body">
             <ul class="list-group list-group-flush ">
                 <li class="list-group-item bg-transparent text-light">Email : {{ app.user.email }} </li>

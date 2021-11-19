@@ -1,4 +1,4 @@
-<form method="post" action="{{ path('ticket_delete', {'id': ticket.id}) }}" onsubmit="return confirm('Etes vous sûr de vouloir supprimer ce ticket');" class="d-inline-block">
+<form method="post" action="{{ path('ticket_delete', {'id': ticket.id}) }}" onsubmit="return confirm('Etes-vous sûr de vouloir supprimer ce ticket ?');" class="d-inline-block">
     <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ ticket.id) }}">
-    <button class="btn btn-outline-danger mb-3 ">Suprimer</button>
+    <button class="btn btn-outline-danger mb-3 ">Supprimer</button>
 </form>

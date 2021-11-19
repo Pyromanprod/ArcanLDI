@@ -1,15 +1,14 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Ajouter un role{% endblock %}
+{% block title %}Ajouter un rôle{% endblock %}
 
 {% block body %}
-    <h1>Ajouter un role </h1>
+    <h1>Ajouter un rôle </h1>
 
    {{ form_start(form) }}
    {{ form_row(form.name) }}
     <button type="submit" class="btn btn-outline-success">{{ button_label|default('ajouter') }}</button>
    {{ form_end(form) }}
 
-    <a href="{{ path('role_groupe_index') }}">back to list</a>
 
 {% endblock %}

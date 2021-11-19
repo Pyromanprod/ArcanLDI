@@ -1,12 +1,12 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Moderation{% endblock %}
+{% block title %}Modérateurs{% endblock %}
 
 {% block body %}
     <div class="container">
         <h2 class="text-center">Modérateurs</h2>
         <div class="text-center">
-            <h2>Ajouter modérateur</h2>
+            <h2>Ajouter un modérateur</h2>
             <form action="{{ path('moderator_Add_index') }}">
                 <label for="moderation"></label>
                 <input type="text" id="moderation" name="moderation" placeholder="Email">
@@ -23,9 +23,9 @@
 
                         {% for role in user.roles %}
                             {% if role != "ROLE_MODERATOR" and role == "ROLE_USER" %}
-                                <form method="post" action="{{ path('moderator_Add', {'id': user.id}) }}" onsubmit="return confirm('Etes vous sûr de vouloir attribuer le rôle modérateur à ce compte');">
+                                <form method="post" action="{{ path('moderator_Add', {'id': user.id}) }}" onsubmit="return confirm('Etes-vous sûr de vouloir attribuer le statut modérateur à ce compte');">
                                     <input type="hidden" name="_token" value="{{ csrf_token('add' ~ user.id) }}">
-                                    <button class="btn btn-outline-success">Ajouter à la moderation</button>
+                                    <button class="btn btn-outline-success">Ajouter à la modération</button>
                                 </form>
                             {% endif %}
                         {% endfor %}

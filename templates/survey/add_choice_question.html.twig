@@ -34,7 +34,7 @@
             {% for choix in question.choices %}
                 <div class="row mt-2 p-2 rounded-2">
                     <form action="{{ path('survey_delete_choice', {'id': choix.id}) }}"
-                          onsubmit="return confirm('Etes-vous sûr de vouloir supprimer {{ choix.content }}')">
+                          onsubmit="return confirm('Etes-vous sûr de vouloir supprimer {{ choix.content }} ?')">
                         {{ choix.content }}
                         <button type="submit" class="btn btn-outline-danger ms-3">Supprimer</button>
                         <input type="hidden" name="csrf_token" value="{{ csrf_token(choix.id~'delete') }}">

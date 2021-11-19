@@ -1,9 +1,9 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Order index{% endblock %}
+{% block title %}Demandes de remboursement{% endblock %}
 
 {% block body %}
-<h1>Liste des commandes</h1>
+<h1>Liste des demandes de remboursement</h1>
 
 
 {% for order in orders %}
@@ -14,10 +14,10 @@
     </div>
     <div class="card-body">
         <ul class="list-group list-group-flush ">
-            <li class="list-group-item bg-transparent text-light">Acheter par : {{ order.player.pseudo }}</li>
+            <li class="list-group-item bg-transparent text-light">Acheté par : {{ order.player.pseudo }}</li>
             <li class="list-group-item bg-transparent text-light">Prix : {{ order.total }} €</li>
             <li class="list-group-item bg-transparent text-light">Payé le {{ order.datePaid|date('d-m-Y') }}</li>
-            <li class="list-group-item bg-transparent text-light">raison de la demande : {{ order.refundRequest }} </li>
+            <li class="list-group-item bg-transparent text-light">Motif de la demande : {{ order.refundRequest }} </li>
             <li class="list-group-item bg-transparent text-light">{{ include('order/_refund_form.html.twig') }}</li>
             <li class="list-group-item bg-transparent text-light">{{ include('order/_refund_reject_form.html.twig') }}</li>
 
@@ -27,7 +27,7 @@
 
 {% else %}
     <div class="alert alert-warning">
-        aucune demande de remboursement en cour
+        Aucune demande de remboursement en cours.
     </div>
     {% endfor %}
 

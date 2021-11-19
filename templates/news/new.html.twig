@@ -1,14 +1,14 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Créer une Actualité{% endblock %}
+{% block title %}Créer une actualité{% endblock %}
 
 {% block body %}
     <div class="container">
         <div class="row">
-            <h1 class="text-center">Créer une Actualité</h1>
+            <h1 class="text-center">Créer une actualité</h1>
             <div class="text-center">
 
-                <a class="btn-outline-light btn" href="{{ path('news_index') }}">Retour à la liste des Actualités</a>
+                <a class="btn-outline-light btn" href="{{ path('news_index') }}">Retour à la liste des actualités</a>
             </div>
             <div class="col-8 offset-2">
                 {{ include('news/_form.html.twig') }}

@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}liste des adhérants{% endblock %}
+{% block title %}Liste des adhérents{% endblock %}
 
 {% block body %}
     <div class="container">
@@ -9,11 +9,11 @@
                 <table class="table table-dark table-striped">
                     <thead>
                     <tr>
-                        <th>pseudo</th>
-                        <th>email</th>
+                        <th>Pseudo</th>
+                        <th>Email</th>
                         {% if membership %}
 
-                        <th>action</th>
+                        <th>Action</th>
                         {% endif %}
                     </tr>
                     </thead>
@@ -23,8 +23,8 @@
                             <td>{{ member.pseudo }}</td>
                             <td>{{ member.email }}</td>
                             {% if membership %}
-                            <td><a onclick="return confirm('etes vous sûr?')" class="btn-outline-success btn me-3" href="{{ path('manual_payment', {'id': membership, 'user': member.id}) }}">paiement hors site</a>
-                            <a onclick="return confirm('etes vous sûr?')" class="btn-outline-danger btn" href="{{ path('manual_payment', {'id': membership, 'user': member.id}) }}">retirer de la cotisation</a></td>
+                            <td><a onclick="return confirm('Etes-vous sûr ?')" class="btn-outline-success btn me-3" href="{{ path('manual_payment', {'id': membership, 'user': member.id}) }}">paiement hors site</a>
+                            <a onclick="return confirm('Etes-vous sûr ?')" class="btn-outline-danger btn" href="{{ path('manual_payment', {'id': membership, 'user': member.id}) }}">Retirer de la cotisation</a></td>
                             {% endif %}
                         </tr>
                     {% endfor %}
@@ -36,7 +36,7 @@
     </div>
 
 
-    <a class="btn btn-outline-warning" href="{{ path('membership_index') }}">retour</a>
+    <a class="btn btn-outline-warning" href="{{ path('membership_index') }}">Retour</a>
 
 
 {% endblock %}

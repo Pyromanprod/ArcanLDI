@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Moderation{% endblock %}
+{% block title %}Modérateurs{% endblock %}
 
 {% block body %}
     <div class="container">
@@ -22,9 +22,9 @@
                     <p class="card-text">Email: {{ user.email }}</p>
                     {% for role in user.roles %}
                     {% if role == "ROLE_MODERATOR" %}
-                        <form method="post" action="{{ path('moderator_Delete', {'id': user.id}) }}" onsubmit="return confirm('Etes vous sûr de vouloir retirer le rôle modérateur à ce compte');">
+                        <form method="post" action="{{ path('moderator_Delete', {'id': user.id}) }}" onsubmit="return confirm('Etes-vous sûr de vouloir retirer le statut modérateur à ce compte');">
                             <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ user.id) }}">
-                            <button class="btn btn-outline-danger">Retirer de la moderation</button>
+                            <button class="btn btn-outline-danger">Retirer de la modération</button>
                         </form>
                     {% endif %}
                     {% endfor %}

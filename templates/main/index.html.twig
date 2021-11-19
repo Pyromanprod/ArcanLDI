@@ -14,7 +14,7 @@
     {# STYLE PERSO #}
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
 
-    <title>Accueil - Arcan, Jeux de roles grandeur nature GN</title>
+    <title>Accueil - Arcan, Jeux de rôle Grandeur Nature (GN)</title>
 
 
 </head>
@@ -27,7 +27,7 @@
     {% include('main/navbar.html.twig') %}
 
     {% if paid %}
-        <div class="alert-warning p-3 text-center">vous avez la cotisation a <a class="btn btn-outline-primary"
+        <div class="alert-warning p-3 text-center">Vous avez la cotisation à <a class="btn btn-outline-primary"
                                                                                 href="{{ path('checkout_membership', {'id': paid.membership.id}) }}">payer</a>
         </div>
     {% endif %}
@@ -65,7 +65,7 @@
                 remboursement</a>
         </div>
     {% endif %}
-    {# <div class='layer-overlay layer parallax' data-depth='0.85'></div> #}
+
 
     <div class="layer parallax layer-overlay" data-depth='1'>
 
@@ -111,10 +111,10 @@
             <aside class="col-12 col-lg-3">
 
 
-                <h2 class="text-center fs-3 m-0 col-12 py-3 px-0">Dernier événement</h2>
+                <h2 class="text-center fs-3 m-0 col-12 py-3 px-0">Dernier évènement</h2>
 
                 {% include 'game/showAll.html.twig' %}
-                <h2 class="text-center fs-3 m-0 col-12 py-3 px-0">Derniere actu</h2>
+                <h2 class="text-center fs-3 m-0 col-12 py-3 px-0">Dernière actu</h2>
 
 
                 {# ACTU #}

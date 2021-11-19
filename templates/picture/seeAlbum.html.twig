@@ -10,18 +10,18 @@
         </div>
 
         <div class="gallery">
-                <div class="col-12 col-md-3">
+            <div class="col-12 col-md-3">
 
-                    <a href="{{ path('video_see_video', {'slug': game.slug}) }}"
-                       class="btn btn-outline-light mb-3 me-2"> Gallerie vidéo
+                <a href="{{ path('video_see_video', {'slug': game.slug}) }}"
+                   class="btn btn-outline-light mb-3 me-2"> Galerie vidéos
+                </a>
+                {% if participated %}
+
+                    <a href="{{ path('download_album', {'id': game.id}) }}"
+                       class="btn btn-outline-success mb-3 me-2"> Télécharger tout <i class="fas fa-file-archive"></i>
                     </a>
-                    {% if participated %}
-
-                        <a href="{{ path('download_album', {'id': game.id}) }}"
-                           class="btn btn-outline-success mb-3 me-2"> Télécharger tout <i class="fas fa-file-archive"></i>
-                        </a>
-                    {% endif %}
-                </div>
+                {% endif %}
+            </div>
             <div class="row">
                 {% for photo in pictures %}
 
@@ -29,10 +29,17 @@
 
                         <a href="{{ asset(game_album_directory~game.slug~'/'~photo.name) }}" class="big" rel="rel1">
                             <img src="{{ asset(game_album_directory~game.slug~'/'~photo.name)|imagine_filter('gallery') }}"
-                                 alt="Photo de gallerie" class="w-100 card-zoom">
+                                 alt="Photo de galerie" class="w-100 card-zoom">
                         </a>
                     </div>
 
+                {% else %}
+                    <div class="mb-2 col-6 col-md-4 col-xl-3">
+
+                        <div class="alert alert-warning text-dark">
+                            Pas encore de photo... mais ça arrive ;-)
+                        </div>
+                    </div>
                 {% endfor %}
 
 

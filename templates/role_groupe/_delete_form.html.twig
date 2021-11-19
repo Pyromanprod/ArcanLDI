@@ -1,4 +1,4 @@
-<form method="post" class="d-inline" action="{{ path('role_groupe_delete', {'id': role.id}) }}" onsubmit="return confirm('Etes vous sûr de vouloir supprimer ce role?');">
+<form method="post" class="d-inline" action="{{ path('role_groupe_delete', {'id': role.id}) }}" onsubmit="return confirm('Etes-vous sûr de vouloir supprimer ce rôle ?');">
     <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ role.id) }}">
     <button class="btn btn-outline-danger ms-2">Supprimer</button>
 </form>

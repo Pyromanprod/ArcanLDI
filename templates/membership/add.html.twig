@@ -1,17 +1,17 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Ajouter des membres a la cotisation{% endblock %}
+{% block title %}Ajouter des membres à la cotisation{% endblock %}
 
 {% block body %}
 
     <div class="container">
         <div class="row">
             <div class="text-center" id="searchmember">
-                <label for="search">recherche</label>
+                <label for="search">Recherche</label>
                 <input type="text" id="search" class="search form-text">
             </div>
             <div class="col-12 col-md-8 mx-auto">
-                <h1>Ajouter des membres a la cotisation</h1>
+                <h1>Ajouter des membres à la cotisation {{ membership.year }}</h1>
 
                 {{ form_start(form) }}
                 {{ form_widget(form.member,{

@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Order index{% endblock %}
+{% block title %}Commandes{% endblock %}
 
 {% block body %}
     <div class="container">
@@ -21,7 +21,7 @@
                                 {% if is_granted('ROLE_ADMIN') and order.datePaid %}
 
                                 {% elseif order.refundRequest %}
-                                    <li class="list-group-item bg-transparent text-light">vous ne pouvez plus faire de
+                                    <li class="list-group-item bg-transparent text-light">Vous ne pouvez plus faire de
                                         demande de remboursement sur ce ticket
                                     </li>
                                 {% elseif order.datePaid is null %}
@@ -40,7 +40,7 @@
                                            href="{{ path('survey_suvey_for_ticket', {'id': order.id}) }}">Terminer
                                             l'achat</a>
                                         <form method="post" action="{{ path('cancel_order', {'id': order.id}) }}"
-                                              onsubmit="return confirm('Etes vous sure de vouloir annuler cette commande?');">
+                                              onsubmit="return confirm('Etes-vous sûr de vouloir annuler cette commande ?');">
 
 
                                             <input type="hidden" name="_token"
@@ -57,7 +57,7 @@
 
             {% else %}
                 <div class="alert alert-warning">
-                    Pas encore de ticket acheter
+                    Pas encore de ticket acheté
                 </div>
             {% endfor %}
 

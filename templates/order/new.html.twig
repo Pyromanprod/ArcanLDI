@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}New Order{% endblock %}
+{% block title %}Acheter un ticket{% endblock %}
 
 {% block body %}
     <div class="container">
@@ -10,7 +10,7 @@
 
                 {{ include('order/_form.html.twig',{'button_label': 'Acheter'}) }}
 
-                <a class="btn btn-outline-light mt-3 " href="{{ path('game_index') }}">Retour à la liste de jeu</a>
+                <a class="btn btn-outline-light mt-3 " href="{{ path('game_index') }}">Retour à la liste des jeux</a>
 
             </div>
         </div>

@@ -190,7 +190,8 @@ class MembershipController extends AbstractController
         }
 
         return $this->renderForm('membership/add.html.twig', [
-            'form' => $form
+            'form' => $form,
+            'membership'=>$membership,
         ]);
     }
 

@@ -2,20 +2,28 @@
 
 
 
-            {% if presentation %}
+    {% if presentation %}
 
-                <div class="col-12 mx-auto ckeditor presentation">
-                    {{ presentation.content|purify|raw }}
-                </div>
+        <div class="col-12 mx-auto ckeditor presentation">
+            {{ presentation.content|purify|raw }}
+        </div>
 
-            {% else %}
-                <div class="col-12 col-md-10 mx-auto ckeditor presentation">
-                    <p class="alert-warning alert">Pas encore de présentation <a href="{{ path('presentation_new') }}">
-                            cliquez ici pour en créer une
-                        </a></p>
-                </div>
+    {% else %}
+        {% if is_granted('ROLE_ADMIN') %}
 
-            {% endif %}
+            <div class="col-12 col-md-10 mx-auto ckeditor presentation">
+                <p class="alert-warning alert">Pas encore de présentation <a href="{{ path('presentation_new') }}">
+                        cliquez ici pour en créer une.
+                    </a></p>
+            </div>
+        {% else %}
+            <div class="col-12 col-md-10 mx-auto ckeditor presentation">
+                <p class="alert-warning alert">Pas encore de présentation.
+                    </p>
+            </div>
+        {% endif %}
+
+    {% endif %}
 
 
 {% endblock %}

@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Ticket index{% endblock %}
+{% block title %}Tickets{% endblock %}
 
 {% block body %}
     <div class="container">
@@ -19,7 +19,7 @@
             <div class="dropdown text-center mb-5">
                 <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1"
                         data-bs-toggle="dropdown" aria-expanded="false">
-                    selection des tickets par jeu
+                    Selection des tickets par jeu
                 </button>
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                     {% for game in games %}
@@ -38,9 +38,9 @@
                     <div class="card-body">
                         <ul class="list-group list-group-flush ">
                             <li class="list-group-item bg-transparent text-light">Prix : {{ ticket.price }} €</li>
-                            <li class="list-group-item bg-transparent text-light">Pour le jeu
+                            <li class="list-group-item bg-transparent text-light">Jeu
                                 : {{ ticket.game.name }}</li>
-                            <li class="list-group-item bg-transparent text-light">En Stock
+                            <li class="list-group-item bg-transparent text-light">Stock
                                 : {{ ticket.stock }}</li>
                             <li class="list-group-item bg-transparent text-light">
 
@@ -52,8 +52,7 @@
                             questionnaire</a>
                         <a class="btn btn-outline-warning mb-3 me-2" href="{{ path('ticket_edit', {'id': ticket.id}) }}">Modifier</a>
                         <a class="btn btn-outline-info mb-3 me-2"
-                           href="{{ path('survey_ticket_ordered', {'id': ticket.id}) }}">Ordonner
-                            les questionnaires</a>
+                           href="{{ path('survey_ticket_ordered', {'id': ticket.id}) }}">Ordonner les questionnaires</a>
                         {{ include('ticket/_delete_form.html.twig') }}
                     </div>
                 </div>

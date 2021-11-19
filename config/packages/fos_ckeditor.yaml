@@ -4,6 +4,9 @@ fos_ck_editor:
         game:
             toolbar: 'toolbarGame'
             height: '500px'
+        comment:
+            toolbar: 'toolbarComment'
+            height: '150px'
     toolbars:
         configs:
             toolbarGame: [
@@ -46,6 +49,35 @@ fos_ck_editor:
                         'Image',
                         'Table',
                         'HorizontalRule',
+                        'SpecialChar'
+                ],
+
+            ]
+            toolbarComment: [
+                [
+                        'Bold',
+                        'Italic',
+                        'Underline',
+                        'Strike',
+                        '-',
+                        'RemoveFormat',
+                        '-',
+                        'Undo',
+                        'Redo',
+
+                ],
+                [
+                        'NumberedList',
+                        'BulletedList',
+                        '-',
+                        'Blockquote',
+                        '-',
+                        'JustifyLeft',
+                        'JustifyCenter',
+                        'JustifyRight',
+                        'JustifyBlock',
+                        '-',
+                        'Image',
                         'SpecialChar'
                 ],
 

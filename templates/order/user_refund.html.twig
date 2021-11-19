@@ -1,12 +1,12 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}
-remboursement
+Remboursement
 {% endblock %}
 {% block body %}
     <div class="container">
         <div class="row">
-            <div class="col-12 col-md-8 mx-auto">
+            <div class="col-12 col-md-8 mx-auto mt-5">
                 {% if disclaimer %}
                 <p class="alert-danger p-5 text-center">{{ disclaimer }}</p>
                     {% else %}
@@ -14,7 +14,7 @@ remboursement
                 {% endif %}
                 {{ form_start(form) }}
                 {{ form_row(form.refundRequest,{
-                    'label':'Raison de la demande'
+                    'label':'Motif de la demande'
                 }) }}
                 {{ form_widget(form) }}
                 <button type="submit" class="btn btn-outline-success">Envoyer la demande</button>

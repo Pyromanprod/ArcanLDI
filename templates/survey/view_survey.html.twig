@@ -27,7 +27,7 @@
                                         {% for choix in question.choices %}
                                             {{ choix.content }}
                                         {% else %}
-                                            Champs texte
+                                            Champ de texte
                                         {% endfor %}
                                     </td>
 
@@ -40,17 +40,17 @@
                                     </td>
                                 </tr>
                             {% else %}
-                                Pas de questions a ce formulaire
+                                Pas encore de question associée à ce formulaire
                             {% endfor %}
                         </table>
-                        <button class="btn btn-outline-info" type="submit">Ordonner</button>
+                        <button class="btn btn-outline-success mx-auto" type="submit">Valider l'ordre</button>
                     </form>
                 </div>
                 <div class="card-footer bg-transparent border-secondary">
                     <a href="{{ path('survey_add_question',{'id': survey.id}) }}" class="btn btn-outline-light">Ajouter
                         une question</a>
-                    <a href="{{ path('survey_index') }}" class="btn btn-outline-light my-2">faire un autre questionnaire</a>
-                    <a href="{{ path('ticket_new') }}" class="btn btn-outline-light">passer a la creation des ticket</a>
+                    <a href="{{ path('survey_index') }}" class="btn btn-outline-light my-2">Nouveau questionnaire</a>
+                    <a href="{{ path('ticket_new') }}" class="btn btn-outline-light">Créer ticket</a>
                 </div>
             </div>
         </div>

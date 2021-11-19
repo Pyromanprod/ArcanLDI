@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}discussion{% endblock %}
+{% block title %}Discussion{% endblock %}
 
 {% block body %}
     <div class="container">
@@ -11,7 +11,7 @@
             </div>
         </div>
 
-        <a class="btn btn-outline-light" href="{{ path('article_index') }}">Retour a l'accueil</a>
+        <a class="btn btn-outline-light" href="{{ path('article_index') }}">Retour à l'accueil</a>
 
         {% if is_granted('ROLE_ADMIN') %}
             <a class="btn btn-outline-warning" href="{{ path('article_edit', {'id': article.id}) }}">Modifier</a>
@@ -19,17 +19,16 @@
         {% endif %}
         <div class="row">
             <div class="col-12 col-md-8 mx-auto">
+
+
                 {{ form_start(form) }}
                 {{ form_row(form.content,{
-                    'label': 'commentaire',
-                    'attr': {
-                        'row' : '20'
-                    }
+                    'label': 'Commentaire',
+
                 }) }}
                 {{ form_widget(form) }}
                 <button type="submit" class="btn btn-outline-success">Envoyer un commentaire</button>
                 {{ form_end(form) }}
-
             </div>
         </div>
 
@@ -41,11 +40,11 @@
                             {{ coment.player.pseudo }}
                         </div>
                         <div class="card-body">
-                            <div class="card-text ckeditor">{{ coment.content|purify|raw}}</div>
+                            <div class="card-text ckeditor">{{ coment.content|purify|raw }}</div>
                             {% if is_granted('ROLE_MODERATOR') %}
 
                                 <form method="post" action="{{ path('comment_delete', {'id': coment.id}) }}"
-                                      onsubmit="return confirm('Etes vous sure de vouloir supprimer ce message?');">
+                                      onsubmit="return confirm('Etes-vous sûr de vouloir supprimer ce message ?');">
                                     <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ coment.id) }}">
                                     <button class="btn btn-outline-danger">Supprimer</button>
                                 </form>

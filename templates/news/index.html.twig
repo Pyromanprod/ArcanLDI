@@ -1,10 +1,10 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Les Actualités{% endblock %}
+{% block title %}Les actualités{% endblock %}
 
 {% block body %}
     <div class="container">
-        <h1 class="text-center">Les Actualités</h1>
+        <h1 class="text-center">Les actualités</h1>
         <div class="row">
 
             <div class="col-12 col-md-3 col-lg-2 mx-auto">
@@ -29,16 +29,16 @@
                             <h5 class="card-title">{{ new.title }}</h5>
                             <p class="card-text">{{ new.content|purify|striptags|excerpt(20) }}</p>
                             <a class="btn btn-outline-light mb-3 me-2"
-                               href="{{ path('news_show', {'slug': new.slug}) }}">voir
+                               href="{{ path('news_show', {'slug': new.slug}) }}">Voir
                                 plus</a>
                             {% if is_granted('ROLE_MODERATOR') %}
 
                                 <a href="{{ path('news_edit', {'id': new.id}) }} "
                                    class="btn btn-outline-warning mb-3 me-2">Modifier</a>
                                 <form method="post" action="{{ path('news_delete', {'id': new.id}) }}"
-                                      onsubmit="return confirm('Voulez-vou vraiment supprimer {{ new.title }}');">
+                                      onsubmit="return confirm('Voulez-vous vraiment supprimer {{ new.title }} ?');">
                                     <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ new.id) }}">
-                                    <button class="btn btn-outline-danger mb-3 me-2">supprimer</button>
+                                    <button class="btn btn-outline-danger mb-3 me-2">Supprimer</button>
                                 </form>
                             {% endif %}
                         </div>
@@ -46,7 +46,7 @@
                     </div>
                 </div>
             {% else %}
-                <p class="alert alert-warning">pas encore d'actualité mais ça arrive</p>
+                <p class="alert alert-warning text-dark mt-5 fw-bold">Pas encore d'actualité... mais ça arrive ;-)</p>
             {% endfor %}
             <div class="d-inline-block">
                 {# Affichage du menu permettant de naviguer entre les différentes pages #}

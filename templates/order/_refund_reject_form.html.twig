@@ -1,4 +1,4 @@
-<form method="post" action="{{ path('reject_refund', {'id': order.id}) }}" onsubmit="return confirm('Etes vous sure de vouloir rejeté cette commande?');">
+<form method="post" action="{{ path('reject_refund', {'id': order.id}) }}" onsubmit="return confirm('Etes-vous sûr de vouloir rejeter cette demande ?');">
     <label class="form-label" for="reason">Raison du rejet (facultative)</label>
     <textarea class="form-text d-block w-100 mb-3" name="reason" id="reason" rows="5"></textarea>
     <input type="hidden" name="_token" value="{{ csrf_token('rejectRefund' ~ order.id) }}">

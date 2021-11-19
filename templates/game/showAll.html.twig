@@ -24,10 +24,10 @@
                    class="btn btn-outline-light mb-3 me-2"> Voir plus
                 </a>
                 <a href="{{ path('see_album', {'slug': game.slug}) }}"
-                   class="btn btn-outline-light mb-3 me-2"> Gallerie photo
+                   class="btn btn-outline-light mb-3 me-2"> Galerie photos
                 </a>
                 <a href="{{ path('video_see_video', {'slug': game.slug}) }}"
-                   class="btn btn-outline-light mb-3 me-2"> Gallerie vidéo
+                   class="btn btn-outline-light mb-3 me-2"> Galerie vidéos
                 </a>
 
                 {% if is_granted('ROLE_ADMIN') %}
@@ -42,11 +42,11 @@
                     <a href="{{ path('game_add_album_Photo', {'id': game.id}) }} "
                        class="btn btn-outline-info mb-3 me-2">Ajouter photos</a>
                     <a href="{{ path('video_game_add_album_video', {'id': game.id}) }} "
-                       class="btn btn-outline-info mb-3 me-2">Ajouter vidéos</a>
+                       class="btn btn-outline-info mb-3 me-2">Ajouter vidéo</a>
                     <a href="{{ path('extract_answer', {'id': game.id}) }} "
-                       class="btn btn-outline-success mb-3 me-2">extraire les réponses</a>
+                       class="btn btn-outline-success mb-3 me-2">Extraire les réponses</a>
                     <a href="{{ path('extract_player', {'id': game.id}) }} "
-                       class="btn btn-outline-success mb-3 me-2">extraire les joueurs</a>
+                       class="btn btn-outline-success mb-3 me-2">Extraire liste des joueurs</a>
                     {% include('game/_delete_form.html.twig') %}
                 {% endif %}
             </div>

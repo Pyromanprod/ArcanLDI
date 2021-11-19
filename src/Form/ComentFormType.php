@@ -13,7 +13,10 @@ class ComentFormType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('content',CKEditorType::class)
+            ->add('content', CKEditorType::class, [
+                'config_name' => 'comment',
+                'purify_html' => true,
+            ]);
         ;
     }
 
