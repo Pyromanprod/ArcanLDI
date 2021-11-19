@@ -1,4 +1,5 @@
 {% extends 'base.html.twig' %}
+{%  set enable = false %}
 
 {% block title %}{{ game.name }}{% endblock %}
 
@@ -29,8 +30,10 @@
                 <div class="align-content-center">
 
                     <h2 class="text-center"> Billeterie</h2>
+
                     {% for ticket in game.tickets %}
                         {% if ticket.stock %}
+                            {% set enable = true %}
                             <p>{{ ticket.name }} : {{ ticket.price }} €</p>
                         {% else %}
                             <p>{{ ticket.name }} : épuisé </p>
@@ -39,9 +42,11 @@
 
                     {% endfor %}
                     <div class="text-center">
-
+                        {% if enable %}
                         <a href="{{ path('order_new', {'slug':  game.slug }) }}" class="btn btn-warning mx-auto mt-3">
                             Acheter un ticket</a>
+                        {% endif %}
+
                     </div>
                 </div>
             </div>

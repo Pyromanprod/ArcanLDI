@@ -62,10 +62,10 @@ class NewsController extends AbstractController
     }
 
     #[Route('/{slug}', name: 'news_show', methods: ['GET','POST'])]
-    public function show(News $news, Request $request,RateLimiterFactory $anonymousApiLimiter,PaginatorInterface $paginator,NewsCommentRepository $commentRepository): Response
+    public function show(News $news, Request $request,RateLimiterFactory $commentsLimiter,PaginatorInterface $paginator,NewsCommentRepository $commentRepository): Response
     {
-        $limiter = $anonymousApiLimiter->create($request->getClientIp());
-
+        //déclaration limiteur de commentaire a 3/h voir ratelimiter.yaml pour modifier
+        $limiter = $commentsLimiter->create($request->getClientIp());
 
         $newsComment = new NewsComment();
         $form = $this->createForm(NewsCommentType::class, $newsComment);
@@ -79,9 +79,13 @@ class NewsController extends AbstractController
             $requestedPage,
             50
         );
+
+        // 1 token consumer par action si plus de token (3/h) throw exception
         if ($form->isSubmitted() && $form->isValid()) {
-            if (false === $limiter->consume(1)->isAccepted()) {
+            if (false === $limiter->consume()->isAccepted()) {
             throw new TooManyRequestsHttpException();}
+
+
             $newsComment->setAuthor($this->getUser())
                 ->setNews($news);
             $entityManager = $this->getDoctrine()->getManager();
