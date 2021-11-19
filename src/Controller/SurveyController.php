@@ -220,8 +220,13 @@ class SurveyController extends AbstractController
             }
 
         }
+        if ($order->getTicket()->getGame()->getIsPublished()){
+
         return $this->redirectToRoute('checkout', ['id' => $order->getId()]);
-        //TODO: faire une vérif des orders sans paiement de plus de 7 jours (delete order + answer etc...)
+        }else{
+            $this->addFlash('success','merci d\'avoir testé le questionnaire');
+        return $this->redirectToRoute('home');
+        }
     }
 
     #[Route('/question/{id}/{idOrder}/{hash}', name: 'answer')]

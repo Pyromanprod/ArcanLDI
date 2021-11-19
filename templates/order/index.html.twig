@@ -9,7 +9,7 @@
             {% for order in orders %}
                 <div class="col-12 col-md-4">
 
-                    <div class="card bg-cardgame col-11 mx-auto p-0 my-3">
+                    <div class="card bg-cardgame h-100 col-11 mx-auto p-0 my-3">
                         <div class="card-header bg-header-card">
                             <h5>Ticket pour le jeu : {{ order.ticket.game.name }}</h5>
                         </div>
@@ -35,7 +35,7 @@
                                     {% if order.datePaid %}
                                         Payé le {{ order.datePaid|date('d-m-Y') }}
                                     {% else %}
-                                        En cours de paiement
+                                        <a class="btn btn-outline-success" href="{{ path('survey_suvey_for_ticket', {'id': order.id}) }}">Terminer l'achat</a>
                                     {% endif %}
                                 </li>
                             </ul>
