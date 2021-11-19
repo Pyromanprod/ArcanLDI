@@ -36,7 +36,8 @@
                        class="btn btn-outline-warning mb-3 me-2">Modifier</a>
                     {% if game.isPublished == false %}
                         <a href="{{ path('publish_game', {'id': game.id}) }}?csrf_token={{ csrf_token('publish' ~ game.id) }}"
-                           class="btn btn-outline-success mb-3 me-2">Publier</a>
+                                                 class="btn btn-outline-success mb-3 me-2">Publier</a>
+
                     {% endif %}
                     <a href="{{ path('game_add_album_Photo', {'id': game.id}) }} "
                        class="btn btn-outline-info mb-3 me-2">Ajouter photos</a>

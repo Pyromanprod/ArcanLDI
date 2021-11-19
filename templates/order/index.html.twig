@@ -26,16 +26,28 @@
                                     </li>
                                 {% elseif order.datePaid is null %}
                                 {% else %}
-                                    <li class="list-group-item bg-transparent text-light"><a class="btn btn-outline-danger"
-                                                                                             href="{{ path('user_refund', {'id': order.id}) }}">Demander
+                                    <li class="list-group-item bg-transparent text-light"><a
+                                                class="btn btn-outline-danger"
+                                                href="{{ path('user_refund', {'id': order.id}) }}">Demander
                                             un remboursement</a></li>
                                 {% endif %}
-                                <li class="list-group-item bg-transparent text-light">
+                                <li class="list-group-item bg-transparent text-light text-center">
 
                                     {% if order.datePaid %}
                                         Payé le {{ order.datePaid|date('d-m-Y') }}
                                     {% else %}
-                                        <a class="btn btn-outline-success" href="{{ path('survey_suvey_for_ticket', {'id': order.id}) }}">Terminer l'achat</a>
+                                        <a class="btn btn-outline-success mb-4"
+                                           href="{{ path('survey_suvey_for_ticket', {'id': order.id}) }}">Terminer
+                                            l'achat</a>
+                                        <form method="post" action="{{ path('cancel_order', {'id': order.id}) }}"
+                                              onsubmit="return confirm('Etes vous sure de vouloir annuler cette commande?');">
+
+
+                                            <input type="hidden" name="_token"
+                                                   value="{{ csrf_token('cancelOrder' ~ order.id) }}">
+                                            <button class="btn btn-outline-danger">Annuler cette commande</button>
+                                        </form>
+
                                     {% endif %}
                                 </li>
                             </ul>

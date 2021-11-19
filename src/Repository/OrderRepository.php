@@ -32,6 +32,15 @@ class OrderRepository extends ServiceEntityRepository
             ->getOneOrNullResult()
             ;
     }
+    public function findByGame(Game $game){
+        return $this->createQueryBuilder('a')
+            ->innerJoin('a.ticket','b')
+            ->where('b.game = :game')
+            ->setParameter(':game', $game)
+            ->getQuery()
+            ->getResult()
+            ;
+    }
     public function findRefundRequestedOrder(){
         return $this->createQueryBuilder('a')
             ->andWhere('a.refundRequest is not null')

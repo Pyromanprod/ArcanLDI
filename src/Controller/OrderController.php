@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Game;
 use App\Entity\Order;
 use App\Form\UserRefundFormType;
+use App\Repository\AnswerRepository;
 use App\Repository\OrderRepository;
 use App\Repository\RoleGroupeRepository;
 use App\Repository\TicketRepository;
@@ -207,6 +208,30 @@ class OrderController extends AbstractController
 
 
         $this->addFlash('error', 'Achat annulé');
+
+        return $this->redirectToRoute('home');
+
+    }
+
+    #[Route('annuler-un-achat/{id}', name: 'cancel_order', methods: ['GET', 'POST'])]
+    #[IsGranted('ROLE_USER')]
+    public function cancelOrder(Order                  $order,
+                                Request                $request,
+                                EntityManagerInterface $entityManager,
+                                AnswerRepository       $answerRepository): Response
+    {
+
+
+        if ($this->isCsrfTokenValid('cancelOrder' . $order->getId(), $request->request->get('_token')) && $order->getDatePaid() == null) {
+            $entityManager->remove($order);
+            foreach ( $answerRepository->findByUserGame($order->getTicket()->getGame(), $this->getUser()) as $answer){
+                $entityManager->remove($answer);
+            }
+            $entityManager->flush();
+            $this->addFlash('success', 'Achat annulé');
+        } else {
+            $this->addFlash('error', 'Impossible d\'annuler la commande');
+        }
 
         return $this->redirectToRoute('home');
 

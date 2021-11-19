@@ -5,19 +5,18 @@ namespace App\Controller;
 use App\Entity\Game;
 use App\Entity\GameComment;
 use App\Entity\RoleGroupe;
-use App\Entity\Video;
-use App\Form\AlbumVideoFormType;
 use App\Form\GameCommentType;
 use App\Form\GameType;
+use App\Repository\AnswerRepository;
 use App\Repository\GameCommentRepository;
 use App\Repository\GameRepository;
+use App\Repository\OrderRepository;
 use App\Repository\UserRepository;
 use App\Service\uploadGamePhoto;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -32,7 +31,7 @@ class GameController extends AbstractController
     public function index(GameRepository $gameRepository): Response
     {
         return $this->render('game/index.html.twig', [
-            'allGames' => $gameRepository->findBy(['isPublished'=>1], ['dateStart'=>'DESC']),
+            'allGames' => $gameRepository->findBy(['isPublished' => 1], ['dateStart' => 'DESC']),
         ]);
     }
 
@@ -41,17 +40,33 @@ class GameController extends AbstractController
     public function adminJeu(GameRepository $gameRepository): Response
     {
         return $this->render('game/index.html.twig', [
-            'allGames' => $gameRepository->findBy([],['dateStart'=>'DESC']),
+            'allGames' => $gameRepository->findBy([], ['dateStart' => 'DESC']),
         ]);
     }
 
     #[Route('/publier-jeu/{id}/', name: 'publish_game', methods: ['GET'])]
     #[isGranted('ROLE_ADMIN')]
-    public function publishGame(Request $request, Game $game, GameRepository $gameRepository, EntityManagerInterface $em): Response
+    public function publishGame(Request                $request,
+                                Game                   $game,
+                                AnswerRepository       $answerRepository,
+                                GameRepository         $gameRepository,
+                                OrderRepository        $orderRepository,
+                                EntityManagerInterface $em): Response
     {
         $csrf = $request->get('csrf_token');
 
         if ($this->isCsrfTokenValid('publish' . $game->getId(), $csrf)) {
+
+            foreach ($orderRepository->findByGame($game) as $order){
+                $em->remove($order);
+            }
+
+
+            foreach ($answerRepository->findByGame($game) as $answer) {
+
+                $em->remove($answer);
+            }
+//            dd($lesAnswer);
             $game->setIsPublished(true);
             $em->flush();
             $this->addFlash('success', $game->getName() . ' publié avec succés');
@@ -73,23 +88,23 @@ class GameController extends AbstractController
         $form = $this->createForm(GameType::class, $game);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid() && $request->get('dateStart') <= $request->get('dateEnd')) {
-            if ($form->get('dateStart')->getData()<= $form->get('dateEnd')->getData()){
+            if ($form->get('dateStart')->getData() <= $form->get('dateEnd')->getData()) {
 
-            $entityManager = $this->getDoctrine()->getManager();
-            //récupération de la photo si il y a
-            $photo = $form->get('banner')->getData();
-            if ($photo) {
-                $game->setBanner($uploadGamePhoto->uploadBanner($photo, $game));
-            }
-            $game->setIsPublished(false);
-            $entityManager->persist($game);
-            $role->setGame($game)
-                ->setName('public');
-            $entityManager->persist($role);
-            $entityManager->flush();
-            return $this->redirectToRoute('survey_index', [], Response::HTTP_SEE_OTHER);
-            }else{
-                $this->addFlash('error','La date de fin ne peut pas être antérieur a la date de début de l\'évènement');
+                $entityManager = $this->getDoctrine()->getManager();
+                //récupération de la photo si il y a
+                $photo = $form->get('banner')->getData();
+                if ($photo) {
+                    $game->setBanner($uploadGamePhoto->uploadBanner($photo, $game));
+                }
+                $game->setIsPublished(false);
+                $entityManager->persist($game);
+                $role->setGame($game)
+                    ->setName('public');
+                $entityManager->persist($role);
+                $entityManager->flush();
+                return $this->redirectToRoute('survey_index', [], Response::HTTP_SEE_OTHER);
+            } else {
+                $this->addFlash('error', 'La date de fin ne peut pas être antérieur a la date de début de l\'évènement');
             }
         }
 
@@ -100,21 +115,21 @@ class GameController extends AbstractController
     }
 
     #[Route('/{slug}', name: 'game_show', methods: ['GET', 'POST'])]
-    public function show(Game $game, GameCommentRepository $commentRepository, Request $request, RateLimiterFactory $anonymousApiLimiter, GameRepository $gameRepository, UserRepository $userRepository,PaginatorInterface $paginator): Response
+    public function show(Game $game, GameCommentRepository $commentRepository, Request $request, RateLimiterFactory $anonymousApiLimiter, GameRepository $gameRepository, UserRepository $userRepository, PaginatorInterface $paginator): Response
     {
         $form = null;
         $gameComment = new GameComment();
         $limiter = $anonymousApiLimiter->create($request->getClientIp());
         $requestedPage = $request->query->getInt('page', 1);
-        if($requestedPage < 1){
+        if ($requestedPage < 1) {
             throw new NotFoundHttpException();
         }
         $comment = $paginator->paginate(
-            $commentRepository->findByGame($game,['createdAt' => 'DESC']),
+            $commentRepository->findByGame($game, ['createdAt' => 'DESC']),
             $requestedPage,
             50
         );
-        if ($userRepository->findPlayerByGame($game,$this->getUser())) {
+        if ($userRepository->findPlayerByGame($game, $this->getUser())) {
             $form = $this->createForm(GameCommentType::class, $gameComment);
             $form->handleRequest($request);
             if ($form->isSubmitted() && $form->isValid()) {
