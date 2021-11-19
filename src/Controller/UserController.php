@@ -21,11 +21,12 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route('/user')]
 class UserController extends AbstractController
 {
-
+    //crud User///
     #[Route('/', name: 'user_index', methods: ['GET'])]
     #[IsGranted('ROLE_MODERATOR')]
     public function index(UserRepository $userRepository,TicketRepository $ticketRepository,PaginatorInterface $paginator,Request $request): Response
     {
+        //paginator pour la pagination
         $requestedPage = $request->query->getInt('page', 1);
         if($requestedPage < 1){
             throw new NotFoundHttpException();
@@ -42,6 +43,10 @@ class UserController extends AbstractController
             'tickets' => $tickets
         ]);
     }
+
+    //moderation>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+    //liste des moderateur
     #[Route('/moderation', name: 'moderator_index', methods: ['GET'])]
     #[IsGranted('ROLE_ADMIN')]
     public function indexModerator(UserRepository $userRepository): Response
@@ -52,6 +57,8 @@ class UserController extends AbstractController
             'users' => $userRepository->findPlayerByRole(),
         ]);
     }
+
+    //recherche d'un compte pour lui ajouter le role
     #[Route('/moderation/ajouter', name: 'moderator_Add_index', methods: ['GET'])]
     #[IsGranted('ROLE_ADMIN')]
     public function indexModeratorAdd(UserRepository $userRepository,Request $request): Response
@@ -62,6 +69,7 @@ class UserController extends AbstractController
             'users' => $userRepository->findPlayerByEmail($email),
         ]);
     }
+    //ajouter le role a un compte precedement rechercher
     #[Route('/moderation/ajouter/{id}', name: 'moderator_Add', methods: ['GET','POST'])]
     #[IsGranted('ROLE_ADMIN')]
     public function ModeratorAdd(User $user,UserRepository $userRepository,Request $request): Response
@@ -74,7 +82,7 @@ class UserController extends AbstractController
             'users' => $userRepository->findPlayerByRole(),
         ]);
     }
-
+    //retrait le role moderateur a un compte
     #[Route('/moderation/retirer/{id}', name: 'moderator_Delete', methods: ['GET','POST'])]
     #[IsGranted('ROLE_ADMIN')]
     public function ModeratorDelete(User $user,UserRepository $userRepository,Request $request): Response
@@ -88,6 +96,9 @@ class UserController extends AbstractController
         ]);
     }
 
+    //moderation <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+    //liste des joueur en fonction d'un ticket
     #[Route('/{id}/ticket', name: 'user_index_ticket', methods: ['GET'])]
     #[IsGranted('ROLE_MODERATOR')]
     public function indexticket(Ticket $ticket,UserRepository $userRepository,PaginatorInterface $paginator, Request $request): Response
@@ -108,7 +119,7 @@ class UserController extends AbstractController
         ]);
     }
 
-
+    //détail du profile d'un joueur
     #[Route('/{id}', name: 'user_show', methods: ['GET'])]
     #[IsGranted('ROLE_USER')]
     public function show(User $user): Response
@@ -118,6 +129,15 @@ class UserController extends AbstractController
         ]);
     }
 
+    //profile de l'utilisateur
+    #[Route('-profile/', name: 'user_show_profile', methods: ['GET','POST'])]
+    #[IsGranted('ROLE_USER')]
+    public function showProfile(): Response
+    {
+        return $this->render('user/show_profile.html.twig');
+    }
+
+    //modification du profile
     #[Route('-profile/edit', name: 'user_edit_profile', methods: ['GET','POST'])]
     #[IsGranted('ROLE_USER')]
     public function editProfile(Request $request): Response
@@ -136,7 +156,7 @@ class UserController extends AbstractController
                 ], Response::HTTP_SEE_OTHER);
             }
 
-
+            //changement de nom de la photo et verification de l'unicité de  celui-ci
             if ($this->getUser()->getPhoto() != null && file_exists($this->getParameter('user.photo.directory'). $this->getUser()->getPhoto())){
 
                 unlink( $this->getParameter('user.photo.directory') . $this->getUser()->getPhoto() );
@@ -151,6 +171,7 @@ class UserController extends AbstractController
             $this->getUser()->setPhoto($newFileName);
 
             $this->getDoctrine()->getManager()->flush();
+            //move de la photo dans le dossier prévu
             $photo->move(
                 $this->getParameter('user.photo.directory'),
                 $newFileName
@@ -167,13 +188,7 @@ class UserController extends AbstractController
         ]);
     }
 
-    #[Route('-profile/', name: 'user_show_profile', methods: ['GET','POST'])]
-    #[IsGranted('ROLE_USER')]
-    public function showProfile(): Response
-    {
-        return $this->render('user/show_profile.html.twig');
-    }
-
+    //supression d'un compte
     #[Route('/{id}', name: 'user_delete', methods: ['POST'])]
     #[IsGranted('ROLE_ADMIN')]
     public function delete(Request $request, User $user): Response

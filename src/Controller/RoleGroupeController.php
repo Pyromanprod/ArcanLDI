@@ -7,7 +7,6 @@ use App\Entity\RoleGroupe;
 use App\Entity\User;
 use App\Form\RoleAddFormType;
 use App\Form\RoleGroupeType;
-use App\Repository\OrderRepository;
 use App\Repository\RoleGroupeRepository;
 use App\Repository\UserRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -21,6 +20,8 @@ use Symfony\Component\Routing\Annotation\Route;
 #[IsGranted('ROLE_MODERATOR')]
 class RoleGroupeController extends AbstractController
 {
+   //crud pour les rôles  de groupes////
+
     #[Route('/', name: 'role_groupe_index', methods: ['GET'])]
     #[IsGranted('ROLE_MODERATOR')]
     public function index(RoleGroupeRepository $roleGroupeRepository): Response
@@ -52,6 +53,7 @@ class RoleGroupeController extends AbstractController
         ]);
     }
 
+    //liste des joueur pour ce role
     #[Route('/{id}/joueur-liste', name: 'show_role_player_list', methods: ['GET'])]
     #[IsGranted('ROLE_MODERATOR')]
     public function showRolePlayerList(RoleGroupe $role,UserRepository $userRepository): Response
@@ -63,7 +65,7 @@ class RoleGroupeController extends AbstractController
         ]);
     }
 
-
+    //modif d'un role
     #[Route('/{id}/edit', name: 'role_groupe_edit', methods: ['GET','POST'])]
     #[IsGranted('ROLE_MODERATOR')]
     public function edit(Request $request, RoleGroupe $roleGroupe): Response
@@ -82,16 +84,20 @@ class RoleGroupeController extends AbstractController
             'form' => $form,
         ]);
     }
+
     //ajout d'un player a role de groupe
     #[Route('/{id}/ajouter', name: 'role_groupe_add', methods: ['GET','POST'])]
     #[IsGranted('ROLE_MODERATOR')]
     public function add(Request $request, RoleGroupe $role, UserRepository $userRepository): Response
     {
+        //form avec choix personalisé envoyer en option dans le form service
         $form = $this->createForm(RoleAddFormType::class,[],[
             'choice'=> $userRepository->findPlayerWithoutRole($role->getGame(),$role),
         ]);
+
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+            //pour chaque joueur cocher dans la liste de joueur je leur ajoute un role et puis "flush" ensuite dans la  BDD
             foreach ($form->get('name')->getData() as $player){
             $player->addRoleGroupe($role);
             }
@@ -108,10 +114,12 @@ class RoleGroupeController extends AbstractController
         ]);
     }
 
+    //supression d'un rôle  et delete des discussion associé par cascade
     #[Route('/{id}', name: 'role_groupe_delete', methods: ['POST'])]
     #[IsGranted('ROLE_MODERATOR')]
     public function delete(Request $request, RoleGroupe $roleGroupe): Response
     {
+        //protection CSRF
         if ($this->isCsrfTokenValid('delete'.$roleGroupe->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($roleGroupe);
@@ -122,6 +130,7 @@ class RoleGroupeController extends AbstractController
     }
 
 
+    //retrait d'un role d'un joueur avec remaping des parametre passer dans l'url
     #[Route('/delete/{pseudo}-{id}', name: 'role_delete', methods: ['POST','GET'])]
     #[ParamConverter('user', options: ['mapping' => ['pseudo' => 'pseudo']])]
     #[ParamConverter('roleGroupe', options: ['mapping' => ['id' => 'id']])]
@@ -131,6 +140,7 @@ class RoleGroupeController extends AbstractController
         $entityManager = $this->getDoctrine()->getRepository(Order::class);
         $id = $entityManager->findOneByPlayer($user)->getTicket()->getId();
 
+        //protection CSRF
         if ($this->isCsrfTokenValid('delete'.$roleGroupe->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
             $user->removeRoleGroupe($roleGroupe);

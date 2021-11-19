@@ -7,6 +7,9 @@ use App\Entity\Game;
 use App\Entity\Survey;
 use App\Entity\User;
 use App\Repository\AnswerRepository;
+use App\Repository\GameRepository;
+use App\Repository\OrderRepository;
+use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -17,7 +20,6 @@ class ExtractAnswerController extends AbstractController
     public function index(AnswerRepository $answerRepository, Game $game): Response
     {
 
-//        dd($this->getDoctrine()->getRepository(Ticket::class)->findBySurveyTicket($game));
         $listeTicket = $game->getTickets();
         $myVariableCSV = "\n\n\n######IMPORTER DANS GOOGLE SHEET POUR UN VRAI RENDU CHOISIR LA DETECTION AUTOMATIQUE DU SEPARATEUR######\n\n\n";
         foreach ($listeTicket as $ticket) {
@@ -62,6 +64,28 @@ class ExtractAnswerController extends AbstractController
                 "Content-disposition" => "attachment; filename=" . $game->getSlug() . "_Reponse.csv"
             ]
         );
-//        dd($myVariableCSV);
+    }
+    #[Route('/extract/player/{id}', name: 'extract_player')]
+    public function extractPlayer(Game $game,UserRepository $userRepository,OrderRepository $orderRepository): Response
+    {
+        $players = $userRepository->findPlayersByGame($game);
+
+        $myVariableCSV = "\n\n\n######IMPORTER DANS GOOGLE SHEET POUR UN VRAI RENDU CHOISIR LA DETECTION AUTOMATIQUE DU SEPARATEUR######\n\n\n";
+            $myVariableCSV .= "Nom, Prénom, Mail,Code unique,";
+        foreach ($players as $player) {
+            $order = $orderRepository->findOneorder($game,$player);
+            $myVariableCSV .= ",\n".$player->getLastname().','.$player->getFirstName().','.$player->getEmail().','.$order->getTicket()->getId().$game->getId().$player->getId();
+        }
+        return new Response(
+            $myVariableCSV,
+            200,
+            [
+                //Définit le contenu de la requête en tant que fichier Excel
+                'Content-Type' => 'application/vnd.ms-excel',
+                'Content-Encoding'=> 'UTF-8',
+                //On indique que le fichier sera en attachment donc ouverture de boite de téléchargement ainsi que le nom du fichier
+                "Content-disposition" => "attachment; filename=" . $game->getSlug() . "_Joueurs.csv"
+            ]
+        );
     }
 }

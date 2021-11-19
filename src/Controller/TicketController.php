@@ -8,7 +8,6 @@ use App\Entity\Ticket;
 use App\Form\TicketType;
 use App\Repository\GameRepository;
 use App\Repository\SurveyRepository;
-use App\Repository\SurveyTicketRepository;
 use App\Repository\TicketRepository;
 use App\Service\uploadGamePhoto;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -22,6 +21,7 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route('/ticket')]
 class TicketController extends AbstractController
 {
+    //crud ticket
     #[Route('/', name: 'ticket_index', methods: ['GET'])]
     public function index(TicketRepository $ticketRepository, GameRepository $gameRepository): Response
     {
@@ -32,6 +32,7 @@ class TicketController extends AbstractController
         ]);
     }
 
+    //selection des tickets par jeu
     #[Route('/game/{id}', name: 'ticket_index_game', methods: ['GET'])]
     public function indexGame(TicketRepository $ticketRepository, Game $game, GameRepository $gameRepository): Response
     {
@@ -43,6 +44,8 @@ class TicketController extends AbstractController
         ]);
     }
 
+    //créer un nouveau ticket
+
     #[Route('/new', name: 'ticket_new', methods: ['GET', 'POST'])]
     #[IsGranted('ROLE_ADMIN')]
     public function new(Request $request, uploadGamePhoto $uploadGamePhoto): Response
@@ -53,7 +56,7 @@ class TicketController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-
+            //validation des CGV pour l'achat du ticket
             $ticket->setCgv($uploadGamePhoto->uploadCGVTicket($form->get('cgv')->getData(), $ticket));
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($ticket);
@@ -140,6 +143,7 @@ class TicketController extends AbstractController
 
     }
 
+    //modification d'un ticket
     #[Route('/{id}/edit', name: 'ticket_edit', methods: ['GET', 'POST'])]
     public function edit(uploadGamePhoto $uploadGamePhoto, Request $request, Ticket $ticket): Response
     {
@@ -161,6 +165,7 @@ class TicketController extends AbstractController
         ]);
     }
 
+    //supression d'un ticket
     #[Route('/{id}/delete', name: 'ticket_delete', methods: ['POST'])]
     public function delete(Request $request, Ticket $ticket): Response
     {

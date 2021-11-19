@@ -49,6 +49,17 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             ->getResult();
     }
 
+    public function findPlayersByGame($game){
+        return $this->createQueryBuilder('a')
+            ->innerJoin('a.orders','b')
+            ->join('b.ticket','c')
+            ->join('c.game','d')
+            ->where('d = :game')
+            ->setParameter(':game',$game)
+            ->getQuery()
+            ->getResult();
+    }
+
     public function findPlayerWithoutRole($game,$role){
         return $this->createQueryBuilder('a')
             ->innerJoin('a.orders','b')

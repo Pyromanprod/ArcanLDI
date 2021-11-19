@@ -14,6 +14,7 @@ use Stripe\Checkout\Session;
 use Stripe\Refund;
 use Stripe\Stripe;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -74,8 +75,14 @@ class OrderController extends AbstractController
                     ->to($this->getUser()->getUserIdentifier())
                     ->subject('remboursement ArcanLDI')
                     ->text('votre demande de remboursement a bien été prise en compte');
+                $emailNotif = (new Email())
+                    ->from('contact@arcanlesdemondivoire.fr')
+                    ->to('contact@arcanlesdemondivoire.fr')
+                    ->subject('demande de remboursement par ' . $order->getPlayer()->getPseudo())
+                    ->text(' demande de remboursement pour le jeu ' . $order->getTicket()->getGame()->getName() . ' ticket ' . $order->getTicket()->getName() . ' par le joueur ' . $order->getPlayer()->getPseudo() . ' email du joueur ' . $order->getPlayer()->getEmail());
                 $mailer->send($email);
-                $order->getTicket()->setStock($order->getTicket()->getStock()+1);
+                $mailer->send($emailNotif);
+                $order->getTicket()->setStock($order->getTicket()->getStock() + 1);
                 $entityManager->flush();
                 $this->addFlash('success', 'demande de remboursement effectuée');
                 return $this->redirectToRoute('home');
@@ -219,12 +226,26 @@ class OrderController extends AbstractController
             $order->setReference($session->id);
             $order->setPaymentIntent($session->payment_intent);
             $entityManager->flush();
-            $email = (new Email())
+            $emailsold = (new TemplatedEmail())
                 ->from('contact@arcanlesdemondivoire.fr')
                 ->to($order->getPlayer()->getEmail())
                 ->subject('Achat d\'un ticket ArcanLDI ' . ' jeu ' . $order->getTicket()->getGame()->getName() . ' ticket ' . $order->getTicket()->getName())
-                ->text('vous avez bien acheté un ticket ' . $order->getTicket()->getName() . ' pour le jeu' . $order->getTicket()->getGame()->getName());
-            $mailer->send($email);
+                ->htmlTemplate('emails/ticket.html.twig')
+                ->context([
+                    'ticketName' => $order->getTicket()->getName(),
+                    'gameName' => $order->getTicket()->getGame()->getName(),
+                    'ticketId' => $order->getTicket()->getId(),
+                    'gameId' => $order->getTicket()->getGame()->getId(),
+                    'playerId' => $order->getPlayer()->getId()
+                ]);
+            $emailNotif = (new Email())
+                ->from('contact@arcanlesdemondivoire.fr')
+                ->to('contact@arcanlesdemondivoire.fr')
+                ->subject($order->getPlayer()->getPseudo() . ' a acheter un ticket pour le jeu ' . $order->getTicket()->getGame()->getName())
+                ->text('le joueur ' . $order->getPlayer()->getPseudo() . ' à acheter un ticket ' . $order->getTicket()->getName() . ' pour le jeu ' . $order->getTicket()->getGame()->getName());
+            $mailer->send($emailsold);
+            $mailer->send($emailNotif);
+
             $this->addFlash('success', 'ticket acheté avec succès');
 
         }
@@ -241,7 +262,7 @@ class OrderController extends AbstractController
             Refund::create([
                 'payment_intent' => $order->getPaymentIntent(),
             ]);
-            foreach ($order->getPlayer()->getRoleGroupes() as $role){
+            foreach ($order->getPlayer()->getRoleGroupes() as $role) {
                 $order->getPlayer()->removeRoleGroupe($role);
             }
             $entityManager->remove($order);
