@@ -1,6 +1,6 @@
 framework:
   rate_limiter:
-    anonymous_api:
+    comments:
       policy: 'fixed_window'
-      limit: 20
+      limit: 3
       interval: '60 minutes'

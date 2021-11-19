@@ -115,11 +115,12 @@ class GameController extends AbstractController
     }
 
     #[Route('/{slug}', name: 'game_show', methods: ['GET', 'POST'])]
-    public function show(Game $game, GameCommentRepository $commentRepository, Request $request, RateLimiterFactory $anonymousApiLimiter, GameRepository $gameRepository, UserRepository $userRepository, PaginatorInterface $paginator): Response
+    public function show(Game $game, GameCommentRepository $commentRepository, Request $request, RateLimiterFactory $commentsLimiter, GameRepository $gameRepository, UserRepository $userRepository, PaginatorInterface $paginator): Response
     {
         $form = null;
         $gameComment = new GameComment();
-        $limiter = $anonymousApiLimiter->create($request->getClientIp());
+        //déclaration du limiteur de commentaire a 3/h voir ratelimiter.yaml pour modifier
+        $limiter = $commentsLimiter->create($request->getClientIp());
         $requestedPage = $request->query->getInt('page', 1);
         if ($requestedPage < 1) {
             throw new NotFoundHttpException();
@@ -142,6 +143,7 @@ class GameController extends AbstractController
                         'game' => $game,
                     ], Response::HTTP_SEE_OTHER);
                 }
+                // 1 token consumer par action si plus de token (3/h) throw exception
                 if (false === $limiter->consume(1)->isAccepted()) {
                     throw new TooManyRequestsHttpException();
                 }

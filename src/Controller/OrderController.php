@@ -109,6 +109,7 @@ class OrderController extends AbstractController
     #[Route('/acheter/{slug}', name: 'order_new', methods: ['GET', 'POST'])]
     public function new(Request $request, Game $game, OrderRepository $orderRepository): Response
     {
+
         $order = new Order();
         $form = $this->createFormBuilder($order)
             ->add('ticket', EntityType::class, [
@@ -121,10 +122,19 @@ class OrderController extends AbstractController
                 },
             ])->getForm();
         $form->handleRequest($request);
+        $variable = false;
+        foreach($game->getTickets() as $ticket){
+           if($ticket->getStock() > 0){
+               $variable = true;
+           }
+    }
+        if (!$variable){
+            $this->addFlash('error','les tickets sont partit trop tôt');
+          return  $this->redirectToRoute('game_index');
+        }
         if ($form->isSubmitted() && $form->isValid()) {
             if ($order->getTicket()->getGame()->getDateEnd() > new \DateTime() || $order->getTicket()->getGame()->getDateEnd() == NULL) {
                 $reservation = $orderRepository->findOneorder($game, $this->getUser());
-                dump($reservation);
 
                 if ($reservation !== null) {
 
@@ -132,11 +142,10 @@ class OrderController extends AbstractController
                     //si la date de paiement est null on renvoie vers le questionnaire avec le message flash
                     if ($reservation->getDatePaid() == NULL) {
 
-                        $this->addFlash('error', 'vous devez terminer le questionnaire pour acheter le ticket');
+                        $this->addFlash('error', 'vous avez déjà une commande en cour pour ce jeu');
 
-                        return $this->redirectToRoute('survey_suvey_for_ticket', [
-                            'id' => $reservation->getId(),
-                        ], Response::HTTP_SEE_OTHER);
+                        return $this->redirectToRoute('user_order', [], Response::HTTP_SEE_OTHER);
+
                     } else {
 
                         $this->addFlash('error', 'vous ne pouvez acheter qu\'un seul ticket par jeu de rôle');
