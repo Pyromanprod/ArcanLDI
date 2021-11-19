@@ -1,0 +1,24 @@
+{# Utilisation du squelette de page base.html.twig #}
+{% extends 'base.html.twig' %}
+
+{# Titre de la page #}
+{% block title %}ERREUR 429 : Trop de commentaires à l'heure{% endblock %}
+
+{# Contenu de la page #}
+{% block body %}
+
+    <div class="container-fluid">
+
+        <div class="row">
+
+            <h1 class="text-center fs-1 fw-bold pt-5">ERREUR 429 : Trop de commentaires à l'heure</h1>
+
+            <div class="col-12 text-center">
+                <p class="h1">Votre tour est terminé. Veuillez attendre que vos commentaires se recharge (1h)</p>
+            </div>
+
+        </div>
+
+    </div>
+
+{% endblock %}
