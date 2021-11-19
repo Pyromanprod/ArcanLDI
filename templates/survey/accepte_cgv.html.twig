@@ -5,12 +5,12 @@
         <div class="row mt-5">
             <div class="col-12 col-md-6 mx-auto">
 
-                <a href="{{ asset('cgv/'~order.ticket.cgv) }}" target="_blank">CGV du ticket</a>
+                <a href="{{ asset('cgv/'~order.ticket.cgv) }}" target="_blank">Conditions générales de vente du ticket</a>
                 {{ form_start(form) }}
                 {{ form_row(form.is_cgv, {
                     'label': 'J\'accepte les conditions générales de vente ci-dessus'
                 }) }}
-                <button type="submit" class="btn btn-warning">J'accepte</button>
+                <button type="submit" class="btn btn-outline-warning">J'accepte</button>
                 {{ form_end(form) }}
 
             </div>

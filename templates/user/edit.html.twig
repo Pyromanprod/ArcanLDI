@@ -4,13 +4,13 @@
 
 {% block body %}
     <div class="container">
-                <h1 class="text-center">Modifier un utilisateur</h1>
+                <h1 class="text-center">Modifier mes informations</h1>
         <div class="row">
             <div class="col-12 col-md-8 offset-md-2">
 
                 {{ include('user/_form.html.twig', {'button_label': 'Modifier'}) }}
 
-                <a class="btn btn-warning mt-2" href="{{ path('user_show_profile') }}">Annuler</a>
+                <a class="btn btn-outline-light mt-2" href="{{ path('user_show_profile') }}">Retour au profil</a>
             </div>
         </div>
     </div>

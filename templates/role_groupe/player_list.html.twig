@@ -7,7 +7,7 @@
         <div class="row">
             <div class="col-12 col-md-8 mx-auto">
                 <div class="text-center my-5">
-                    <a class="btn btn-outline-light" href="{{ path('role_groupe_index') }}">retour a la liste des
+                    <a class="btn btn-outline-light" href="{{ path('role_groupe_index') }}">Retour a la liste des
                         groupes</a>
                 </div>
                 {% if players %}
@@ -35,7 +35,7 @@
                                           action="{{ path('role_delete', {'pseudo': player.pseudo, 'id': role.id} ) }}"
                                           onsubmit="return confirm('etes vous sur de vouloir retirer ce role?');">
                                         <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ role.id) }}">
-                                        <button class="btn btn-outline-danger">retirer le joueur du groupe
+                                        <button class="btn btn-outline-danger">Retirer le joueur du groupe
                                         </button>
                                     </form>
                                 </td>
@@ -45,7 +45,7 @@
                     </table>
                     {% else %}
                         <p class="alert-warning p-3 text-center"> Aucun joueurs dans ce groupe !
-                            <a class="btn btn-outline-info" href="{{ path('role_groupe_add', {'id': role.id}) }}">ajoutez-en</a>
+                            <a class="btn btn-outline-info" href="{{ path('role_groupe_add', {'id': role.id}) }}">Ajoutez-en</a>
                         </p>
                     {% endif %}
                 </div>

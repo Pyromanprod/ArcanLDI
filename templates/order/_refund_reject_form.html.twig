@@ -2,5 +2,5 @@
     <label class="form-label" for="reason">Raison du rejet (facultative)</label>
     <textarea class="form-text" name="reason" id="reason" cols="50" rows="5"></textarea>
     <input type="hidden" name="_token" value="{{ csrf_token('rejectRefund' ~ order.id) }}">
-    <button class="btn btn-danger">Rejeter la demande</button>
+    <button class="btn btn-outline-danger">Rejeter la demande</button>
 </form>

@@ -34,14 +34,14 @@
                     <a href="{{ path('ticket_new') }}" class="btn btn-outline-info">Nouveau ticket</a>
                     <a class="btn btn-outline-info" href="{{ path('ticket_show', {'id': ticket.id}) }}">Ajouter
                         des questionnaires</a>
-                    <a class="btn btn-outline-light" href="{{ path('ticket_index') }}">revenir a la liste des
+                    <a class="btn btn-outline-light" href="{{ path('ticket_index') }}">Revenir a la liste des
                         ticket</a>
                 </div>
                 <form action="{{ path('survey_ticket_ordered', {'id': ticket.id}) }}" method="post">
                     <table class="table table-striped table-dark ">
                         <tr>
                             <th>Nom du Questionnaire</th>
-                            <th>ordre</th>
+                            <th>Ordre</th>
                         </tr>
                         {% for index, surveyTicket  in ticket.surveyTickets|sort((a, b) => a.orderBy <=> b.orderBy) %}
 

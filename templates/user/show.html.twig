@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}joueur{% endblock %}
+{% block title %}Joueur{% endblock %}
 
 {% block body %}
 
@@ -14,7 +14,7 @@
             <ul class="list-group list-group-flush ">
                 <li class="list-group-item bg-transparent text-light">Email : {{ user.email }} </li>
                 <li class="list-group-item bg-transparent text-light">Prenom : {{ user.firstname }}</li>
-                <li class="list-group-item bg-transparent text-light">nom : {{ user.lastname }}</li>
+                <li class="list-group-item bg-transparent text-light">Nom : {{ user.lastname }}</li>
             </ul>
         </div>
         {% if if is_granted('ROLE_ADMIN') %}

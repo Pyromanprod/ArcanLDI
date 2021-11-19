@@ -10,7 +10,7 @@
             <form action="{{ path('moderator_Add_index') }}">
                 <label for="moderation"></label>
                 <input type="text" id="moderation" name="moderation" placeholder="Email">
-                <button class="btn-outline-info btn" type="submit">recherche</button>
+                <button class="btn-outline-info btn" type="submit">Recherche</button>
             </form>
         </div>
         <div class="row">
@@ -25,7 +25,7 @@
                             {% if role != "ROLE_MODERATOR" and role == "ROLE_USER" %}
                                 <form method="post" action="{{ path('moderator_Add', {'id': user.id}) }}" onsubmit="return confirm('Etes vous sûr de vouloir attribuer le rôle modérateur à ce compte');">
                                     <input type="hidden" name="_token" value="{{ csrf_token('add' ~ user.id) }}">
-                                    <button class="btn btn-outline-success">Ajouter a la moderation</button>
+                                    <button class="btn btn-outline-success">Ajouter à la moderation</button>
                                 </form>
                             {% endif %}
                         {% endfor %}

@@ -13,11 +13,11 @@
             <ul class="list-group list-group-flush ">
                 <li class="list-group-item bg-transparent text-light">Email : {{ app.user.email }} </li>
                 <li class="list-group-item bg-transparent text-light">Prénom : {{ app.user.firstname }}</li>
-                <li class="list-group-item bg-transparent text-light">nom : {{ app.user.lastname }}</li>
+                <li class="list-group-item bg-transparent text-light">Nom : {{ app.user.lastname }}</li>
             </ul>
         </div>
         <div class="card-footer list-group-item bg-transparent text-light">
-            <a class="btn btn-primary" href="{{ path('user_edit_profile') }}">modifier mes informations</a>
+            <a class="btn btn-outline-warning" href="{{ path('user_edit_profile') }}">Modifier mes informations</a>
         </div>
     </div>
 {% endblock %}

@@ -32,7 +32,7 @@ class GameController extends AbstractController
     public function index(GameRepository $gameRepository): Response
     {
         return $this->render('game/index.html.twig', [
-            'allGames' => $gameRepository->findByIsPublished(1),
+            'allGames' => $gameRepository->findBy(['isPublished'=>1], ['dateStart'=>'DESC']),
         ]);
     }
 
@@ -41,7 +41,7 @@ class GameController extends AbstractController
     public function adminJeu(GameRepository $gameRepository): Response
     {
         return $this->render('game/index.html.twig', [
-            'allGames' => $gameRepository->findAll(),
+            'allGames' => $gameRepository->findBy([],['dateStart'=>'DESC']),
         ]);
     }
 
