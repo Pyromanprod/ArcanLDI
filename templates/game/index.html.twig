@@ -5,7 +5,17 @@
 {% block body %}
 
     <div class="container">
+
         <h1 class="text-center my-5"> Tous nos évenements</h1>
+        {% if is_granted('ROLE_ADMIN') %}
+
+            <div class="row mt-5">
+
+                <div class="col-12 text-center mb-3">
+                    <a href="{{ path('game_new') }}" class="btn btn-outline-info">Nouveau jeu</a>
+                </div>
+            </div>
+        {% endif %}
         <div class="row">
 
             {% for game in allGames %}
@@ -31,6 +41,12 @@
 
                             <a href="{{ path('game_show', {'slug': game.slug}) }}"
                                class="btn btn-outline-light mb-3 me-2"> Voir plus
+                            </a>
+                            <a href="{{ path('see_album', {'slug': game.slug}) }}"
+                               class="btn btn-outline-light mb-3 me-2"> Gallerie photo
+                            </a>
+                            <a href="{{ path('video_see_video', {'slug': game.slug}) }}"
+                               class="btn btn-outline-light mb-3 me-2"> Gallerie vidéo
                             </a>
 
                             {% if is_granted('ROLE_ADMIN') %}
