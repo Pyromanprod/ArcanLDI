@@ -72,8 +72,9 @@ class GameController extends AbstractController
         $role = new RoleGroupe();
         $form = $this->createForm(GameType::class, $game);
         $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid() && $request->get('dateStart') <= $request->get('dateEnd')) {
+            if ($form->get('dateStart')->getData()<= $form->get('dateEnd')->getData()){
 
-        if ($form->isSubmitted() && $form->isValid()) {
             $entityManager = $this->getDoctrine()->getManager();
             //récupération de la photo si il y a
             $photo = $form->get('banner')->getData();
@@ -87,6 +88,9 @@ class GameController extends AbstractController
             $entityManager->persist($role);
             $entityManager->flush();
             return $this->redirectToRoute('survey_index', [], Response::HTTP_SEE_OTHER);
+            }else{
+                $this->addFlash('error','La date de fin ne peut pas être antérieur a la date de début de l\'évènement');
+            }
         }
 
         return $this->renderForm('game/new.html.twig', [
