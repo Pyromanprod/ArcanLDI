@@ -150,7 +150,7 @@ class UserController extends AbstractController
             $photo = $form->get('photo')->getData();
             if (!$photo){
                 $this->getDoctrine()->getManager()->flush();
-                $this->addFlash('success','Vos informations ont bien été modifier');
+                $this->addFlash('success','Vos informations ont bien été modifiées.');
                 return $this->redirectToRoute('user_show_profile', [
                     'id' => $this->getUser()->getId()
                 ], Response::HTTP_SEE_OTHER);
@@ -176,7 +176,7 @@ class UserController extends AbstractController
                 $this->getParameter('user.photo.directory'),
                 $newFileName
             );
-            $this->addFlash('success','Vos informations ont bien été modifier');
+            $this->addFlash('success','Vos informations ont bien été modifiées.');
             return $this->redirectToRoute('user_show_profile', [
                 'id' => $this->getUser()->getId()
             ], Response::HTTP_SEE_OTHER);

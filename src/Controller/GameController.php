@@ -69,9 +69,9 @@ class GameController extends AbstractController
 //            dd($lesAnswer);
             $game->setIsPublished(true);
             $em->flush();
-            $this->addFlash('success', $game->getName() . ' publié avec succés');
+            $this->addFlash('success', $game->getName() . ' publié avec succès');
         } else {
-            $this->addFlash('error', $game->getName() . ' n\'as pas été publier (token invalide)');
+            $this->addFlash('error', $game->getName() . ' n\'a pas été publié (token invalide)');
         }
 
         return $this->render('game/index.html.twig', [
@@ -104,7 +104,7 @@ class GameController extends AbstractController
                 $entityManager->flush();
                 return $this->redirectToRoute('survey_index', [], Response::HTTP_SEE_OTHER);
             } else {
-                $this->addFlash('error', 'La date de fin ne peut pas être antérieur a la date de début de l\'évènement');
+                $this->addFlash('error', 'La date de fin ne peut pas être antérieur à la date de début de l\'évènement.');
             }
         }
 
@@ -135,7 +135,7 @@ class GameController extends AbstractController
             $form->handleRequest($request);
             if ($form->isSubmitted() && $form->isValid()) {
                 if (!$gameRepository->findPlayerGame($game, $this->getUser())) {
-                    $this->addFlash('error', 'vous ne pouvez pas écrire un commentaire pour un jeu ou vous n\'avez pas participé');
+                    $this->addFlash('error', 'Vous ne pouvez pas commenter un jeu auquel vous n\'avez pas participé.');
                     return $this->redirectToRoute('game_show', [
                         'slug' => $game->getSlug(),
                         'form' => $form,

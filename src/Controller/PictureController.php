@@ -87,7 +87,7 @@ class PictureController extends AbstractController
 
         // Redirect avec message d'erreur si le joueur n'a pas participé a ce jeu
         if (!$gameRepository->findPlayerGame($game, $this->getUser())){
-            $this->addFlash('error', 'Vous n\'avez pas participé a ce jeu');
+            $this->addFlash('error', 'Vous n\'avez pas participé à ce jeu.');
             return $this->redirectToRoute('see_album', ['slug'=>$game->getSlug()]);
         }
 

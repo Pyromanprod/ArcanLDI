@@ -42,7 +42,7 @@ class VideoController extends AbstractController
 
                 $this->getDoctrine()->getManager()->persist($video);
                 $this->getDoctrine()->getManager()->flush();
-                $this->addFlash('success', 'Vidéo ajoutée avec succès');
+                $this->addFlash('success', 'Vidéo ajoutée avec succès.');
                 return $this->redirectToRoute('video_game_add_album_video', ['id'=>$game->getId()]);
             }
 

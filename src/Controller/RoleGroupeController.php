@@ -146,7 +146,7 @@ class RoleGroupeController extends AbstractController
             $user->removeRoleGroupe($roleGroupe);
             $entityManager->flush();
         } else{
-            $this->addFlash('error','role non retirer');
+            $this->addFlash('error','Rôle non retiré.');
         }
 
         return $this->redirectToRoute('show_role_player_list', [

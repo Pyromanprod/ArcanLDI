@@ -24,7 +24,7 @@ class SurveyTicketController extends AbstractController
 
             foreach ($request->request->get('surveyTicket') as $key => $reponse) {
                 if (!is_numeric($reponse)){
-                    $this->addFlash('error', 'L\'ordre doit etre un chiffre');
+                    $this->addFlash('error', 'L\'ordre doit être un chiffre.');
                     return $this->redirectToRoute('survey_ticket_ordered', ['id' =>$ticket->getId()]);
                 }
                 $surveyTicket = $surveyTicketRepository->findOneById($key);

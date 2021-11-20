@@ -107,7 +107,7 @@ class MembershipController extends AbstractController
                 ->subject('cotisation payée ' . ' année ' . $membership->getYear() )
                 ->text('votre cotisation a bien été payée');
             $mailer->send($email);
-            $this->addFlash('success', 'cotisation payée avec succès');
+            $this->addFlash('success', 'Cotisation payée avec succès.');
 
         }
         return $this->redirectToRoute('home');

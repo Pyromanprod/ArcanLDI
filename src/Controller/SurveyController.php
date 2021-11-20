@@ -44,7 +44,7 @@ class SurveyController extends AbstractController
         if ($form->isSubmitted()) {
             $em->persist($newSurvey);
             $em->flush();
-            $this->addFlash('success', 'Questionnaire Ajouté');
+            $this->addFlash('success', 'Questionnaire ajouté');
             return $this->redirectToRoute('survey_add_question', [
                 'id' => $newSurvey->getId()
             ]);
@@ -71,7 +71,7 @@ class SurveyController extends AbstractController
             $em = $this->getDoctrine()->getManager();
             $em->persist($newQuestion);
             $em->flush();
-            $this->addFlash('success', 'Question Ajoutée');
+            $this->addFlash('success', 'Question ajoutée');
             //si liste déroulante coché
             if ($form->get('select')->getData()) {
 
@@ -127,13 +127,13 @@ class SurveyController extends AbstractController
     public function deleteChoice(Request $request, Choice $choice): Response
     {
         if ($this->isCsrfTokenValid($choice->getId() . "delete", $request->get('csrf_token'))) {
-            $this->addFlash('success', 'Suppression Réussi');
+            $this->addFlash('success', 'Suppression réussie');
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($choice);
             $entityManager->flush();
         } else {
 
-            $this->addFlash('error', 'Suppression échouée');
+            $this->addFlash('error', 'Echec de la suppression.');
         }
 
         return $this->redirectToRoute('survey_add_choice', ['id' => $choice->getQuestion()->getId()]);
@@ -224,7 +224,7 @@ class SurveyController extends AbstractController
 
         return $this->redirectToRoute('checkout', ['id' => $order->getId()]);
         }else{
-            $this->addFlash('success','merci d\'avoir testé le questionnaire');
+            $this->addFlash('success','Merci d\'avoir testé le questionnaire.');
         return $this->redirectToRoute('home');
         }
     }
@@ -318,7 +318,7 @@ class SurveyController extends AbstractController
 
         foreach ($request->request->get('question') as $key => $reponse) {
             if (!is_numeric($reponse)) {
-                $this->addFlash('error', 'L\'ordre doit etre un chiffre');
+                $this->addFlash('error', 'L\'ordre doit être un chiffre.');
                 return $this->redirectToRoute('survey_view', ['id' => $survey->getId()]);
             }
             $question = $questionRepository->findOneById($key);
