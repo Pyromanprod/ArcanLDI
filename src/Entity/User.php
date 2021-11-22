@@ -86,6 +86,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'member', targetEntity: MembershipAssociation::class, orphanRemoval: true)]
     private $membershipAssociations;
 
+    #[ORM\Column(type: 'boolean')]
+    #[Assert\IsTrue(message: 'Vous devez accepter les mentions légales')]
+    private $is_rgpd;
+
     public function __construct()
     {
         $this->orders = new ArrayCollection();
@@ -509,6 +513,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $membershipAssociation->setMember(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getIsRgpd(): ?bool
+    {
+        return $this->is_rgpd;
+    }
+
+    public function setIsRgpd(bool $is_rgpd): self
+    {
+        $this->is_rgpd = $is_rgpd;
 
         return $this;
     }
