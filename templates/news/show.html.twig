@@ -22,7 +22,11 @@
             </div>
             <div class="row">
                 <div class="col-12 col-md-8 offset-md-2 mt-3">
+                    {% if app.user %}
                     {{ include('news_comment/_form.html.twig') }}
+                        {% else %}
+                        Pour commenter l'actu <a href="{{ path('app_login') }}">Connecter vous</a>
+                    {% endif %}
                     {% for comment in comments %}
                         <div class="row">
                             <div class="col-12 mt-3">

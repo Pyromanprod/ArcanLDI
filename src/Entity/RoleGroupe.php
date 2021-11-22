@@ -38,7 +38,7 @@ class RoleGroupe
 
     public function __toString(): string
     {
-        return $this->getName();
+        return $this->getName().' - '.$this->getGame()->getName();
     }
 
     public function __construct()

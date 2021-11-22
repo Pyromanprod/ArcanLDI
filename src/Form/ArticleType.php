@@ -18,7 +18,6 @@ class ArticleType extends AbstractType
             ->add('content',CKEditorType::class)
             ->add('roleGroupe',EntityType::class,[
                 'class' => 'App\Entity\RoleGroupe',
-                'choice_label' => 'name',
                 ])
         ;
     }

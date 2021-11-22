@@ -83,13 +83,13 @@ class OrderController extends AbstractController
 
                 //envoie d'un mail a l'utilisateur et un autre a l'adresse mail du site
                 $email = (new Email())
-                    ->from('contact@arcanlesdemondivoire.fr')
+                    ->from('contact@arcanlesdemonsdivoire.fr')
                     ->to($this->getUser()->getUserIdentifier())
                     ->subject('remboursement ArcanLDI')
                     ->text('votre demande de remboursement a bien été prise en compte');
                 $emailNotif = (new Email())
-                    ->from('contact@arcanlesdemondivoire.fr')
-                    ->to('contact@arcanlesdemondivoire.fr')
+                    ->from('contact@arcanlesdemonsdivoire.fr')
+                    ->to('contact@arcanlesdemonsdivoire.fr')
                     ->subject('demande de remboursement par ' . $order->getPlayer()->getPseudo())
                     ->text(' demande de remboursement pour le jeu ' . $order->getTicket()->getGame()->getName() . ' ticket ' . $order->getTicket()->getName() . ' par le joueur ' . $order->getPlayer()->getPseudo() . ' email du joueur ' . $order->getPlayer()->getEmail());
                 $mailer->send($email);
@@ -138,7 +138,6 @@ class OrderController extends AbstractController
           return  $this->redirectToRoute('game_index');
         }
         if ($form->isSubmitted() && $form->isValid()) {
-        dump($order);
             if ($order->getTicket()->getGame()->getDateEnd() > new \DateTime()) {
                 $reservation = $orderRepository->findOneorder($game, $this->getUser());
 
@@ -267,7 +266,7 @@ class OrderController extends AbstractController
             $order->setPaymentIntent($session->payment_intent);
             $entityManager->flush();
             $emailsold = (new TemplatedEmail())
-                ->from('contact@arcanlesdemondivoire.fr')
+                ->from('contact@arcanlesdemonsdivoire.fr')
                 ->to($order->getPlayer()->getEmail())
                 ->subject('Achat d\'un ticket ArcanLDI ' . ' jeu ' . $order->getTicket()->getGame()->getName() . ' ticket ' . $order->getTicket()->getName())
                 ->htmlTemplate('emails/ticket.html.twig')
@@ -279,8 +278,8 @@ class OrderController extends AbstractController
                     'playerId' => $order->getPlayer()->getId()
                 ]);
             $emailNotif = (new Email())
-                ->from('contact@arcanlesdemondivoire.fr')
-                ->to('contact@arcanlesdemondivoire.fr')
+                ->from('contact@arcanlesdemonsdivoire.fr')
+                ->to('contact@arcanlesdemonsdivoire.fr')
                 ->subject($order->getPlayer()->getPseudo() . ' a acheter un ticket pour le jeu ' . $order->getTicket()->getGame()->getName())
                 ->text('le joueur ' . $order->getPlayer()->getPseudo() . ' à acheter un ticket ' . $order->getTicket()->getName() . ' pour le jeu ' . $order->getTicket()->getGame()->getName());
             $mailer->send($emailsold);
@@ -309,13 +308,13 @@ class OrderController extends AbstractController
             $entityManager->flush();
             if ($request->request->get('reason')) {
                 $email = (new Email())
-                    ->from('contact@arcanlesdemondivoire.fr')
+                    ->from('contact@arcanlesdemonsdivoire.fr')
                     ->to($order->getPlayer()->getEmail())
                     ->subject('remboursement ArcanLDI ' . ' jeu ' . $order->getTicket()->getGame()->getName() . ' ticket ' . $order->getTicket()->getName())
                     ->text($request->request->get('reason'));
             } else {
                 $email = (new Email())
-                    ->from('contact@arcanlesdemondivoire.fr')
+                    ->from('contact@arcanlesdemonsdivoire.fr')
                     ->to($order->getPlayer()->getEmail())
                     ->subject('remboursement ArcanLDI ' . ' jeu ' . $order->getTicket()->getGame()->getName() . ' ticket ' . $order->getTicket()->getName())
                     ->text('votre demande de remboursement a été acceptée');
@@ -340,13 +339,13 @@ class OrderController extends AbstractController
             $order->getTicket()->setStock($order->getTicket()->getStock() - 1);
             if ($request->request->get('reason')) {
                 $email = (new Email())
-                    ->from('contact@arcanlesdemondivoire.fr')
+                    ->from('contact@arcanlesdemonsdivoire.fr')
                     ->to($order->getPlayer()->getEmail())
                     ->subject('remboursement ArcanLDI ' . ' jeu ' . $order->getTicket()->getGame()->getName() . ' ticket ' . $order->getTicket()->getName())
                     ->text($request->request->get('reason'));
             } else {
                 $email = (new Email())
-                    ->from('contact@arcanlesdemondivoire.fr')
+                    ->from('contact@arcanlesdemonsdivoire.fr')
                     ->to($order->getPlayer()->getEmail())
                     ->subject('remboursement ArcanLDI')
                     ->text('Votre demande de remboursement a été refusée');

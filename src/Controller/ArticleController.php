@@ -31,7 +31,7 @@ class ArticleController extends AbstractController
             $article = $articleRepository->findAll();
         } else {
             foreach ($this->getUser()->getRoleGroupes() as $role) {
-                $article = $articleRepository->findByRoleNull('public');
+                $article = $articleRepository->findByRoleNull($role);
 
             }
         }

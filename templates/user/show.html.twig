@@ -17,7 +17,7 @@
                 <li class="list-group-item bg-transparent text-light">Nom : {{ user.lastname }}</li>
             </ul>
         </div>
-        {% if if is_granted('ROLE_ADMIN') %}
+        {% if is_granted('ROLE_ADMIN') %}
 
             <div class="card-footer list-group-item bg-transparent text-light">
                 {{ include('user/_delete_form.html.twig') }}
