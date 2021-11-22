@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Game;
 use App\Entity\Order;
+use App\Form\OrderType;
 use App\Form\UserRefundFormType;
 use App\Repository\AnswerRepository;
 use App\Repository\OrderRepository;
@@ -27,6 +28,8 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 #[Route('/order')]
 class OrderController extends AbstractController
 {
+    // crud des order
+
     #[Route('/', name: 'order_index', methods: ['GET'])]
     #[IsGranted('ROLE_ADMIN')]
     public function index(OrderRepository $orderRepository): Response
@@ -36,6 +39,7 @@ class OrderController extends AbstractController
         ]);
     }
 
+    //liste des commande pour les user
     #[Route('-user', name: 'user_order', methods: ['GET', 'POST'])]
     #[IsGranted('ROLE_USER')]
     public function userOrder(OrderRepository $orderRepository): Response
@@ -49,6 +53,7 @@ class OrderController extends AbstractController
 
     }
 
+    //liste des demandes de remboursement
     #[Route('-requested-refund', name: 'order_refund_requested', methods: ['GET', 'POST'])]
     #[IsGranted('ROLE_USER')]
     public function refundRequested(OrderRepository $orderRepository): Response
@@ -62,15 +67,21 @@ class OrderController extends AbstractController
 
     }
 
+    //demande de remboursement
     #[Route('-refund-request/{id}', name: 'user_refund', methods: ['GET', 'POST'])]
     #[IsGranted('ROLE_USER')]
     public function userRefund(Order $order, OrderRepository $orderRepository, Request $request, EntityManagerInterface $entityManager, MailerInterface $mailer): Response
     {
 
+        //comparaison entre le mail de la commande et celui de l'utilisateur qui fait la demande de remboursement redirection vers ces order sinon
         if ($order->getPlayer()->getEmail() == $this->getUser()->getUserIdentifier()) {
             $form = $this->createForm(UserRefundFormType::class, $order);
             $form->handleRequest($request);
+            //verification si le formulaire est valide et bien envoyer ainsi que comparaison entre le user qui demande l'order et celui a qui appartien celui ci
+            //comparaison si la date du jeu lié au ticket est superieur a la date d'aujourd'hui pour demander un remboursement
             if ($form->isSubmitted() && $form->isValid() && $order->getPlayer() == $this->getUser() && $order->getTicket()->getGame()->getDateStart() > new \DateTime()) {
+
+                //envoie d'un mail a l'utilisateur et un autre a l'adresse mail du site
                 $email = (new Email())
                     ->from('contact@arcanlesdemondivoire.fr')
                     ->to($this->getUser()->getUserIdentifier())
@@ -105,22 +116,16 @@ class OrderController extends AbstractController
 
     }
 
+    //achat des tickets
     #[IsGranted('ROLE_USER')]
     #[Route('/acheter/{slug}', name: 'order_new', methods: ['GET', 'POST'])]
     public function new(Request $request, Game $game, OrderRepository $orderRepository): Response
     {
-
         $order = new Order();
-        $form = $this->createFormBuilder($order)
-            ->add('ticket', EntityType::class, [
-                'class' => 'App\Entity\Ticket',
-                'query_builder' => function (TicketRepository $tr) use ($game) {
-                    return $tr->createQueryBuilder('u')
-                        ->where('u.game = :game')
-                        ->andWhere('u.stock > 0')
-                        ->setParameter('game', $game);
-                },
-            ])->getForm();
+        //creation du formulaire avec passage de paramètre
+        $form = $this->createForm(OrderType::class,$order,[
+            'choice'=> $game->getTickets(),
+        ]);
         $form->handleRequest($request);
         $variable = false;
         foreach($game->getTickets() as $ticket){
@@ -133,7 +138,8 @@ class OrderController extends AbstractController
           return  $this->redirectToRoute('game_index');
         }
         if ($form->isSubmitted() && $form->isValid()) {
-            if ($order->getTicket()->getGame()->getDateEnd() > new \DateTime() || $order->getTicket()->getGame()->getDateEnd() == NULL) {
+        dump($order);
+            if ($order->getTicket()->getGame()->getDateEnd() > new \DateTime()) {
                 $reservation = $orderRepository->findOneorder($game, $this->getUser());
 
                 if ($reservation !== null) {

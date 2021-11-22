@@ -13,8 +13,9 @@ class OrderType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('ticket',EntityType::class,[
+            ->add('ticket', EntityType::class, [
                 'class' => 'App\Entity\Ticket',
+                'choices' => $options['choice'],
             ])
         ;
     }
@@ -23,6 +24,7 @@ class OrderType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Order::class,
+            'choice' => array()
         ]);
     }
 }

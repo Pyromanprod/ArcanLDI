@@ -105,7 +105,7 @@ class TicketController extends AbstractController
         $surveyAssocie = $surveyRepository->findBySurveyByTicket($ticket);
 
         foreach ($listeSurvey as $survey){
-//            dd($surveyAssocie);
+
             if (!in_array($survey, $surveyAssocie)){
                 $surveyAAfficher[] = $survey;
             }
@@ -113,7 +113,7 @@ class TicketController extends AbstractController
         if (!isset($surveyAAfficher)){
             $surveyAAfficher = [];
         }
-//        dd($surveyAAfficher);
+
         $formGeneral = $this->createFormBuilder()
             ->add('survey', EntityType::class, [
                 'class' => 'App\Entity\Survey',
