@@ -1,0 +1,49 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Contactez-nous{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="row">
+            <div class="col-12 col-md-8 mx-auto">
+                {{ form_start(form) }}
+                {{ form_row(form.Email,{
+                    label: 'Votre email',
+                    attr:{
+                        class: 'bg-dark border-0 border-bottom border-ivoire rounded-0 text-light mt-3'
+                    },
+                    row_attr: {
+                        class: 'form-floating bg-dark text-ivoire'
+                    }
+                }) }}
+                {{ form_row(form.Object,{
+                    label: 'Object',
+                    attr:{
+                        class: 'bg-dark border-0 border-bottom border-ivoire rounded-0 text-light mt-3'
+                    },
+                    row_attr: {
+                        class: 'form-floating bg-dark text-ivoire'
+                    }
+                }) }}
+                {{ form_row(form.Content,{
+                    label: 'Votre message',
+                    attr:{
+                        class: 'bg-dark border-0 border-bottom border-ivoire rounded-0 text-light mt-3',
+                        style: 'height:200px'
+                    },
+                    row_attr: {
+                        class: 'form-floating bg-dark text-ivoire'
+                    }
+                }) }}
+                {{ form_errors(form) }}
+                <div class="form-group my-4">
+                    <div class="g-recaptcha" data-sitekey="{{ google_recaptcha_site_key }}"></div>
+                </div>
+                <button class="btn btn-outline-success" type="submit">Envoyer</button>
+                {{ form_end(form) }}
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+{% block stylsheet %}<script src="https://www.google.com/recaptcha/api.js" async defer></script>{% endblock %}
