@@ -41,6 +41,14 @@ class OrderRepository extends ServiceEntityRepository
             ->getResult()
             ;
     }
+    public function findByPaid(){
+        return $this->createQueryBuilder('a')
+            ->where('a.datePaid is not null')
+            ->orderBy('a.createdAt', 'DESC')
+            ->getQuery()
+            ->getResult()
+            ;
+    }
     public function findRefundRequestedOrder(){
         return $this->createQueryBuilder('a')
             ->andWhere('a.refundRequest is not null')

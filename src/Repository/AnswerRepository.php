@@ -65,6 +65,7 @@ class AnswerRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+
     public function findByUserGame(Game $game, User $user)
     {
         return $this->createQueryBuilder('a')
@@ -73,9 +74,9 @@ class AnswerRepository extends ServiceEntityRepository
             ->join('survey.surveyTickets', 'survey_tickets')
             ->join('survey_tickets.ticket', 'ticket')
             ->join('ticket.game', 'game')
-            ->andWhere('game = :game')
+            ->andWhere('game.id = :game')
             ->andWhere('a.player = :player')
-            ->setParameter('game', $game)
+            ->setParameter('game', $game->getId())
             ->setParameter('player', $user)
             ->getQuery()
             ->getResult();

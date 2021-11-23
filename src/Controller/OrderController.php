@@ -35,7 +35,7 @@ class OrderController extends AbstractController
     public function index(OrderRepository $orderRepository): Response
     {
         return $this->render('order/index.html.twig', [
-            'orders' => $orderRepository->findAll(),
+            'orders' => $orderRepository->findByPaid(),
         ]);
     }
 
@@ -237,10 +237,10 @@ class OrderController extends AbstractController
 
 
         if ($this->isCsrfTokenValid('cancelOrder' . $order->getId(), $request->request->get('_token')) && $order->getDatePaid() == null) {
-            $entityManager->remove($order);
             foreach ( $answerRepository->findByUserGame($order->getTicket()->getGame(), $this->getUser()) as $answer){
                 $entityManager->remove($answer);
             }
+            $entityManager->remove($order);
             $entityManager->flush();
             $this->addFlash('success', 'Achat annulé');
         } else {
@@ -294,7 +294,7 @@ class OrderController extends AbstractController
 
     #[Route('-refund/{id}', name: 'refund', methods: ['GET', 'POST'])]
     #[IsGranted('ROLE_ADMIN')]
-    public function refund($stripeSK, Order $order, EntityManagerInterface $entityManager, Request $request, MailerInterface $mailer): Response
+    public function refund($stripeSK, Order $order, EntityManagerInterface $entityManager, Request $request, MailerInterface $mailer,AnswerRepository $answerRepository): Response
     {
         if ($this->isCsrfTokenValid('refund' . $order->getId(), $request->request->get('_token'))) {
             Stripe::setApiKey($stripeSK);
@@ -304,6 +304,11 @@ class OrderController extends AbstractController
             foreach ($order->getPlayer()->getRoleGroupes() as $role) {
                 $order->getPlayer()->removeRoleGroupe($role);
             }
+            $answers = $answerRepository->findByUserGame($order->getTicket()->getGame(),$order->getPlayer());
+            foreach ($answers as $answer){
+                $entityManager->remove($answer);
+            }
+
             $entityManager->remove($order);
             $entityManager->flush();
             if ($request->request->get('reason')) {
