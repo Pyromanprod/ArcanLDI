@@ -122,7 +122,7 @@ class SurveyController extends AbstractController
         ]);
     }
 
-    #[Route('/delete-choice/{id}/', name: 'delete_choice')]
+    #[Route('/supprimer-choix/{id}/', name: 'delete_choice')]
     #[isGranted('ROLE_ADMIN')]
     public function deleteChoice(Request $request, Choice $choice): Response
     {

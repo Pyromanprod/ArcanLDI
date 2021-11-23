@@ -18,7 +18,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 
 
-#[Route('/user')]
+#[Route('/joueur')]
 class UserController extends AbstractController
 {
     //crud User///
@@ -138,7 +138,7 @@ class UserController extends AbstractController
     }
 
     //modification du profile
-    #[Route('-profile/edit', name: 'user_edit_profile', methods: ['GET','POST'])]
+    #[Route('-profile/modifier', name: 'user_edit_profile', methods: ['GET','POST'])]
     #[IsGranted('ROLE_USER')]
     public function editProfile(Request $request): Response
     {
@@ -189,7 +189,7 @@ class UserController extends AbstractController
     }
 
     //supression d'un compte
-    #[Route('/{id}', name: 'user_delete', methods: ['POST'])]
+    #[Route('/{id}/supprimer', name: 'user_delete', methods: ['POST'])]
     #[IsGranted('ROLE_ADMIN')]
     public function delete(Request $request, User $user): Response
     {

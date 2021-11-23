@@ -18,7 +18,7 @@ use Symfony\Component\HttpKernel\Exception\TooManyRequestsHttpException;
 use Symfony\Component\RateLimiter\RateLimiterFactory;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[Route('/news')]
+#[Route('/actu')]
 class NewsController extends AbstractController
 {
     #[Route('/', name: 'news_index', methods: ['GET'])]
@@ -38,7 +38,7 @@ class NewsController extends AbstractController
         ]);
     }
 
-    #[Route('/new', name: 'news_new', methods: ['GET','POST'])]
+    #[Route('/nouvelle', name: 'news_new', methods: ['GET','POST'])]
     #[IsGranted("ROLE_MODERATOR")]
     public function new(Request $request): Response
     {
@@ -103,7 +103,7 @@ class NewsController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/edit', name: 'news_edit', methods: ['GET','POST'])]
+    #[Route('/{id}/modifier', name: 'news_edit', methods: ['GET','POST'])]
     #[IsGranted('ROLE_MODERATOR')]
     public function edit(Request $request, News $news): Response
     {

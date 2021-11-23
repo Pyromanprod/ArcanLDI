@@ -14,7 +14,7 @@ use Symfony\Component\Form\FormError;
 
 class RegistrationController extends AbstractController
 {
-    #[Route('/register', name: 'app_register')]
+    #[Route('/inscription', name: 'app_register')]
     public function register(Request $request, UserPasswordHasherInterface $userPasswordHasherInterface, Recaptcha $recaptcha): Response
     {
         $user = new User();

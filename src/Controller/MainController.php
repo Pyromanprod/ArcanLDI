@@ -52,7 +52,7 @@ class MainController extends AbstractController
     }
 
 
-    #[Route('search', name: 'search')]
+    #[Route('recherche', name: 'search')]
     public function search(GameRepository $gameRepository, Request $request): Response
     {
         $allGames = $gameRepository->search($request->query->get('q'));
@@ -76,7 +76,7 @@ class MainController extends AbstractController
     }
 
 
-    #[Route('nous-contactez', name: 'contact_us', methods: ['GET', 'POST'])]
+    #[Route('contactez-nous', name: 'contact_us', methods: ['GET', 'POST'])]
     public function contactUs(MailerInterface $mailer, Request $request, Recaptcha $recaptcha): Response
     {
 

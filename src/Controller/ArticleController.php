@@ -18,7 +18,7 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[Route('/article')]
+#[Route('/discussion')]
 class ArticleController extends AbstractController
 {
     #[Route('/', name: 'article_index', methods: ['GET', 'POST'])]
@@ -40,7 +40,7 @@ class ArticleController extends AbstractController
         ]);
     }
 
-    #[Route('/new', name: 'article_new', methods: ['GET', 'POST'])]
+    #[Route('/nouvelle', name: 'article_new', methods: ['GET', 'POST'])]
     #[IsGranted('ROLE_MODERATOR')]
     public function new(Request $request,): Response
     {
@@ -62,7 +62,7 @@ class ArticleController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/article', name: 'article_show', methods: ['GET', 'POST'])]
+    #[Route('/{id}', name: 'article_show', methods: ['GET', 'POST'])]
     public function show(Article $article, UserRepository $userRepository, Request $request,PaginatorInterface $paginator,ComentRepository $comentRepository): Response
     {
         $coment = new Coment();
@@ -104,7 +104,7 @@ class ArticleController extends AbstractController
         return throw new AccessDeniedHttpException();
     }
 
-    #[Route('/{id}/edit', name: 'article_edit', methods: ['GET', 'POST'])]
+    #[Route('/{id}/modifier', name: 'article_edit', methods: ['GET', 'POST'])]
     #[IsGranted('ROLE_MODERATOR')]
     public function edit(Request $request, Article $article): Response
     {
@@ -123,7 +123,7 @@ class ArticleController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/delete', name: 'article_delete', methods: ['POST'])]
+    #[Route('/{id}/supprimer', name: 'article_delete', methods: ['POST'])]
     #[IsGranted('ROLE_MODERATOR')]
     public function delete(Request $request, Article $article): Response
     {
@@ -136,7 +136,7 @@ class ArticleController extends AbstractController
         return $this->redirectToRoute('article_index', [], Response::HTTP_SEE_OTHER);
     }
 
-    #[Route('/comment/{id}/delete', name: 'comment_delete', methods: ['POST'])]
+    #[Route('/comment/{id}/supprimer', name: 'comment_delete', methods: ['POST'])]
     #[IsGranted('ROLE_MODERATOR')]
     public function deletecomment(Request $request, Coment $coment): Response
     {

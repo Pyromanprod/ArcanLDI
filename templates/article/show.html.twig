@@ -18,7 +18,7 @@
             {{ include('article/_delete_form.html.twig') }}
         {% endif %}
         <div class="row">
-            <div class="col-12 col-md-8 mx-auto">
+            <div class="col-12 col-md-8 mx-auto my-5">
 
 
                 {{ form_start(form) }}
@@ -37,7 +37,7 @@
                 <div class="col-12 col-md-8 mx-auto my-3">
                     <div class="card bg-cardgame">
                         <div class="card-header">
-                            {{ coment.player.pseudo }}
+                            {{ coment.player.pseudo }}  {{ coment.createdAt|date('d/m/Y H\\hi') }}
                         </div>
                         <div class="card-body">
                             <div class="card-text ckeditor">{{ coment.content|purify|raw }}</div>

@@ -33,7 +33,7 @@ class TicketController extends AbstractController
     }
 
     //selection des tickets par jeu
-    #[Route('/game/{id}', name: 'ticket_index_game', methods: ['GET'])]
+    #[Route('/jeu/{id}', name: 'ticket_index_game', methods: ['GET'])]
     public function indexGame(TicketRepository $ticketRepository, Game $game, GameRepository $gameRepository): Response
     {
         $tickets = $ticketRepository->findByGame($game);
@@ -46,7 +46,7 @@ class TicketController extends AbstractController
 
     //créer un nouveau ticket
 
-    #[Route('/new', name: 'ticket_new', methods: ['GET', 'POST'])]
+    #[Route('/nouveau', name: 'ticket_new', methods: ['GET', 'POST'])]
     #[IsGranted('ROLE_ADMIN')]
     public function new(Request $request, uploadGamePhoto $uploadGamePhoto): Response
     {
@@ -144,7 +144,7 @@ class TicketController extends AbstractController
     }
 
     //modification d'un ticket
-    #[Route('/{id}/edit', name: 'ticket_edit', methods: ['GET', 'POST'])]
+    #[Route('/{id}/modifier', name: 'ticket_edit', methods: ['GET', 'POST'])]
     public function edit(uploadGamePhoto $uploadGamePhoto, Request $request, Ticket $ticket): Response
     {
         $form = $this->createForm(TicketType::class, $ticket);
@@ -166,7 +166,7 @@ class TicketController extends AbstractController
     }
 
     //supression d'un ticket
-    #[Route('/{id}/delete', name: 'ticket_delete', methods: ['POST'])]
+    #[Route('/{id}/supprimer', name: 'ticket_delete', methods: ['POST'])]
     public function delete(Request $request, Ticket $ticket): Response
     {
         if ($this->isCsrfTokenValid('delete' . $ticket->getId(), $request->request->get('_token'))) {

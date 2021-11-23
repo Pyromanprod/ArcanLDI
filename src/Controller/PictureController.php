@@ -81,7 +81,7 @@ class PictureController extends AbstractController
         return $this->redirectToRoute('home', [], Response::HTTP_SEE_OTHER);
     }
 
-    #[Route('/download/{id}', name: 'download_album', methods: ['POST', 'GET'])]
+    #[Route('/telecharger/{id}', name: 'download_album', methods: ['POST', 'GET'])]
     public function download(Request $request, GameRepository $gameRepository, Game $game): Response
     {
 

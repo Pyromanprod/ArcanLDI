@@ -9,10 +9,10 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-#[Route('/survey-ticket/', name: 'survey_ticket_')]
+#[Route('/questionnaire/', name: 'survey_ticket_')]
 class SurveyTicketController extends AbstractController
 {
-    #[Route('ordered/{id}', name: 'ordered')]
+    #[Route('mettre-en-ordre/{id}', name: 'ordered')]
     public function index(Request $request,
                           SurveyTicketRepository $surveyTicketRepository,
                           EntityManagerInterface $em,

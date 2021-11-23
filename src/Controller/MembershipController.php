@@ -24,7 +24,7 @@ use Symfony\Component\Mime\Email;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
-#[Route('/membership')]
+#[Route('/cotisation')]
 class MembershipController extends AbstractController
 {
     #[Route('/', name: 'membership_index', methods: ['GET'])]
@@ -90,7 +90,7 @@ class MembershipController extends AbstractController
 
     }
 
-    #[Route('-success-membership-url/{id}/', name: 'success_membership', methods: ['GET', 'POST'])]
+    #[Route('-reussite-cotisation/{id}/', name: 'success_membership', methods: ['GET', 'POST'])]
     #[IsGranted('ROLE_USER')]
     public function successMembership(Request $request, Membership $membership, $stripeSK, EntityManagerInterface $entityManager, MailerInterface $mailer,MembershipAssociationRepository $associationRepository): Response
     {
@@ -114,7 +114,7 @@ class MembershipController extends AbstractController
 
     }
 
-    #[Route('/new', name: 'membership_new', methods: ['GET', 'POST'])]
+    #[Route('/nouvelle', name: 'membership_new', methods: ['GET', 'POST'])]
     #[IsGranted('ROLE_ADMIN')]
     public function new(Request $request): Response
     {
@@ -148,7 +148,7 @@ class MembershipController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/all', name: 'membership_showall', methods: ['GET'])]
+    #[Route('/{id}/membre', name: 'membership_showall', methods: ['GET'])]
     #[IsGranted('ROLE_ADMIN')]
     public function showAll(Membership $membership,UserRepository $userRepository): Response
     {
@@ -160,7 +160,7 @@ class MembershipController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/addMember', name: 'add_member', methods: ['GET', 'POST'])]
+    #[Route('/{id}/ajouter-membre', name: 'add_member', methods: ['GET', 'POST'])]
     #[IsGranted('ROLE_ADMIN')]
     public function addMember(Membership $membership, Request $request,UserRepository $userRepository): Response
     {
@@ -195,7 +195,7 @@ class MembershipController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/edit', name: 'membership_edit', methods: ['GET', 'POST'])]
+    #[Route('/{id}/modifier', name: 'membership_edit', methods: ['GET', 'POST'])]
     #[IsGranted('ROLE_ADMIN')]
     public function edit(Request $request, Membership $membership): Response
     {
@@ -214,7 +214,7 @@ class MembershipController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'membership_delete', methods: ['POST'])]
+    #[Route('/{id}/supprimer', name: 'membership_delete', methods: ['POST'])]
     #[IsGranted('ROLE_ADMIN')]
     public function delete(Request $request, Membership $membership): Response
     {

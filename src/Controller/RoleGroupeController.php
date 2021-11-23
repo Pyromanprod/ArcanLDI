@@ -31,7 +31,7 @@ class RoleGroupeController extends AbstractController
         ]);
     }
 
-    #[Route('/new', name: 'role_groupe_new', methods: ['GET','POST'])]
+    #[Route('/nouveau', name: 'role_groupe_new', methods: ['GET','POST'])]
     #[IsGranted('ROLE_MODERATOR')]
     public function new(Request $request): Response
     {
@@ -66,7 +66,7 @@ class RoleGroupeController extends AbstractController
     }
 
     //modif d'un role
-    #[Route('/{id}/edit', name: 'role_groupe_edit', methods: ['GET','POST'])]
+    #[Route('/{id}/modifier', name: 'role_groupe_edit', methods: ['GET','POST'])]
     #[IsGranted('ROLE_MODERATOR')]
     public function edit(Request $request, RoleGroupe $roleGroupe): Response
     {
@@ -131,7 +131,7 @@ class RoleGroupeController extends AbstractController
 
 
     //retrait d'un role d'un joueur avec remaping des parametre passer dans l'url
-    #[Route('/delete/{pseudo}-{id}', name: 'role_delete', methods: ['POST','GET'])]
+    #[Route('/supprimer/{pseudo}-{id}', name: 'role_delete', methods: ['POST','GET'])]
     #[ParamConverter('user', options: ['mapping' => ['pseudo' => 'pseudo']])]
     #[ParamConverter('roleGroupe', options: ['mapping' => ['id' => 'id']])]
     #[IsGranted('ROLE_MODERATOR')]

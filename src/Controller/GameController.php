@@ -79,7 +79,7 @@ class GameController extends AbstractController
         ]);
     }
 
-    #[Route('/new', name: 'game_new', methods: ['GET', 'POST'])]
+    #[Route('/nouveau', name: 'game_new', methods: ['GET', 'POST'])]
     #[isGranted('ROLE_ADMIN')]
     public function new(Request $request, uploadGamePhoto $uploadGamePhoto): Response
     {
@@ -168,7 +168,7 @@ class GameController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/edit', name: 'game_edit', methods: ['GET', 'POST'])]
+    #[Route('/{id}/modifier', name: 'game_edit', methods: ['GET', 'POST'])]
     #[isGranted('ROLE_ADMIN')]
     public function edit(Request $request, Game $game, uploadGamePhoto $uploadGamePhoto): Response
     {

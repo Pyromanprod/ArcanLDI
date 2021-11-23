@@ -32,7 +32,7 @@
                             <div class="col-12 mt-3">
                                 <div class="card bg-cardgame">
                                     <div class="card-header">
-                                        {{ comment.author.pseudo }}
+                                        {{ comment.author.pseudo }} {{ comment.createdAt|date('d/m/Y H\\hi') }}
                                     </div>
                                     <div class="card-body">
                                         <div class="card-text">{{ comment.content}}</div>

@@ -25,7 +25,7 @@ use Symfony\Component\Mime\Email;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
-#[Route('/order')]
+#[Route('/achat')]
 class OrderController extends AbstractController
 {
     // crud des order
@@ -40,7 +40,7 @@ class OrderController extends AbstractController
     }
 
     //liste des commande pour les user
-    #[Route('-user', name: 'user_order', methods: ['GET', 'POST'])]
+    #[Route('-utilisateur', name: 'user_order', methods: ['GET', 'POST'])]
     #[IsGranted('ROLE_USER')]
     public function userOrder(OrderRepository $orderRepository): Response
     {
@@ -54,7 +54,7 @@ class OrderController extends AbstractController
     }
 
     //liste des demandes de remboursement
-    #[Route('-requested-refund', name: 'order_refund_requested', methods: ['GET', 'POST'])]
+    #[Route('-demande-de-remboursement', name: 'order_refund_requested', methods: ['GET', 'POST'])]
     #[IsGranted('ROLE_USER')]
     public function refundRequested(OrderRepository $orderRepository): Response
     {
@@ -68,7 +68,7 @@ class OrderController extends AbstractController
     }
 
     //demande de remboursement
-    #[Route('-refund-request/{id}', name: 'user_refund', methods: ['GET', 'POST'])]
+    #[Route('-demande-remboursement/{id}', name: 'user_refund', methods: ['GET', 'POST'])]
     #[IsGranted('ROLE_USER')]
     public function userRefund(Order $order, OrderRepository $orderRepository, Request $request, EntityManagerInterface $entityManager, MailerInterface $mailer): Response
     {
@@ -215,7 +215,7 @@ class OrderController extends AbstractController
         }
     }
 
-    #[Route('-cancel-url/', name: 'cancel', methods: ['GET', 'POST'])]
+    #[Route('-annuler/', name: 'cancel', methods: ['GET', 'POST'])]
     #[IsGranted('ROLE_USER')]
     public function cancel(): Response
     {
@@ -251,7 +251,7 @@ class OrderController extends AbstractController
 
     }
 
-    #[Route('-success-url/{id}/', name: 'success', methods: ['GET', 'POST'])]
+    #[Route('-reussite/{id}/', name: 'success', methods: ['GET', 'POST'])]
     #[IsGranted('ROLE_USER')]
     public function success(Request $request, Order $order, $stripeSK, EntityManagerInterface $entityManager, RoleGroupeRepository $groupeRepository, MailerInterface $mailer): Response
     {
@@ -288,11 +288,21 @@ class OrderController extends AbstractController
             $this->addFlash('success', 'Ticket acheté avec succès.');
 
         }
-        return $this->redirectToRoute('home');
+        return $this->redirectToRoute('thank_you');
 
     }
 
-    #[Route('-refund/{id}', name: 'refund', methods: ['GET', 'POST'])]
+    #[Route('/merci', name: 'thank_you', methods: ['GET', 'POST'])]
+    public function thankYou(): Response
+    {
+
+        return $this->render('order/success.html.twig');
+
+
+    }
+
+
+    #[Route('-remboursement/{id}', name: 'refund', methods: ['GET', 'POST'])]
     #[IsGranted('ROLE_ADMIN')]
     public function refund($stripeSK, Order $order, EntityManagerInterface $entityManager, Request $request, MailerInterface $mailer,AnswerRepository $answerRepository): Response
     {
@@ -335,7 +345,7 @@ class OrderController extends AbstractController
 
     }
 
-    #[Route('-reject-refund/{id}', name: 'reject_refund', methods: ['GET', 'POST'])]
+    #[Route('-refus-remboursement/{id}', name: 'reject_refund', methods: ['GET', 'POST'])]
     #[IsGranted('ROLE_ADMIN')]
     public function rejectRefund(Order $order, EntityManagerInterface $entityManager, Request $request, MailerInterface $mailer): Response
     {

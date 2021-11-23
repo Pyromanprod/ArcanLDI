@@ -29,7 +29,7 @@ class PresentationController extends AbstractController
         }
     }
 
-    #[Route('/new', name: 'presentation_new', methods: ['GET','POST'])]
+    #[Route('/nouvelle', name: 'presentation_new', methods: ['GET','POST'])]
     #[IsGranted('ROLE_MODERATOR')]
     public function new(Request $request): Response
     {
@@ -60,7 +60,7 @@ class PresentationController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/edit', name: 'presentation_edit', methods: ['GET','POST'])]
+    #[Route('/{id}/modifier', name: 'presentation_edit', methods: ['GET','POST'])]
     #[IsGranted('ROLE_MODERATOR')]
     public function edit(Request $request, Presentation $presentation): Response
     {
