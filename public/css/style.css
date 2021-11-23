@@ -172,6 +172,10 @@ p {
 #logoparalaxe {
     max-height: 800px;
 }
+.text-muted{
+    color: #878F97!important;
+    font-weight: bold;
+}
 
 .layer-bg {
     background-image: url('../img/accueil3.jpg');
