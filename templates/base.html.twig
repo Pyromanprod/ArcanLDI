@@ -27,10 +27,11 @@
 {% include('main/navbar.html.twig') %}
 
 {% if app.session.flashBag.has('error') %}
-    <div class="container">
+    <div class="container position-absolute top-0 start-50 translate-middle-x flash">
         <div class="row">
             {% for message in app.flashes('error') %}
-                <div class="alert alert-danger alert-dismissible fade show text-center col-12 my-3" role="alert">
+                <div class="alert alert-danger alert-dismissible fade show text-center col-12 p-4 m-0"
+                     role="alert">
                     {{ message }}
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
@@ -39,10 +40,11 @@
     </div>
 {% endif %}
 {% if app.session.flashBag.has('success') %}
-    <div class="container">
+    <div class="container position-absolute top-0 start-50 translate-middle-x flash">
         <div class="row">
             {% for message in app.flashes('success') %}
-                <div class="alert alert-success alert-dismissible fade show text-center col-12 my-3" role="alert">
+                <div class="alert alert-success alert-dismissible fade show text-center col-12 p-4 m-0"
+                     role="alert">
                     {{ message }}
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
@@ -50,6 +52,7 @@
         </div>
     </div>
 {% endif %}
+
 <div class="min-vh-100">
 
     {% block body %}
@@ -60,6 +63,7 @@
 <script src="{{ asset('js/bootstrap.bundle.min.js') }}"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"
         integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+<script src="{{ asset('js/flash.js') }}"></script>
 
 {% block script %}{% endblock %}
 </body>

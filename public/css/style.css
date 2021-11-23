@@ -206,7 +206,10 @@ p {
     /*background-image: url('../img/overlay.png');*/
     background-color: rgba(0, 0, 0, 0.15);
 }
-
+.for-mobile .container{
+    border-radius: 0;
+    overflow: hidden;
+}
 
 @media only screen and (max-width: 768px) {
     .layer-1 {

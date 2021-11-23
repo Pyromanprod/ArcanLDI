@@ -1,4 +1,59 @@
 {{ form_start(form) }}
-    {{ form_widget(form) }}
+
+{#                {{ form_errors(form) }}#}
+
+                {{ form_row(form.lastname, {
+                    label: 'Nom *',
+                    attr: {
+                        placeholder: '',
+                        class: 'bg-dark border-0 border-bottom border-ivoire rounded-0 text-light'
+                    },
+                    row_attr: {
+                        class: 'form-floating bg-dark text-ivoire my-5'
+                    }
+                }) }}
+                {{ form_row(form.firstname, {
+                    label: 'Prénom *',
+                    attr: {
+                        placeholder: '',
+                        class: 'bg-dark border-0 border-bottom border-ivoire rounded-0 text-light'
+                    },
+                    row_attr: {
+                        class: 'form-floating bg-dark text-ivoire my-5'
+                    }
+                }) }}
+
+
+                {{ form_row(form.pseudo, {
+                    label: 'Pseudo *',
+                    attr: {
+                        placeholder: '',
+                        class: 'bg-dark border-0 border-bottom border-ivoire rounded-0 text-light'
+                    },
+                    row_attr: {
+                        class: 'form-floating bg-dark text-ivoire my-5'
+                    }
+                }) }}
+                {{ form_row(form.photo, {
+                    label:'Photo * (2mo max)',
+                    attr: {
+                        placeholder: '',
+                        class: 'bg-dark border-0 border-bottom border-ivoire rounded-0 text-light'
+                    },
+                    label_attr:{
+                        class: 'text-ivoire'
+                    }
+                }) }}
+                {{ form_row(form.email, {
+                    label: 'Mail *',
+                    attr: {
+                        placeholder: '',
+                        class: 'bg-dark border-0 border-bottom border-ivoire rounded-0 text-light'
+                    },
+                    row_attr: {
+                        class: 'form-floating bg-dark text-ivoire my-5'
+                    }
+                }) }}
+
     <button class="btn btn-outline-success">{{ button_label|default('Ajouter') }}</button>
 {{ form_end(form) }}
