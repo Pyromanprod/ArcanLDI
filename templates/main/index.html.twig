@@ -23,74 +23,75 @@
 
 <div id='hero'>
 
-    <div class='layer-bg layer parallax' data-depth='0.30'></div>
-    {% include('main/navbar.html.twig') %}
+        <div class='layer-bg layer parallax' data-depth='0.30'></div>
+        {% include('main/navbar.html.twig') %}
 
-    {% if paid %}
-        <div class="alert-warning p-3 text-center">Vous avez la cotisation à <a class="btn btn-outline-primary"
-                                                                                href="{{ path('checkout_membership', {'id': paid.membership.id}) }}">payer</a>
-        </div>
-    {% endif %}
-
-
-    {% if app.session.flashBag.has('error') %}
-        <div class="container position-absolute top-0 start-50 translate-middle-x flash">
-            <div class="row">
-                {% for message in app.flashes('error') %}
-                    <div class="alert alert-danger alert-dismissible fade show text-center col-12 p-4 m-0"
-                         role="alert">
-                        {{ message }}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                {% endfor %}
+        {% if paid %}
+            <div class="alert-warning p-3 text-center">Vous avez la cotisation à <a class="btn btn-outline-primary"
+                                                                                    href="{{ path('checkout_membership', {'id': paid.membership.id}) }}">payer</a>
             </div>
-        </div>
-    {% endif %}
-    {% if app.session.flashBag.has('success') %}
-        <div class="container position-absolute top-0 start-50 translate-middle-x flash">
-            <div class="row">
-                {% for message in app.flashes('success') %}
-                    <div class="alert alert-success alert-dismissible fade show text-center col-12 p-4 m-0"
-                         role="alert">
-                        {{ message }}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                {% endfor %}
+        {% endif %}
+
+
+        {% if app.session.flashBag.has('error') %}
+            <div class="container position-absolute top-0 start-50 translate-middle-x flash">
+                <div class="row">
+                    {% for message in app.flashes('error') %}
+                        <div class="alert alert-danger alert-dismissible fade show text-center col-12 p-4 m-0"
+                             role="alert">
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    {% endfor %}
+                </div>
             </div>
-        </div>
-    {% endif %}
-    {% if requestedRefund and is_granted('ROLE_ADMIN') %}
-        <div class="text-center position-fixed top-0 start-50 translate-middle-x first-layer">
-            <a class="btn btn-outline-warning" href="{{ path('order_refund_requested') }}">Demandes de
-                remboursement</a>
-        </div>
-    {% endif %}
+        {% endif %}
+        {% if app.session.flashBag.has('success') %}
+            <div class="container position-absolute top-0 start-50 translate-middle-x flash">
+                <div class="row">
+                    {% for message in app.flashes('success') %}
+                        <div class="alert alert-success alert-dismissible fade show text-center col-12 p-4 m-0"
+                             role="alert">
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endif %}
+        {% if requestedRefund and is_granted('ROLE_ADMIN') %}
+            <div class="text-center position-fixed top-0 start-50 translate-middle-x first-layer">
+                <a class="btn btn-outline-warning" href="{{ path('order_refund_requested') }}">Demandes de
+                    remboursement</a>
+            </div>
+        {% endif %}
 
 
-    <div class="layer parallax layer-overlay" data-depth='1'>
+        <div class="layer parallax layer-overlay" data-depth='1'>
+
+        </div>
+        <div class="layer parallax blood" data-depth='0.60'>
+
+        </div>
+        <div class="row layer parallax title h-100" data-depth='0.70'>
+            <div class="col-6 mx-auto text-center">
+
+                <img src="{{ asset('img/LOGO.png') }}" alt="Arcan Les Démons D'Ivoire" class="col-md-12 col-xl-9 col-xxl-6 opacity-50 mt-5" id="logoparalaxe">
+            </div>
+
+        </div>
 
     </div>
-    <div class="layer parallax blood" data-depth='0.60'>
 
-    </div>
-    <div class="row layer parallax title h-100" data-depth='0.70'>
-        <div class="col-6 mx-auto">
-
-            <img src="{{ asset('img/LOGO.png') }}" alt="Arcan Les Démons D'Ivoire" class="w-100 opacity-50">
-        </div>
-
-    </div>
-
-</div>
 
 {# LE MOBILE #}
-<div class="for-mobile">
+<div class="for-mobile bg-perso overflow-hidden">
     {% include('main/navbar.html.twig') %}
     <div class="container bg-perso">
         <div class="row">
-            <div class="col-12">
+            <div class="col-12 m-0 p-0 bg-black">
 
-                <img src="{{ asset('img/LOGO.png')|imagine_filter('logo_mobil') }}" alt="" class="w-100">
+                <img src="{{ asset('img/Logo-Asso-trans.png')|imagine_filter('logo_mobil') }}" alt="" class="w-100">
             </div>
         </div>
     </div>
@@ -143,7 +144,6 @@
 
 
 <script src="{{ asset('js/paralaxe.js') }}"></script>
-<script src="{{ asset('js/flash.js') }}"></script>
 {% include ('main/footer.html.twig') %}
 </body>
 </html>

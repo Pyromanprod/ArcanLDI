@@ -19,7 +19,7 @@ class AlbumPhotoFormType extends AbstractType
                 'mapped' => false,
                 'constraints' => [
                     new Image([
-                            'maxSize' => '2M',
+                            'maxSize' => '5M',
                             'mimeTypes' => [
                                 'image/jpeg',
                                 'image/png',

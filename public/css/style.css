@@ -104,16 +104,11 @@ body{
 }
 /*paralaxe*/
 
-
-
-
-
 #hero {
     display: none;
     height: 800px;
     overflow: hidden;
     position: relative;
-    max-width: 1920px;
     margin: 0 auto;
 }
 /*POUR LE BREAKPOINT MD*/
@@ -129,12 +124,10 @@ body{
 
 /*POUR LE BREAKPOINT LG*/
 @media screen and (min-width: 992px){
-    .for-mobile{
-        display: none;
-    }
+
     #hero{
-        display: block;
         height: 800px;
+        width: 100%;
     }
 }
 #content {
@@ -176,11 +169,19 @@ p {
 #hero, .layer {
     min-height: 50vh;
 }
+#logoparalaxe {
+    max-height: 800px;
+}
+.text-muted{
+    color: #878F97!important;
+    font-weight: bold;
+}
 
 .layer-bg {
-    background-image: url('../img/accueil.jpg');
+    background-image: url('../img/accueil3.jpg');
     background-size: cover;
     background-position: center;
+    /*image-rendering: smooth;*/
 }
 .layer-1 {
     width: 100vw;
@@ -190,7 +191,8 @@ p {
 
 }
 .blood {
-    background-image: url('../img/blood.png');
+    background-image: url('../img/blood2.png');
+    background-size: cover;
     background-position: bottom;
     opacity: 0.5;
 }

@@ -9,93 +9,103 @@
             <h1 class="text-center">S'inscrire</h1>
         </div>
         <div class="row">
+            <div class="col-12 text-muted fs-6 text-center">
+                Tous les champs sont obligatoire
+            </div>
             <div class="col-12 mx-auto col-md-6">
                 {{ form_start(registrationForm) }}
 
                 {{ form_errors(registrationForm) }}
 
                 {{ form_row(registrationForm.lastname, {
-                    label: 'Nom',
+                    label: 'Nom *',
                     attr: {
                         placeholder: '',
-                        class: 'bg-dark border-0 border-bottom border-ivoire rounded-0 text-light mt-5'
+                        class: 'bg-dark border-0 border-bottom border-ivoire rounded-0 text-light'
                     },
                     row_attr: {
-                        class: 'form-floating bg-dark text-ivoire'
+                        class: 'form-floating bg-dark text-ivoire my-5'
                     }
                 }) }}
                 {{ form_row(registrationForm.firstname, {
-                    label: 'Prénom',
+                    label: 'Prénom *',
                     attr: {
                         placeholder: '',
-                        class: 'bg-dark border-0 border-bottom border-ivoire rounded-0 text-light mt-5'
+                        class: 'bg-dark border-0 border-bottom border-ivoire rounded-0 text-light'
                     },
                     row_attr: {
-                        class: 'form-floating bg-dark text-ivoire'
+                        class: 'form-floating bg-dark text-ivoire my-5'
                     }
                 }) }}
                 {{ form_row(registrationForm.birthDate,{
-                    label: 'Date de naissance',
+                    label: 'Date de naissance *',
                     attr: {
                         placeholder: '',
-                        class: 'bg-dark border-0 border-bottom border-ivoire rounded-0 text-light mt-5'
+                        class: 'bg-dark border-0 border-bottom border-ivoire rounded-0 text-light'
                     },
                     row_attr: {
-                        class: 'form-floating bg-dark text-ivoire'
+                        class: 'form-floating bg-dark text-ivoire my-5'
                     }}) }}
 
 
 
                 {{ form_row(registrationForm.pseudo, {
-                    label: 'Pseudo',
+                    label: 'Pseudo *',
                     attr: {
                         placeholder: '',
-                        class: 'bg-dark border-0 border-bottom border-ivoire rounded-0 text-light mt-5'
+                        class: 'bg-dark border-0 border-bottom border-ivoire rounded-0 text-light'
                     },
                     row_attr: {
-                        class: 'form-floating bg-dark text-ivoire'
+                        class: 'form-floating bg-dark text-ivoire my-5'
                     }
                 }) }}
                 {{ form_row(registrationForm.photo, {
+                    label:'Photo * (2mo max)',
                     attr: {
                         placeholder: '',
-                        class: 'bg-dark border-0 border-bottom border-ivoire rounded-0 text-light mt-5'
+                        class: 'bg-dark border-0 border-bottom border-ivoire rounded-0 text-light'
                     },
+                    label_attr:{
+                        class: 'text-ivoire'
+                    }
                 }) }}
                 {{ form_row(registrationForm.email, {
-                    label: 'Mail',
+                    label: 'Mail *',
                     attr: {
                         placeholder: '',
-                        class: 'bg-dark border-0 border-bottom border-ivoire rounded-0 text-light mt-5'
+                        class: 'bg-dark border-0 border-bottom border-ivoire rounded-0 text-light'
                     },
                     row_attr: {
-                        class: 'form-floating bg-dark text-ivoire'
+                        class: 'form-floating bg-dark text-ivoire my-5'
                     }
                 }) }}
 
                 {{ form_row(registrationForm.plainPassword.first, {
 
-                    label: 'Mot de passe',
+                    label: 'Mot de passe *',
                     attr: {
                         placeholder: '',
-                        class: 'bg-dark border-0 border-bottom border-ivoire rounded-0 text-light mt-5'
+                        class: 'bg-dark border-0 border-bottom border-ivoire rounded-0 text-light'
                     },
                     row_attr: {
-                        class: 'form-floating bg-dark text-ivoire'
+                        class: 'form-floating bg-dark text-ivoire my-5'
                     }
                 }) }}
                 {{ form_row(registrationForm.plainPassword.second, {
 
-                    label: 'Confirmation du mot de passe',
+                    label: 'Confirmation du mot de passe *',
                     attr: {
                         placeholder: '',
-                        class: 'bg-dark border-0 border-bottom border-ivoire rounded-0 text-light mt-5'
+                        class: 'bg-dark border-0 border-bottom border-ivoire rounded-0 text-light'
                     },
                     row_attr: {
-                        class: 'form-floating bg-dark text-ivoire'
+                        class: 'form-floating bg-dark text-ivoire my-5'
                     }
 
                 }) }}
+
+                <input type="checkbox" id="afficher">
+                <label for="afficher">Afficher mot de passe</label>
                 <div id="passWordHelp" class="form-text">
                     Minimum :
                     <ul class="text-ivoire">
@@ -114,10 +124,12 @@
                     <div class="g-recaptcha" data-sitekey="{{ google_recaptcha_site_key }}"></div>
                 </div>
 
-                <button type="submit" class="btn btn-outline-light">S'inscrire</button>
+                <button type="submit" class="btn btn-outline-light my-3">S'inscrire</button>
                 {{ form_end(registrationForm) }}
             </div>
         </div>
     </div>
 {% endblock %}
 {% block stylsheet %}<script src="https://www.google.com/recaptcha/api.js" async defer></script>{% endblock %}
+{% block script %}<script src="{{ asset('js/registration.js') }}"></script>{% endblock %}
+

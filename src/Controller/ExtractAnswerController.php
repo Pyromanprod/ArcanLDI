@@ -34,7 +34,6 @@ class ExtractAnswerController extends AbstractController
                 $listeQuestion = $survey->getQuestion();
                 foreach ($listeQuestion as $key => $question) {
 
-
                     $myVariableCSV .= $question->getContent() . ",";
                 }
                 $players = $this->getDoctrine()->getRepository(User::class)->findplayer($ticket);
