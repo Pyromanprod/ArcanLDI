@@ -18,7 +18,7 @@
                     label: 'Nom',
                     attr: {
                         placeholder: '',
-                        class: 'bg-dark border-0 border-bottom border-ivoire rounded-0 text-light'
+                        class: 'bg-dark border-0 border-bottom border-ivoire rounded-0 text-light mt-5'
                     },
                     row_attr: {
                         class: 'form-floating bg-dark text-ivoire'
@@ -28,7 +28,7 @@
                     label: 'Prénom',
                     attr: {
                         placeholder: '',
-                        class: 'bg-dark border-0 border-bottom border-ivoire rounded-0 text-light'
+                        class: 'bg-dark border-0 border-bottom border-ivoire rounded-0 text-light mt-5'
                     },
                     row_attr: {
                         class: 'form-floating bg-dark text-ivoire'
@@ -38,7 +38,7 @@
                     label: 'Date de naissance',
                     attr: {
                         placeholder: '',
-                        class: 'bg-dark border-0 border-bottom border-ivoire rounded-0 text-light'
+                        class: 'bg-dark border-0 border-bottom border-ivoire rounded-0 text-light mt-5'
                     },
                     row_attr: {
                         class: 'form-floating bg-dark text-ivoire'
@@ -50,7 +50,7 @@
                     label: 'Pseudo',
                     attr: {
                         placeholder: '',
-                        class: 'bg-dark border-0 border-bottom border-ivoire rounded-0 text-light'
+                        class: 'bg-dark border-0 border-bottom border-ivoire rounded-0 text-light mt-5'
                     },
                     row_attr: {
                         class: 'form-floating bg-dark text-ivoire'
@@ -59,14 +59,14 @@
                 {{ form_row(registrationForm.photo, {
                     attr: {
                         placeholder: '',
-                        class: 'bg-dark border-0 border-bottom border-ivoire rounded-0 text-light'
+                        class: 'bg-dark border-0 border-bottom border-ivoire rounded-0 text-light mt-5'
                     },
                 }) }}
                 {{ form_row(registrationForm.email, {
                     label: 'Mail',
                     attr: {
                         placeholder: '',
-                        class: 'bg-dark border-0 border-bottom border-ivoire rounded-0 text-light'
+                        class: 'bg-dark border-0 border-bottom border-ivoire rounded-0 text-light mt-5'
                     },
                     row_attr: {
                         class: 'form-floating bg-dark text-ivoire'
@@ -78,7 +78,7 @@
                     label: 'Mot de passe',
                     attr: {
                         placeholder: '',
-                        class: 'bg-dark border-0 border-bottom border-ivoire rounded-0 text-light'
+                        class: 'bg-dark border-0 border-bottom border-ivoire rounded-0 text-light mt-5'
                     },
                     row_attr: {
                         class: 'form-floating bg-dark text-ivoire'
@@ -89,7 +89,7 @@
                     label: 'Confirmation du mot de passe',
                     attr: {
                         placeholder: '',
-                        class: 'bg-dark border-0 border-bottom border-ivoire rounded-0 text-light'
+                        class: 'bg-dark border-0 border-bottom border-ivoire rounded-0 text-light mt-5'
                     },
                     row_attr: {
                         class: 'form-floating bg-dark text-ivoire'
@@ -106,6 +106,10 @@
                         <li>1 Caractère spécial</li>
                     </ul>
                 </div>
+                <a target="_blank" href="{{ asset('cgv/mentions-legales.pdf') }}">Mentions legales</a>
+                {{ form_row(registrationForm.isRgpd,{
+                    label: 'j\'accepte les mentions légales',
+                }) }}
                 <div class="form-group">
                     <div class="g-recaptcha" data-sitekey="{{ google_recaptcha_site_key }}"></div>
                 </div>

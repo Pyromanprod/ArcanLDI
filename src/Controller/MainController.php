@@ -9,13 +9,18 @@ use App\Entity\News;
 use App\Entity\Order;
 use App\Entity\Presentation;
 use App\Entity\User;
+use App\Form\ContactType;
 use App\Form\MemberAssociationType;
+use App\Recaptcha\Recaptcha;
 use App\Repository\GameRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Email;
 use Symfony\Component\Routing\Annotation\Route;
 
 class MainController extends AbstractController
@@ -32,16 +37,16 @@ class MainController extends AbstractController
         $orders = $order->findRefundRequestedOrder();
         $allGames = $repos->findLast();
         $news = $reposnews->findLast();
-        $paid = $member->findByPlayerNotPaid($this->getUser(),$membership->findOneBylast());
+        $paid = $member->findByPlayerNotPaid($this->getUser(), $membership->findOneBylast());
 
-        $presentation = $presentationRepository->findOneBy([], ['id'=>'DESC']);
+        $presentation = $presentationRepository->findOneBy([], ['id' => 'DESC']);
         return $this->render('main/index.html.twig',
             [
-                'paid'=> $paid,
+                'paid' => $paid,
                 'requestedRefund' => $orders,
                 'news' => $news,
                 'allGames' => $allGames,
-                'presentation'=>$presentation,
+                'presentation' => $presentation,
             ]
         );
     }
@@ -68,5 +73,39 @@ class MainController extends AbstractController
         }
         $entityManager->flush();
         return $this->redirectToRoute('admin_jeu', [], Response::HTTP_SEE_OTHER);
+    }
+
+
+    #[Route('nous-contactez', name: 'contact_us', methods: ['GET', 'POST'])]
+    public function contactUs(MailerInterface $mailer, Request $request, Recaptcha $recaptcha): Response
+    {
+
+        $form = $this->createForm(ContactType::class);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted()) {
+            $recaptchaResponse = $request->request->get('g-recaptcha-response', null);
+
+            // Si le captcha n'est pas valide, on crée une nouvelle erreur dans le formulaire (ce qui l'empêchera de créer l'article et affichera l'erreur)
+// $request->server->get('REMOTE_ADDR') -----> Adresse IP de l'utilisateur dont la méthode verify() a besoin
+            if ($recaptchaResponse == null || !$recaptcha->verify($recaptchaResponse, $request->server->get('REMOTE_ADDR'))) {
+
+                // Ajout d'une nouvelle erreur manuellement dans le formulaire
+                $form->addError(new FormError('Le Captcha doit être validé !'));
+            }
+            if ($form->isValid()) {
+                $email = (new Email())
+                    ->from($form->get('Email')->getData())
+                    ->to('contact@arcanlesdemonsdivoire.fr')
+                    ->subject($form->get('Object')->getData())
+                    ->text($form->get('Content')->getData());
+                $mailer->send($email);
+                $this->addFlash('success', 'Message envoyé avec succès');
+                return $this->redirectToRoute('home');
+            }
+        }
+        return $this->renderForm('main/contact.html.twig', [
+            'form' => $form
+        ]);
     }
 }
