@@ -12,6 +12,7 @@ use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\File;
 use Symfony\Component\Validator\Constraints\IsTrue;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -26,7 +27,21 @@ class RegistrationFormType extends AbstractType
             ->add('birthDate',DateType::class,[
                 'widget' => 'single_text',
             ])
-            ->add('photo',FileType::class)
+            ->add('photo',FileType::class, [
+                'constraints'=>[
+                    new File([
+                        'maxSize'=>'2M',
+                        'maxSizeMessage'=>'{{ limit }} {{ suffix }} Maximum autorisé',
+                        'mimeTypes' => [
+                            'image/jpeg',
+                            'image/png',
+                            'image/gif',
+                            'image/webp',
+                        ],
+                        'mimeTypesMessage' => 'Fichier accépté : "jpeg, jpg, png, gif, webp"',
+                    ])
+                ]
+            ])
             ->add('firstname')
             ->add('lastname')
             ->add('pseudo')
