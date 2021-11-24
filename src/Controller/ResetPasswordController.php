@@ -7,6 +7,7 @@ use App\Form\ChangePasswordFormType;
 use App\Form\ResetPasswordRequestFormType;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -52,6 +53,17 @@ class ResetPasswordController extends AbstractController
         return $this->render('reset_password/request.html.twig', [
             'requestForm' => $form->createView(),
         ]);
+    }
+
+    #[Route('/demande-reinitialisation', name: 'app_password_reset')]
+    #[IsGranted('ROLE_USER')]
+    public function requestReset(MailerInterface $mailer): Response
+    {
+            return $this->processSendingPasswordResetEmail(
+                $this->getUser()->getUserIdentifier(),
+                $mailer,
+                $this->getDoctrine()->getRepository(User::class)
+            );
     }
 
     /**

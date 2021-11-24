@@ -6,16 +6,22 @@
     <div class="container">
         <div class="row">
             <div class="col-12 col-md-8 mx-auto my-5">
-                <p>
-                    Si un compte correspond a cette adresse email, un email vient d'etre envoyer a cette adresse avec un
-                    lien pour réinitialisé votre mot de passe.
-                    Ce lien expire
-                    dans {{ resetToken.expirationMessageKey|trans(resetToken.expirationMessageData, 'ResetPasswordBundle') }}
-                    .
-                </p>
-                <p>Si vous n'avez pas reçu de mail penser a regarder dans vos spams/courriers indésirable sinon <a
-                            href="{{ path('app_forgot_password_request') }}">réessayer</a>.</p>
-
+                {% if app.user %}
+                    <p>Un lien de réinitialisation vous a été envoyé à l'adresse suivante {{ app.user.email }} vérifiez
+                        vos courriers indésirables, ce lien expire
+                        dans {{ resetToken.expirationMessageKey|trans(resetToken.expirationMessageData, 'ResetPasswordBundle') }}</p>
+                {% else %}
+                    <p>
+                        Si un compte correspond à cette adresse email, un email vient d'être envoyé à cette adresse
+                        avec un
+                        lien pour réinitialiser votre mot de passe.
+                        Ce lien expire
+                        dans {{ resetToken.expirationMessageKey|trans(resetToken.expirationMessageData, 'ResetPasswordBundle') }}
+                        .
+                    </p>
+                    <p>Si vous n'avez pas reçu de mail pensez à regarder dans vos spams/courriers indésirable sinon <a href="{{ path('app_forgot_password_request') }}">réessayez</a>.</p>
+                {% endif %}
+                <a class="btn btn-outline-light" href="{{ path('home') }}">Retour à l'accueil </a>
             </div>
         </div>
     </div>
