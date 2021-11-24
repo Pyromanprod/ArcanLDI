@@ -90,7 +90,7 @@ class OrderController extends AbstractController
                 $emailNotif = (new Email())
                     ->from('contact@arcanlesdemonsdivoire.fr')
                     ->to('contact@arcanlesdemonsdivoire.fr')
-                    ->subject('demande de remboursement par ' . $order->getPlayer()->getPseudo())
+                    ->subject('[remboursement] demande de remboursement par ' . $order->getPlayer()->getPseudo())
                     ->text(' demande de remboursement pour le jeu ' . $order->getTicket()->getGame()->getName() . ' ticket ' . $order->getTicket()->getName() . ' par le joueur ' . $order->getPlayer()->getPseudo() . ' email du joueur ' . $order->getPlayer()->getEmail());
                 $mailer->send($email);
                 $mailer->send($emailNotif);
@@ -280,7 +280,7 @@ class OrderController extends AbstractController
             $emailNotif = (new Email())
                 ->from('contact@arcanlesdemonsdivoire.fr')
                 ->to('contact@arcanlesdemonsdivoire.fr')
-                ->subject($order->getPlayer()->getPseudo() . ' a acheter un ticket pour le jeu ' . $order->getTicket()->getGame()->getName())
+                ->subject('[Billeterie]'.$order->getPlayer()->getPseudo() . ' a acheter un ticket pour le jeu ' . $order->getTicket()->getGame()->getName())
                 ->text('le joueur ' . $order->getPlayer()->getPseudo() . ' à acheter un ticket ' . $order->getTicket()->getName() . ' pour le jeu ' . $order->getTicket()->getGame()->getName());
             $mailer->send($emailsold);
             $mailer->send($emailNotif);

@@ -97,7 +97,7 @@ class MainController extends AbstractController
                 $email = (new Email())
                     ->from($form->get('Email')->getData())
                     ->to('contact@arcanlesdemonsdivoire.fr')
-                    ->subject($form->get('Object')->getData())
+                    ->subject('[contact] '.$form->get('Object')->getData())
                     ->text($form->get('Content')->getData());
                 $mailer->send($email);
                 $this->addFlash('success', 'Message envoyé avec succès');
