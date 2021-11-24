@@ -31,6 +31,8 @@
                     <div class="card-body">
                         <h6 class="card-subtitle mb-2 text-muted">{{ user.firstname }}  {{ user.lastname }}</h6>
                         <p class="card-text">Email: {{ user.email }}</p>
+                    </div>
+                    <div class="card-footer">
                         <a class="btn btn-outline-light" href="{{ path('user_show', {'id': user.id}) }}">Voir plus</a>
                     </div>
                 </div>
