@@ -3,7 +3,7 @@
     {% for game in allGames %}
 
 
-        <div class="card col-12 p-0 m-0 bg-cardgame card-zoom 2">
+        <div class="card col-12 p-0 bg-cardgame card-zoom 2">
             <div class="card-header m-0 p-0">
 
                 <a href="{{ path('game_show', {'slug': game.slug}) }}"
@@ -23,6 +23,10 @@
                 <a href="{{ path('game_show', {'slug': game.slug}) }}"
                    class="btn btn-outline-light mb-3 me-2"> Voir plus
                 </a>
+                <a href="{{ path('game_show', {'slug': game.slug}) }}"
+                   class="btn btn-outline-warning mb-3 me-2"> Billetterie
+                </a>
+
                 <a href="{{ path('see_album', {'slug': game.slug}) }}"
                    class="btn btn-outline-light mb-3 me-2"> Galerie photos
                 </a>

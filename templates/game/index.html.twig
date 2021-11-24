@@ -19,10 +19,10 @@
         <div class="row">
 
             {% for game in allGames %}
-                <div class="col-12 {{ allGames|length <= 2 ? 'col-md-6' : 'col-md-4' }} my-4">
+                <div class="col-12 {{ allGames|length <= 2 ? 'col-md-6' : 'col-md-4' }} my-4 mx-auto">
 
 
-                    <div class="card col-11 h-100 bg-cardgame card-zoom">
+                    <div class="card mx-auto col-11 h-100 bg-cardgame card-zoom">
                         <div class="card-header m-0 p-0">
 
                             <a href="{{ path('game_show', {'slug': game.slug}) }}"
@@ -40,6 +40,9 @@
 
                             <a href="{{ path('game_show', {'slug': game.slug}) }}"
                                class="btn btn-outline-light mb-3 me-2"> Voir plus
+                            </a>
+                            <a href="{{ path('game_show', {'slug': game.slug}) }}"
+                               class="btn btn-outline-warning mb-3 me-2"> Billetterie
                             </a>
                             <a href="{{ path('see_album', {'slug': game.slug}) }}"
                                class="btn btn-outline-light mb-3 me-2"> Galerie photos
