@@ -14,16 +14,8 @@ $(function () {
 
         validate(pass, confirmpass)
     });
-    $('#afficher').on('change', ()=>{
-        if ($('#afficher').prop('checked')){
-            pass.attr('type', 'text');
-            confirmpass.attr('type', 'text');
-        }else{
-            pass.attr('type', 'password');
-            confirmpass.attr('type', 'password');
 
-        }
-    })
+    // FONCTION QUI MET LA CLASS IS-VALID OU IS-INVALID
     function validate(one, two){
         if (one.val() === two.val()) {
             two.addClass('is-valid');
@@ -41,6 +33,17 @@ $(function () {
         }
     }
 
+    // AFICHAGE DU MOT DE PASSE
+    $('#afficher').on('change', ()=>{
+        if ($('#afficher').prop('checked')){
+            pass.attr('type', 'text');
+            confirmpass.attr('type', 'text');
+        }else{
+            pass.attr('type', 'password');
+            confirmpass.attr('type', 'password');
+
+        }
+    })
 
 
 })
