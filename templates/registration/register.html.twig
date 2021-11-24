@@ -116,9 +116,10 @@
                         <li>1 Caractère spécial</li>
                     </ul>
                 </div>
-                <a target="_blank" href="{{ asset('cgv/mentions-legales.pdf') }}">Mentions legales</a>
+                <a target="_blank" href="{{ asset('cgv/mentions-legales.pdf') }}">Mentions legales</a> et
+                <a target="_blank" href="{{ asset('cgv/mentions-legales.pdf') }}">CGU</a>
                 {{ form_row(registrationForm.isRgpd,{
-                    label: 'j\'accepte les mentions légales',
+                    label: 'j\'accepte les mentions légales et CGU',
                 }) }}
                 <div class="form-group">
                     <div class="g-recaptcha" data-sitekey="{{ google_recaptcha_site_key }}"></div>
