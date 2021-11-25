@@ -16,6 +16,7 @@ use App\Repository\AnswerRepository;
 use App\Repository\ChoiceRepository;
 use App\Repository\QuestionRepository;
 use App\Repository\SurveyTicketRepository;
+use ContainerLS7MrL3\getUser2Service;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
@@ -231,7 +232,7 @@ class SurveyController extends AbstractController
 
     #[Route('/question/{id}/{idOrder}/{hash}', name: 'answer')]
     #[ParamConverter('order', options: ['mapping' => ['idOrder' => 'id']])]
-    public function answer(Request $request, Question $question, Order $order, $hash): Response
+    public function answer(AnswerRepository $answerRepository ,Request $request, Question $question, Order $order,$hash): Response
     {
 
         $ticket = $order->getTicket();
@@ -248,7 +249,14 @@ class SurveyController extends AbstractController
             throw new AccessDeniedHttpException();
         }
 
-        $answer = new Answer();
+        // si l'utilisateur a déjà répondu a cette question
+        //(peut arriver si il a cliqué sur précédent)
+        if($value =$answerRepository->findByQuestionPlayer($question, $this->getUser())){ //bug php storm
+            $answer = $value;
+        }else{
+            $answer = new Answer();
+        }
+
         if ($question->getChoices()->getValues()) {
 
             $form = $this->createFormBuilder()
@@ -268,6 +276,7 @@ class SurveyController extends AbstractController
 
 
         $form->handleRequest($request);
+
 
         if ($form->isSubmitted() && $form->isValid()) {
 

@@ -30,7 +30,7 @@ class RegistrationFormType extends AbstractType
             ->add('photo',FileType::class, [
                 'constraints'=>[
                     new File([
-                        'maxSize'=>'2M',
+                        'maxSize'=>'100M',
                         'maxSizeMessage'=>'{{ limit }} {{ suffix }} Maximum autorisé',
                         'mimeTypes' => [
                             'image/jpeg',
