@@ -328,11 +328,11 @@ class OrderController extends AbstractController
                     ->subject('remboursement ArcanLDI ' . ' jeu ' . $order->getTicket()->getGame()->getName() . ' ticket ' . $order->getTicket()->getName())
                     ->text($request->request->get('reason'));
             } else {
-                $email = (new Email())
+                $email = (new TemplatedEmail())
                     ->from('contact@arcanlesdemonsdivoire.fr')
                     ->to($order->getPlayer()->getEmail())
                     ->subject('remboursement ArcanLDI ' . ' jeu ' . $order->getTicket()->getGame()->getName() . ' ticket ' . $order->getTicket()->getName())
-                    ->text('votre demande de remboursement a été acceptée');
+                    ->htmlTemplate('emails/ticket_refund_accept.html.twig');
             }
             $mailer->send($email);
 
@@ -359,11 +359,11 @@ class OrderController extends AbstractController
                     ->subject('remboursement ArcanLDI ' . ' jeu ' . $order->getTicket()->getGame()->getName() . ' ticket ' . $order->getTicket()->getName())
                     ->text($request->request->get('reason'));
             } else {
-                $email = (new Email())
+                $email = (new TemplatedEmail())
                     ->from('contact@arcanlesdemonsdivoire.fr')
                     ->to($order->getPlayer()->getEmail())
-                    ->subject('remboursement ArcanLDI')
-                    ->text('Votre demande de remboursement a été refusée');
+                    ->subject('remboursement ArcanLDI ' . ' jeu ' . $order->getTicket()->getGame()->getName() . ' ticket ' . $order->getTicket()->getName())
+                    ->htmlTemplate('emails/ticket_refund_reject.html.twig');
             }
             $mailer->send($email);
             $order->setRefundRequest('rejected');
