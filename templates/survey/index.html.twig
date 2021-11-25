@@ -30,6 +30,7 @@
                     }
                 }) }}
                 <button type="submit" class="btn btn-outline-success mb-5">Créer</button>
+                <a class="btn btn-outline-light mb-5" href="{{ path('ticket_new') }}">créer un ticket</a>
                 {{ form_end(form) }}
                 <h2>Questionnaires déjà présents</h2>
                 {% for survey in listeSurvey %}

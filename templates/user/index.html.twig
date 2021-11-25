@@ -20,17 +20,17 @@
         <h2 class="text-center">Joueurs</h2>
         <div class="text-center my-4" id="searchmember">
             <label for="search">Recherche</label>
-            <input type="text" id="search" class="search form-text">
+            <input type="text" id="search" class="search form-text" placeholder="exemple@mail.com">
         </div>
         <div class="row">
             {% for user in users %}
                 <div class="card mx-auto my-3 bg-cardgame p-0" style="width: 18rem;">
                     <div class="card-header bg-header-card text-center">
-                        <h5 class="card-title searching">{{ user.pseudo }}</h5>
+                        <h5 class="card-title">{{ user.pseudo }}</h5>
                     </div>
                     <div class="card-body">
                         <h6 class="card-subtitle mb-2 text-muted">{{ user.firstname }}  {{ user.lastname }}</h6>
-                        <p class="card-text">Email: {{ user.email }}</p>
+                        <p class="card-text searching">{{ user.email }}</p>
                     </div>
                     <div class="card-footer">
                         <a class="btn btn-outline-light" href="{{ path('user_show', {'id': user.id}) }}">Voir plus</a>

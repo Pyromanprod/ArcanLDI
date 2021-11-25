@@ -21,32 +21,32 @@ class ExtractAnswerController extends AbstractController
     {
 
         $listeTicket = $game->getTickets();
-        $myVariableCSV = "\n\n\n######IMPORTER DANS GOOGLE SHEET POUR UN VRAI RENDU CHOISIR LA DETECTION AUTOMATIQUE DU SEPARATEUR######\n\n\n";
+        $myVariableCSV = "\n\n\n######IMPORTER DANS GOOGLE SHEET POUR UN VRAI RENDU CHOISIR LA DETECTION PERSONNALISE ET ECRIRE   POINT VIRGULE    ######\n\n\n";
         foreach ($listeTicket as $ticket) {
             //Nom des colonnes en première lignes
             // le \n à la fin permets de faire un saut de ligne, super important en CSV
             // le point virgule sépare les données en colonnes
-            $myVariableCSV .= "\n".$game->getName() . ",\n";
-            $myVariableCSV .= $ticket->getName() . ",\n";
-            $myVariableCSV .= "Nom, Prénom, Mail,";
+            $myVariableCSV .= "\n". str_replace(';',',',$game->getName()) . ";\n";
+            $myVariableCSV .= str_replace(';',',',$ticket->getName()) . ";\n";
+            $myVariableCSV .= "Nom; Prénom; Mail;";
             $listeSurvey = $this->getDoctrine()->getRepository(Survey::class)->findBySurveyByTicket($ticket);
             foreach ($listeSurvey as $survey) {
                 $listeQuestion = $survey->getQuestion();
                 foreach ($listeQuestion as $key => $question) {
 
-                    $myVariableCSV .= $question->getContent() . ",";
+                    $myVariableCSV .= $question->getContent() . ";";
                 }
                 $players = $this->getDoctrine()->getRepository(User::class)->findplayer($ticket);
                 foreach ($players as $player) {
                     $myVariableCSV .= "\n";
-                    $myVariableCSV .= $player->getLastName() . "," .
-                        $player->getFirstName() . "," .
-                        $player->getEmail() . ",";
+                    $myVariableCSV .= str_replace(';',',',$player->getLastName()) . ";" .
+                        str_replace(';',',',$player->getFirstName()) . ";" .
+                        str_replace(';',',',$player->getEmail()) . ";";
                     foreach ($listeQuestion as $key => $question) {
                         $answer = $this->getDoctrine()
                             ->getRepository(Answer::class)
                             ->findByQuestionPlayer($question, $player);
-                        $myVariableCSV .= $answer->getContent() . ",";
+                        $myVariableCSV .= str_replace(';',',',$answer->getContent()) . ";";
 
                     }
                 }
@@ -69,11 +69,11 @@ class ExtractAnswerController extends AbstractController
     {
         $players = $userRepository->findPlayersByGame($game);
 
-        $myVariableCSV = "\n\n\n######IMPORTER DANS GOOGLE SHEET POUR UN VRAI RENDU CHOISIR LA DETECTION AUTOMATIQUE DU SEPARATEUR######\n\n\n";
-            $myVariableCSV .= "Nom, Prénom, Mail,Code unique,";
+        $myVariableCSV = "\n\n\n######IMPORTER DANS GOOGLE SHEET POUR UN VRAI RENDU CHOISIR LA DETECTION PERSONNALISE ET ECRIRE   POINT VIRGULE    ######\n\n\n";
+            $myVariableCSV .= "Nom; Prénom; Mail; Numéro de ticket;";
         foreach ($players as $player) {
             $order = $orderRepository->findOneorder($game,$player);
-            $myVariableCSV .= ",\n".$player->getLastname().','.$player->getFirstName().','.$player->getEmail().','.$order->getTicket()->getId().$game->getId().$player->getId();
+            $myVariableCSV .= ",\n".str_replace(';',',',$player->getLastname()).','.str_replace(';',',',$player->getFirstName()).','.str_replace(';',',',$player->getEmail()).','.$order->getTicket()->getId().$game->getId().$player->getId();
         }
         return new Response(
             $myVariableCSV,
