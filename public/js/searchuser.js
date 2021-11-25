@@ -2,9 +2,6 @@ $(function () {
 
 
     $("#searchmember").on('input',function () {
-
-
-        console.log('prot')
         let search = $('.search')
         let input = search.val()
         $('.searching').each(function (){

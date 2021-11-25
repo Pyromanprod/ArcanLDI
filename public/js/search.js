@@ -8,7 +8,7 @@ $(function () {
         let input = search.val()
         $('.searching').each(function (){
             $(this).parent().addClass('visually-hidden')
-            if ($(this).text().includes(input)){
+            if ($(this).text().toLowerCase().includes(input)){
                 $(this).parent().removeClass('visually-hidden')
             }
         })
