@@ -16,7 +16,6 @@ use App\Repository\AnswerRepository;
 use App\Repository\ChoiceRepository;
 use App\Repository\QuestionRepository;
 use App\Repository\SurveyTicketRepository;
-use ContainerLS7MrL3\getUser2Service;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
@@ -34,18 +33,21 @@ class SurveyController extends AbstractController
     #[isGranted('ROLE_ADMIN')]
     public function index(Request $request): Response
     {
+        //repository des survey pour aller les chercher en BDD et les afficher
         $reposSurvey = $this->getDoctrine()->getRepository(Survey::class);
         $listeSurvey = $reposSurvey->findAll();
 
+        //Instenciation d'un nouveau survey
         $newSurvey = new Survey();
-        $form = $this->createForm(SurveyFormType::class, $newSurvey);
-        $form->handleRequest($request);
-        $em = $this->getDoctrine()->getManager();
+        $form = $this->createForm(SurveyFormType::class, $newSurvey); //nouveau formulaire qui remplira les $newsurvey
+        $form->handleRequest($request); //avec la "request"
 
-        if ($form->isSubmitted()) {
-            $em->persist($newSurvey);
-            $em->flush();
+        $em = $this->getDoctrine()->getManager(); //manager générale des entité pour flush au submit
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em->persist($newSurvey); //on noutri l'entity manager
+            $em->flush(); // on envoie en BDD
             $this->addFlash('success', 'Questionnaire ajouté');
+            //redirection vers a création des question
             return $this->redirectToRoute('survey_add_question', [
                 'id' => $newSurvey->getId()
             ]);
@@ -68,7 +70,7 @@ class SurveyController extends AbstractController
         $newQuestion->setSurvey($survey);
         $form = $this->createForm(QuestionFormType::class, $newQuestion);
         $form->handleRequest($request);
-        if ($form->isSubmitted()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $em->persist($newQuestion);
             $em->flush();
@@ -76,20 +78,20 @@ class SurveyController extends AbstractController
             //si liste déroulante coché
             if ($form->get('select')->getData()) {
 
+                //redirection vers cration de choix
                 return $this->redirectToRoute('survey_add_choice', [
                     'id' => $newQuestion->getId(),
                 ]);
 
             } else { //sinon
 
+                //on vide le formulaire
                 unset($newQuestion);
                 unset($form);
+                //on ré instancie le tous
                 $newQuestion = new Question();
                 $form = $this->createForm(QuestionFormType::class, $newQuestion);
-                return $this->renderForm('survey/add_question.html.twig', [
-                    'form' => $form,
-                    'survey' => $survey
-                ]);
+
             }
         }
         return $this->renderForm('survey/add_question.html.twig', [
@@ -114,6 +116,7 @@ class SurveyController extends AbstractController
             $this->addFlash('success',
                 $newChoice->getContent() . " ajouté à la question : " . $question->getContent());
 
+            //pour vider un formulaire on peut aussi utilisé l'option de "redirecttoroute"
             return $this->redirectToRoute('survey_add_choice', ['id' => $question->getId()]);
 
         }
@@ -195,6 +198,7 @@ class SurveyController extends AbstractController
 
         foreach ($listeSurveyTicket as $surveyTicket) {
 
+            //un findBYPersonalisé qui emméne les question du survey dans l'ordre décidé par l'admin
             $listeQuestion = $questionRepository->findOrderBy($surveyTicket->getSurvey());
 
             foreach ($listeQuestion as $question) {
@@ -221,18 +225,18 @@ class SurveyController extends AbstractController
             }
 
         }
-        if ($order->getTicket()->getGame()->getIsPublished()){
+        if ($order->getTicket()->getGame()->getIsPublished()) {
 
-        return $this->redirectToRoute('checkout', ['id' => $order->getId()]);
-        }else{
-            $this->addFlash('success','Merci d\'avoir testé le questionnaire.');
-        return $this->redirectToRoute('home');
+            return $this->redirectToRoute('checkout', ['id' => $order->getId()]);
+        } else {
+            $this->addFlash('success', 'Merci d\'avoir testé le questionnaire.');
+            return $this->redirectToRoute('home');
         }
     }
 
     #[Route('/question/{id}/{idOrder}/{hash}', name: 'answer')]
     #[ParamConverter('order', options: ['mapping' => ['idOrder' => 'id']])]
-    public function answer(AnswerRepository $answerRepository ,Request $request, Question $question, Order $order,$hash): Response
+    public function answer(AnswerRepository $answerRepository, Request $request, Question $question, Order $order, $hash): Response
     {
 
         $ticket = $order->getTicket();
@@ -251,9 +255,9 @@ class SurveyController extends AbstractController
 
         // si l'utilisateur a déjà répondu a cette question
         //(peut arriver si il a cliqué sur précédent)
-        if($value =$answerRepository->findByQuestionPlayer($question, $this->getUser())){ //bug php storm
+        if ($value = $answerRepository->findByQuestionPlayer($question, $this->getUser())) { //bug php storm
             $answer = $value;
-        }else{
+        } else {
             $answer = new Answer();
         }
 
@@ -291,7 +295,7 @@ class SurveyController extends AbstractController
                 //si la reponse est obligatoire et que
                 // la réponse vide
                 // on renvoie sur la même question avec un message d'erreur
-                if (!$form->get('content')->getData()){
+                if (!$form->get('content')->getData()) {
                     $this->addFlash('error', 'Réponse obligatoire');
                     return $this->redirectToRoute('survey_suvey_for_ticket', [
                         'id' => $order->getId(),

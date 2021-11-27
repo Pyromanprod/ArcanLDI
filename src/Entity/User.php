@@ -30,23 +30,39 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Assert\Email(message: 'l\'email {{ value }} n\'est pas un email valide')]
     private $email;
 
-    #[ORM\Column(type: 'json')]
-    private $roles = [];
-
     #[ORM\Column(type: 'string')]
     private $password;
 
     #[Assert\NotBlank(message: 'tout les champ doivent etre remplis')]
+    #[Assert\Length(min: 1,
+        max: 36,
+        minMessage: "",
+        maxMessage: '{{ limit }} caractères maximum')]
     #[ORM\Column(type: 'string', length: 36)]
     private $firstname;
 
     #[Assert\NotBlank(message: 'tout les champ doivent etre remplis')]
+    #[Assert\Length(min: 1,
+        max: 32,
+        minMessage: "",
+        maxMessage: '{{ limit }} caractères maximum')]
     #[ORM\Column(type: 'string', length: 32)]
     private $lastname;
 
     #[Assert\NotBlank(message: 'tout les champ doivent etre remplis')]
+    #[Assert\Length(min: 1,
+        max: 50,
+        minMessage: "",
+        maxMessage: '{{ limit }} caractère maximum')]
     #[ORM\Column(type: 'string', length: 50)]
     private $pseudo;
+
+    #[ORM\Column(type: 'json')]
+    private $roles = [];
+
+    #[ORM\Column(type: 'boolean')]
+    #[Assert\IsTrue(message: 'Vous devez accepter les mentions légales')]
+    private $is_rgpd;
 
     #[ORM\OneToMany(mappedBy: 'player', targetEntity: Order::class)]
     private $orders;
@@ -86,9 +102,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'member', targetEntity: MembershipAssociation::class, orphanRemoval: true)]
     private $membershipAssociations;
 
-    #[ORM\Column(type: 'boolean')]
-    #[Assert\IsTrue(message: 'Vous devez accepter les mentions légales')]
-    private $is_rgpd;
 
     public function __construct()
     {
