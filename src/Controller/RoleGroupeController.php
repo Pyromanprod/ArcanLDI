@@ -137,8 +137,6 @@ class RoleGroupeController extends AbstractController
     #[IsGranted('ROLE_MODERATOR')]
     public function deleteRole(User $user,RoleGroupe $roleGroupe, Request $request): Response
     {
-        $entityManager = $this->getDoctrine()->getRepository(Order::class);
-        $id = $entityManager->findOneByPlayer($user)->getTicket()->getId();
 
         //protection CSRF
         if ($this->isCsrfTokenValid('delete'.$roleGroupe->getId(), $request->request->get('_token'))) {

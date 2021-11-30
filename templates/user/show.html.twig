@@ -6,15 +6,16 @@
 
     <div class="card bg-cardgame col-12 col-md-4 mx-auto">
         <div class="card-header bg-header-card">
-            <h1>{{ user.pseudo }}</h1>
+            <h1 class="text-center">{{ user.pseudo }}</h1>
         </div>
         <div class="card-body">
             <img class="img-fluid" src="{{ asset('img/user/'~user.photo)|imagine_filter('profil') }}"
-                 alt=" photo de profile">
+                 alt=" photo de profil">
             <ul class="list-group list-group-flush ">
                 <li class="list-group-item bg-transparent text-light">Email : {{ user.email }} </li>
                 <li class="list-group-item bg-transparent text-light">Prénom : {{ user.firstname }}</li>
                 <li class="list-group-item bg-transparent text-light">Nom : {{ user.lastname }}</li>
+                <li class="list-group-item bg-transparent text-light">date de naissance : {{ user.birthDate|date('j, n, Y') }}</li>
             </ul>
         </div>
         {% if is_granted('ROLE_ADMIN') %}

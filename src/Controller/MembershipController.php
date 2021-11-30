@@ -4,13 +4,11 @@ namespace App\Controller;
 
 use App\Entity\Membership;
 use App\Entity\MembershipAssociation;
-use App\Entity\Order;
 use App\Entity\User;
 use App\Form\MemberAssociationType;
 use App\Form\MembershipType;
 use App\Repository\MembershipAssociationRepository;
 use App\Repository\MembershipRepository;
-use App\Repository\RoleGroupeRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
