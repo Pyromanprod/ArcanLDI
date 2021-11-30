@@ -55,19 +55,21 @@ class GameController extends AbstractController
     {
         $csrf = $request->get('csrf_token');
 
+        //csrf pour éviter la publication a notre insu
         if ($this->isCsrfTokenValid('publish' . $game->getId(), $csrf)) {
 
+            //on supprime tout les "orders" créé pendant la phase de teste
             foreach ($orderRepository->findByGame($game) as $order){
                 $em->remove($order);
             }
-
-
+            //on supprime toute les réponse données pendant la phase de teste
             foreach ($answerRepository->findByGame($game) as $answer) {
 
                 $em->remove($answer);
             }
-//            dd($lesAnswer);
+            //on passe "ispublished" en true
             $game->setIsPublished(true);
+            //on met a jour la base de données avec tous les changement
             $em->flush();
             $this->addFlash('success', $game->getName() . ' publié avec succès');
         } else {
