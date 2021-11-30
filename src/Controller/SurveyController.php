@@ -154,10 +154,15 @@ class SurveyController extends AbstractController
         ]);
     }
 
-    #[Route('/accepter-les-cgv/{id}', name: 'is_cgv')]
+    #[Route('/accepter-les-cgv/{id}', name: 'is_cgv', requirements: ['id'=>'\d+'])]
     #[isGranted('ROLE_USER')]
     public function accepte_cgv(Request $request, EntityManagerInterface $em, Order $order): Response
     {
+
+        if($order->getPlayer() !== $this->getUser()){
+            throw new AccessDeniedHttpException();
+        }
+
         $form = $this->createForm(IsCgvFormType::class, $order);
         $form->handleRequest($request);
 
@@ -239,6 +244,10 @@ class SurveyController extends AbstractController
     public function answer(AnswerRepository $answerRepository, Request $request, Question $question, Order $order, $hash): Response
     {
 
+        if($order->getPlayer() !== $this->getUser()){
+            $this->addFlash('error', 'Une erreur c\'est produite');
+            return $this->redirectToRoute('home');
+        }
         $ticket = $order->getTicket();
         //Vérification du hash envoyé et comparaison pour savoir si l'url a était trafiqué
         //si oui on envoie sur access denied
