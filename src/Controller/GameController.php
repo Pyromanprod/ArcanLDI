@@ -89,7 +89,7 @@ class GameController extends AbstractController
         $role = new RoleGroupe();
         $form = $this->createForm(GameType::class, $game);
         $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid() && $request->get('dateStart') <= $request->get('dateEnd')) {
+        if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('dateStart')->getData() <= $form->get('dateEnd')->getData()) {
 
                 $entityManager = $this->getDoctrine()->getManager();
@@ -174,7 +174,7 @@ class GameController extends AbstractController
     #[isGranted('ROLE_ADMIN')]
     public function edit(Request $request, Game $game, uploadGamePhoto $uploadGamePhoto): Response
     {
-
+        $anciendossieralbum = $this->getParameter('game.album.directory') . $game->getSlug();
         $form = $this->createForm(GameType::class, $game);
         $form->handleRequest($request);
 
@@ -186,6 +186,11 @@ class GameController extends AbstractController
                 $game->setBanner($uploadGamePhoto->uploadBanner($photo, $game));
             }
             $this->getDoctrine()->getManager()->flush();
+            $newdossier = $this->getParameter('game.album.directory') . $game->getSlug();
+
+            if(file_exists($anciendossieralbum)){
+                rename($anciendossieralbum,$newdossier);
+            }
 
             return $this->redirectToRoute('game_index', [], Response::HTTP_SEE_OTHER);
         }
@@ -203,6 +208,28 @@ class GameController extends AbstractController
         if ($this->isCsrfTokenValid('delete' . $game->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($game);
+            $dossier = $this->getParameter('game.album.directory') . $game->getSlug();
+
+            if(file_exists($dossier)){
+
+                $repertoire = opendir($dossier); // On définit le répertoire dans lequel on souhaite travailler.
+
+                while (false !== ($fichier = readdir($repertoire))) // On lit chaque fichier du répertoire dans la boucle.
+                {
+                    $chemin = $dossier."/".$fichier; // On définit le chemin du fichier à effacer.
+
+// Si le fichier n'est pas un répertoire…
+                    if ($fichier != ".." AND $fichier != "." AND !is_dir($fichier))
+                    {
+                        unlink($chemin); // On efface.
+                    }
+                }
+                closedir($repertoire); // Ne pas oublier de fermer le dossier ***EN DEHORS de la boucle*** ! Ce qui évitera à PHP beaucoup de calculs et des problèmes liés à l'ouverture du dossier.
+                rmdir($dossier);
+            }
+            // dossier du jeu dans le game.photo.directory
+            $bannerDirectory = $this->controller->get('game.photo.directory'); //fail phpStorm parametre dans service.yaml
+            unlink($bannerDirectory.$game->getBanner()); //on supprime la bannière
             $entityManager->flush();
         }
 
