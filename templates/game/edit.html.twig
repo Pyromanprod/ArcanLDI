@@ -3,9 +3,16 @@
 {% block title %}Modifier {{ game.name }}{% endblock %}
 
 {% block body %}
-    <h1 class="text-center">Modifier {{ game.name }}</h1>
+    <div class="container">
+        <div class="row">
+            <div class="col-12 col-md-10 mx-auto">
 
-    {{ include('game/_form.html.twig', {'button_label': 'modifier', 'button_color': 'btn-outline-warning'}) }}
+                <h1 class="text-center">Modifier {{ game.name }}</h1>
+
+                {{ include('game/_form.html.twig', {'button_label': 'modifier', 'button_color': 'btn-outline-warning'}) }}
+            </div>
+        </div>
+    </div>
 
 
 {% endblock %}
