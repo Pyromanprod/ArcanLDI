@@ -166,7 +166,7 @@ class SurveyController extends AbstractController
         $form = $this->createForm(IsCgvFormType::class, $order);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid() && $form->get('is_cgv')->getData()) {
             $order->setIsCgv(true);
             $em->flush();
             return $this->redirectToRoute('survey_suvey_for_ticket', ['id' => $order->getId()]);
@@ -188,7 +188,10 @@ class SurveyController extends AbstractController
     ): Response
     {
 
-
+        //L'order passer dans l'url correspond bien au user connecté
+        if($order->getPlayer() !== $this->getUser()){
+            throw new AccessDeniedHttpException();
+        }
         //si les CGV ne sont pas accépter on accéde pas au formulaire
 
         if (!$order->getIsCgv()) {
@@ -230,6 +233,7 @@ class SurveyController extends AbstractController
             }
 
         }
+
         if ($order->getTicket()->getGame()->getIsPublished()) {
 
             return $this->redirectToRoute('checkout', ['id' => $order->getId()]);
@@ -245,9 +249,9 @@ class SurveyController extends AbstractController
     {
 
         if($order->getPlayer() !== $this->getUser()){
-            $this->addFlash('error', 'Une erreur c\'est produite');
-            return $this->redirectToRoute('home');
+            throw new AccessDeniedHttpException();
         }
+
         $ticket = $order->getTicket();
         //Vérification du hash envoyé et comparaison pour savoir si l'url a était trafiqué
         //si oui on envoie sur access denied
@@ -260,14 +264,6 @@ class SurveyController extends AbstractController
             )
         )) {
             throw new AccessDeniedHttpException();
-        }
-
-        // si l'utilisateur a déjà répondu a cette question
-        //(peut arriver si il a cliqué sur précédent)
-        if ($value = $answerRepository->findByQuestionPlayer($question, $this->getUser())) { //bug php storm
-            $answer = $value;
-        } else {
-            $answer = new Answer();
         }
 
         if ($question->getChoices()->getValues()) {
@@ -287,9 +283,15 @@ class SurveyController extends AbstractController
             $form = $this->createForm(AnswerMultipleFormType::class);
         }
 
-
         $form->handleRequest($request);
 
+        // si l'utilisateur a déjà répondu a cette question
+        //(peut arriver si il a cliqué sur précédent)
+        if ($answerExistant = $answerRepository->findByQuestionPlayer($question, $this->getUser())) { //bug php storm
+            $answer = $answerExistant;
+        } else {
+            $answer = new Answer();
+        }
 
         if ($form->isSubmitted() && $form->isValid()) {
 
