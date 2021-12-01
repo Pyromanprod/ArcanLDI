@@ -10,6 +10,7 @@ use App\Repository\GameRepository;
 use App\Repository\SurveyRepository;
 use App\Repository\TicketRepository;
 use App\Service\uploadGamePhoto;
+use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -75,7 +76,7 @@ class TicketController extends AbstractController
     }
 
     #[Route('/{id}', name: 'ticket_show', methods: ['GET', 'POST'])]
-    public function show(Ticket $ticket, Request $request, SurveyRepository $surveyRepository): Response
+    public function show(Ticket $ticket, Request $request, SurveyRepository $surveyRepository,EntityManagerInterface $entityManager): Response
     {
 
 //        FORMULAIRE DES QUESTIONNAIRES SPECIFIQUE QUI NE SON PAS ENCORE ASSOCIE
@@ -127,8 +128,8 @@ class TicketController extends AbstractController
 
             $surveyTicket->setSurvey($formGeneral->get('survey')->getData());
 
-            $this->getDoctrine()->getManager()->persist($surveyTicket);
-            $this->getDoctrine()->getManager()->flush();
+            $entityManager->persist($surveyTicket);
+            $entityManager->flush();
 
             return $this->redirectToRoute('ticket_show', ['id' => $ticket->getId()]);
         }
@@ -145,7 +146,7 @@ class TicketController extends AbstractController
 
     //modification d'un ticket
     #[Route('/{id}/modifier', name: 'ticket_edit', methods: ['GET', 'POST'])]
-    public function edit(uploadGamePhoto $uploadGamePhoto, Request $request, Ticket $ticket): Response
+    public function edit(uploadGamePhoto $uploadGamePhoto, Request $request, Ticket $ticket, EntityManagerInterface $entityManager): Response
     {
         $form = $this->createForm(TicketType::class, $ticket);
         $form->handleRequest($request);
@@ -154,7 +155,7 @@ class TicketController extends AbstractController
             if ($form->get('cgv')->getData()) {
                 $ticket->setCgv($uploadGamePhoto->uploadCGVTicket($form->get('cgv')->getData(), $ticket));
             }
-            $this->getDoctrine()->getManager()->flush();
+            $entityManager->flush();
 
             return $this->redirectToRoute('ticket_index', [], Response::HTTP_SEE_OTHER);
         }
@@ -167,10 +168,9 @@ class TicketController extends AbstractController
 
     //supression d'un ticket
     #[Route('/{id}/supprimer', name: 'ticket_delete', methods: ['POST'])]
-    public function delete(Request $request, Ticket $ticket): Response
+    public function delete(Request $request, Ticket $ticket,EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete' . $ticket->getId(), $request->request->get('_token'))) {
-            $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($ticket);
             $entityManager->flush();
         }

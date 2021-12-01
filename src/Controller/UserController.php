@@ -9,6 +9,10 @@ use App\Repository\GameRepository;
 use App\Repository\RoleGroupeRepository;
 use App\Repository\TicketRepository;
 use App\Repository\UserRepository;
+use Doctrine\Migrations\Configuration\EntityManager\ManagerRegistryEntityManager;
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Persistence\ManagerRegistry;
 use Knp\Component\Pager\PaginatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -72,11 +76,11 @@ class UserController extends AbstractController
     //ajouter le role a un compte precedement rechercher
     #[Route('/moderation/ajouter/{id}', name: 'moderator_Add', methods: ['GET','POST'])]
     #[IsGranted('ROLE_ADMIN')]
-    public function ModeratorAdd(User $user,UserRepository $userRepository,Request $request): Response
+    public function ModeratorAdd(User $user,UserRepository $userRepository,Request $request,EntityManagerInterface $managerRegistry): Response
     {
         if ($this->isCsrfTokenValid('add' . $user->getId(), $request->request->get('_token'))) {
             $user->setRoles(["ROLE_MODERATOR"]);
-            $this->getDoctrine()->getManager()->flush();
+            $managerRegistry->flush();
         }
         return $this->redirectToRoute('moderator_index', [
             'users' => $userRepository->findPlayerByRole(),
@@ -85,11 +89,11 @@ class UserController extends AbstractController
     //retrait le role moderateur a un compte
     #[Route('/moderation/retirer/{id}', name: 'moderator_Delete', methods: ['GET','POST'])]
     #[IsGranted('ROLE_ADMIN')]
-    public function ModeratorDelete(User $user,UserRepository $userRepository,Request $request): Response
+    public function ModeratorDelete(User $user,UserRepository $userRepository,Request $request,EntityManagerInterface $managerRegistry): Response
     {
         if ($this->isCsrfTokenValid('delete' . $user->getId(), $request->request->get('_token'))) {
             $user->setRoles([]);
-            $this->getDoctrine()->getManager()->flush();
+            $managerRegistry->flush();
         }
         return $this->redirectToRoute('moderator_index', [
             'users' => $userRepository->findPlayerByRole(),
@@ -130,7 +134,7 @@ class UserController extends AbstractController
     }
 
     //profile de l'utilisateur
-    #[Route('-profile/', name: 'user_show_profile', methods: ['GET','POST'])]
+    #[Route('-profil/', name: 'user_show_profile', methods: ['GET','POST'])]
     #[IsGranted('ROLE_USER')]
     public function showProfile(): Response
     {
@@ -138,9 +142,9 @@ class UserController extends AbstractController
     }
 
     //modification du profile
-    #[Route('-profile/modifier', name: 'user_edit_profile', methods: ['GET','POST'])]
+    #[Route('-profil/modifier', name: 'user_edit_profile', methods: ['GET','POST'])]
     #[IsGranted('ROLE_USER')]
-    public function editProfile(Request $request): Response
+    public function editProfile(Request $request,EntityManagerInterface $managerRegistry): Response
     {
         $user = $this->getUser();
         $form = $this->createForm(UserType::class, $user);
@@ -149,7 +153,7 @@ class UserController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $photo = $form->get('photo')->getData();
             if (!$photo){
-                $this->getDoctrine()->getManager()->flush();
+                $managerRegistry->flush();
                 $this->addFlash('success','Vos informations ont bien été modifiées.');
                 return $this->redirectToRoute('user_show_profile', [
                     'id' => $this->getUser()->getId()
@@ -191,12 +195,11 @@ class UserController extends AbstractController
     //supression d'un compte
     #[Route('/{id}/supprimer', name: 'user_delete', methods: ['POST'])]
     #[IsGranted('ROLE_ADMIN')]
-    public function delete(Request $request, User $user): Response
+    public function delete(Request $request, User $user, EntityManagerInterface $managerRegistry): Response
     {
         if ($this->isCsrfTokenValid('delete' . $user->getId(), $request->request->get('_token'))) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->remove($user);
-            $entityManager->flush();
+            $managerRegistry->remove($user);
+            $managerRegistry->flush();
         }
 
         return $this->redirectToRoute('user_index', [], Response::HTTP_SEE_OTHER);

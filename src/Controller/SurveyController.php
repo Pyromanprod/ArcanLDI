@@ -15,6 +15,7 @@ use App\Form\SurveyFormType;
 use App\Repository\AnswerRepository;
 use App\Repository\ChoiceRepository;
 use App\Repository\QuestionRepository;
+use App\Repository\SurveyRepository;
 use App\Repository\SurveyTicketRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -31,21 +32,20 @@ class SurveyController extends AbstractController
 {
     #[Route('/', name: 'index')]
     #[isGranted('ROLE_ADMIN')]
-    public function index(Request $request): Response
+    public function index(Request $request,EntityManagerInterface $entityManager,SurveyRepository $surveyRepository): Response
     {
         //repository des survey pour aller les chercher en BDD et les afficher
-        $reposSurvey = $this->getDoctrine()->getRepository(Survey::class);
-        $listeSurvey = $reposSurvey->findAll();
+        $listeSurvey = $surveyRepository->findAll();
 
         //Instenciation d'un nouveau survey
         $newSurvey = new Survey();
         $form = $this->createForm(SurveyFormType::class, $newSurvey); //nouveau formulaire qui remplira les $newsurvey
         $form->handleRequest($request); //avec la "request"
 
-        $em = $this->getDoctrine()->getManager(); //manager générale des entité pour flush au submit
+
         if ($form->isSubmitted() && $form->isValid()) {
-            $em->persist($newSurvey); //on noutri l'entity manager
-            $em->flush(); // on envoie en BDD
+            $entityManager->persist($newSurvey); //on noutri l'entity manager
+            $entityManager->flush(); // on envoie en BDD
             $this->addFlash('success', 'Questionnaire ajouté');
             //redirection vers a création des question
             return $this->redirectToRoute('survey_add_question', [
@@ -63,7 +63,7 @@ class SurveyController extends AbstractController
 
     #[Route('/ajouter-question/{id}', name: 'add_question')]
     #[isGranted('ROLE_ADMIN')]
-    public function addQuestion(Request $request, Survey $survey): Response
+    public function addQuestion(Request $request, Survey $survey,EntityManagerInterface $entityManager): Response
     {
 
         $newQuestion = new Question();
@@ -71,9 +71,8 @@ class SurveyController extends AbstractController
         $form = $this->createForm(QuestionFormType::class, $newQuestion);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($newQuestion);
-            $em->flush();
+            $entityManager->persist($newQuestion);
+            $entityManager->flush();
             $this->addFlash('success', 'Question ajoutée');
             //si liste déroulante coché
             if ($form->get('select')->getData()) {
@@ -103,16 +102,15 @@ class SurveyController extends AbstractController
 
     #[Route('/ajouter-choix/{id}', name: 'add_choice')]
     #[isGranted('ROLE_ADMIN')]
-    public function addChoice(Request $request, Question $question): Response
+    public function addChoice(Request $request, Question $question,EntityManagerInterface $entityManager): Response
     {
         $newChoice = new Choice();
         $form = $this->createForm(ChoiceFormType::class, $newChoice);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
             $newChoice->setQuestion($question);
-            $em->persist($newChoice);
-            $em->flush();
+            $entityManager->persist($newChoice);
+            $entityManager->flush();
             $this->addFlash('success',
                 $newChoice->getContent() . " ajouté à la question : " . $question->getContent());
 
@@ -128,11 +126,10 @@ class SurveyController extends AbstractController
 
     #[Route('/supprimer-choix/{id}/', name: 'delete_choice')]
     #[isGranted('ROLE_ADMIN')]
-    public function deleteChoice(Request $request, Choice $choice): Response
+    public function deleteChoice(Request $request, Choice $choice,EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid($choice->getId() . "delete", $request->get('csrf_token'))) {
             $this->addFlash('success', 'Suppression réussie');
-            $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($choice);
             $entityManager->flush();
         } else {
@@ -344,11 +341,10 @@ class SurveyController extends AbstractController
     }
 
     #[Route('/{id}/delete', name: 'delete', methods: ['POST', 'GET'])]
-    public function delete(Request $request, Survey $survey): Response
+    public function delete(Request $request, Survey $survey, EntityManagerInterface $entityManager): Response
     {
 
         if ($this->isCsrfTokenValid('delete' . $survey->getId(), $request->request->get('csrf_token'))) {
-            $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($survey);
             $entityManager->flush();
         }

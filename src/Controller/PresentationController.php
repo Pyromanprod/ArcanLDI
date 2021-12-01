@@ -5,6 +5,8 @@ namespace App\Controller;
 use App\Entity\Presentation;
 use App\Form\PresentationType;
 use App\Repository\PresentationRepository;
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -31,14 +33,13 @@ class PresentationController extends AbstractController
 
     #[Route('/nouvelle', name: 'presentation_new', methods: ['GET','POST'])]
     #[IsGranted('ROLE_MODERATOR')]
-    public function new(Request $request): Response
+    public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
         $presentation = new Presentation();
         $form = $this->createForm(PresentationType::class, $presentation);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($presentation);
             $entityManager->flush();
 
@@ -62,13 +63,13 @@ class PresentationController extends AbstractController
 
     #[Route('/{id}/modifier', name: 'presentation_edit', methods: ['GET','POST'])]
     #[IsGranted('ROLE_MODERATOR')]
-    public function edit(Request $request, Presentation $presentation): Response
+    public function edit(Request $request, Presentation $presentation, EntityManagerInterface $entityManager): Response
     {
         $form = $this->createForm(PresentationType::class, $presentation);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->getDoctrine()->getManager()->flush();
+            $entityManager->flush();
 
             return $this->redirectToRoute('home', [], Response::HTTP_SEE_OTHER);
         }

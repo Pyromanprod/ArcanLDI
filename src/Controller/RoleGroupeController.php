@@ -2,13 +2,13 @@
 
 namespace App\Controller;
 
-use App\Entity\Order;
 use App\Entity\RoleGroupe;
 use App\Entity\User;
 use App\Form\RoleAddFormType;
 use App\Form\RoleGroupeType;
 use App\Repository\RoleGroupeRepository;
 use App\Repository\UserRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -33,14 +33,13 @@ class RoleGroupeController extends AbstractController
 
     #[Route('/nouveau', name: 'role_groupe_new', methods: ['GET','POST'])]
     #[IsGranted('ROLE_MODERATOR')]
-    public function new(Request $request): Response
+    public function new(Request $request,EntityManagerInterface $entityManager): Response
     {
         $roleGroupe = new RoleGroupe();
         $form = $this->createForm(RoleGroupeType::class, $roleGroupe);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($roleGroupe);
             $entityManager->flush();
 
@@ -68,13 +67,13 @@ class RoleGroupeController extends AbstractController
     //modif d'un role
     #[Route('/{id}/modifier', name: 'role_groupe_edit', methods: ['GET','POST'])]
     #[IsGranted('ROLE_MODERATOR')]
-    public function edit(Request $request, RoleGroupe $roleGroupe): Response
+    public function edit(Request $request, RoleGroupe $roleGroupe,EntityManagerInterface $entityManager): Response
     {
         $form = $this->createForm(RoleGroupeType::class, $roleGroupe);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->getDoctrine()->getManager()->flush();
+            $entityManager->flush();
 
             return $this->redirectToRoute('role_groupe_index', [], Response::HTTP_SEE_OTHER);
         }
@@ -88,7 +87,7 @@ class RoleGroupeController extends AbstractController
     //ajout d'un player a role de groupe
     #[Route('/{id}/ajouter', name: 'role_groupe_add', methods: ['GET','POST'])]
     #[IsGranted('ROLE_MODERATOR')]
-    public function add(Request $request, RoleGroupe $role, UserRepository $userRepository): Response
+    public function add(Request $request, RoleGroupe $role, UserRepository $userRepository,EntityManagerInterface $entityManager): Response
     {
         //form avec choix personalisé envoyer en option dans le form service
         $form = $this->createForm(RoleAddFormType::class,[],[
@@ -101,7 +100,7 @@ class RoleGroupeController extends AbstractController
             foreach ($form->get('name')->getData() as $player){
             $player->addRoleGroupe($role);
             }
-            $this->getDoctrine()->getManager()->flush();
+            $entityManager->flush();
 
             return $this->redirectToRoute('role_groupe_index',[
                 'id' => $role->getId()
@@ -117,11 +116,10 @@ class RoleGroupeController extends AbstractController
     //supression d'un rôle  et delete des discussion associé par cascade
     #[Route('/{id}', name: 'role_groupe_delete', methods: ['POST'])]
     #[IsGranted('ROLE_MODERATOR')]
-    public function delete(Request $request, RoleGroupe $roleGroupe): Response
+    public function delete(Request $request, RoleGroupe $roleGroupe,EntityManagerInterface $entityManager): Response
     {
         //protection CSRF
         if ($this->isCsrfTokenValid('delete'.$roleGroupe->getId(), $request->request->get('_token'))) {
-            $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($roleGroupe);
             $entityManager->flush();
         }
@@ -135,12 +133,11 @@ class RoleGroupeController extends AbstractController
     #[ParamConverter('user', options: ['mapping' => ['pseudo' => 'pseudo']])]
     #[ParamConverter('roleGroupe', options: ['mapping' => ['id' => 'id']])]
     #[IsGranted('ROLE_MODERATOR')]
-    public function deleteRole(User $user,RoleGroupe $roleGroupe, Request $request): Response
+    public function deleteRole(User $user,RoleGroupe $roleGroupe, Request $request,EntityManagerInterface $entityManager): Response
     {
 
         //protection CSRF
         if ($this->isCsrfTokenValid('delete'.$roleGroupe->getId(), $request->request->get('_token'))) {
-            $entityManager = $this->getDoctrine()->getManager();
             $user->removeRoleGroupe($roleGroupe);
             $entityManager->flush();
         } else{

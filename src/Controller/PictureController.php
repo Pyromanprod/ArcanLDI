@@ -8,6 +8,7 @@ use App\Form\AlbumPhotoFormType;
 use App\Repository\GameRepository;
 use App\Repository\PictureRepository;
 use App\Service\uploadGamePhoto;
+use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Knp\Component\Pager\PaginatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -24,7 +25,7 @@ class PictureController extends AbstractController
 
     #[Route('/ajouter-photo/{id}', name: 'game_add_album_Photo', methods: ['POST', 'GET'])]
     #[isGranted('ROLE_ADMIN')]
-    public function addAlbumPhoto(uploadGamePhoto $uploadGamePhoto, Request $request, Game $game): Response
+    public function addAlbumPhoto(uploadGamePhoto $uploadGamePhoto, Request $request, Game $game,EntityManagerInterface $entityManager): Response
     {
         $form = $this->createForm(AlbumPhotoFormType::class);
         $form->handleRequest($request);
@@ -35,9 +36,9 @@ class PictureController extends AbstractController
 
             $listePhoto = $uploadGamePhoto->uploadAlbum($form->get('photos')->getData(), $game);
             foreach ($listePhoto as $photo) {
-                $this->getDoctrine()->getManager()->persist($photo);
+                $entityManager->persist($photo);
             }
-            $this->getDoctrine()->getManager()->flush();
+            $entityManager->flush();
             return $this->redirectToRoute('game_index', [], Response::HTTP_SEE_OTHER);
         }
         return $this->renderForm('game/add_album_photo.html.twig', [
@@ -71,10 +72,9 @@ class PictureController extends AbstractController
     }
 
     #[Route('/{id}', name: 'picture_delete', methods: ['POST'])]
-    public function delete(Request $request, Picture $picture): Response
+    public function delete(Request $request, Picture $picture,EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete' . $picture->getId(), $request->request->get('_token'))) {
-            $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($picture);
             $entityManager->flush();
         }

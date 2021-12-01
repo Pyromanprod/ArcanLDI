@@ -131,7 +131,7 @@ class OrderController extends AbstractController
     //achat des tickets
     #[IsGranted('ROLE_USER')]
     #[Route('/acheter/{slug}', name: 'order_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, Game $game, OrderRepository $orderRepository): Response
+    public function new(Request $request, Game $game, OrderRepository $orderRepository, EntityManagerInterface $entityManager): Response
     {
         $order = new Order();
         //creation du formulaire avec passage de paramètre
@@ -172,7 +172,6 @@ class OrderController extends AbstractController
                     // créer et est flush dans la base de données
                 } else {
 
-                    $entityManager = $this->getDoctrine()->getManager();
                     $order->setPlayer($this->getUser());
                     $order->setTotal($order->getTicket()->getPrice());
                     $entityManager->persist($order);
