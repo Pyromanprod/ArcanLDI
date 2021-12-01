@@ -21,7 +21,7 @@ class uploadGamePhoto
     public function uploadBanner(UploadedFile $photo, Game $game): string
     {
         // dossier du jeu dans le game.photo.directory
-        $directory = $this->controller->get('game.photo.directory'); //fail phpStorm
+        $directory = $this->controller->get('game.photo.directory'); //fail phpStorm parametre dans service.yaml
 
         //si le dossier game.photo.directory n'existe pas
         if (!file_exists($directory)) {
