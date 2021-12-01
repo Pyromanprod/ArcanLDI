@@ -16,6 +16,7 @@ use App\Service\uploadGamePhoto;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Bridge\Doctrine\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -27,6 +28,7 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route('/nos-jeux')]
 class GameController extends AbstractController
 {
+
     #[Route('/', name: 'game_index', methods: ['GET'])]
     public function index(GameRepository $gameRepository): Response
     {
@@ -83,8 +85,11 @@ class GameController extends AbstractController
 
     #[Route('/nouveau', name: 'game_new', methods: ['GET', 'POST'])]
     #[isGranted('ROLE_ADMIN')]
-    public function new(Request $request, uploadGamePhoto $uploadGamePhoto): Response
+    public function new(EntityManagerInterface $entityManager,
+                        Request $request,
+                        uploadGamePhoto $uploadGamePhoto): Response
     {
+
         $game = new Game();
         $role = new RoleGroupe();
         $form = $this->createForm(GameType::class, $game);
@@ -92,7 +97,6 @@ class GameController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('dateStart')->getData() <= $form->get('dateEnd')->getData()) {
 
-                $entityManager = $this->getDoctrine()->getManager();
                 //récupération de la photo si il y a
                 $photo = $form->get('banner')->getData();
                 if ($photo) {
@@ -117,10 +121,18 @@ class GameController extends AbstractController
     }
 
     #[Route('/{slug}', name: 'game_show', methods: ['GET', 'POST'])]
-    public function show(Game $game, GameCommentRepository $commentRepository, Request $request, RateLimiterFactory $commentsLimiter, GameRepository $gameRepository, UserRepository $userRepository, PaginatorInterface $paginator): Response
+    public function show(Game $game,
+                         GameCommentRepository $commentRepository,
+                         Request $request,
+                         RateLimiterFactory $commentsLimiter,
+                         GameRepository $gameRepository,
+                         UserRepository $userRepository,
+                         PaginatorInterface $paginator,
+                         EntityManagerInterface $entityManager): Response
     {
         $form = null;
         $gameComment = new GameComment();
+
         //déclaration du limiteur de commentaire a 3/h voir ratelimiter.yaml pour modifier
         $limiter = $commentsLimiter->create($request->getClientIp());
         $requestedPage = $request->query->getInt('page', 1);
@@ -152,7 +164,6 @@ class GameController extends AbstractController
                 $gameComment
                     ->setAuthor($this->getUser())
                     ->setGame($game);
-                $entityManager = $this->getDoctrine()->getManager();
                 $entityManager->persist($gameComment);
                 $entityManager->flush();
 
@@ -172,7 +183,10 @@ class GameController extends AbstractController
 
     #[Route('/{id}/modifier', name: 'game_edit', methods: ['GET', 'POST'])]
     #[isGranted('ROLE_ADMIN')]
-    public function edit(Request $request, Game $game, uploadGamePhoto $uploadGamePhoto): Response
+    public function edit(Request $request,
+                         Game $game,
+                         uploadGamePhoto $uploadGamePhoto,
+                         EntityManagerInterface $entityManager): Response
     {
         $anciendossieralbum = $this->getParameter('game.album.directory') . $game->getSlug();
         $form = $this->createForm(GameType::class, $game);
@@ -185,7 +199,7 @@ class GameController extends AbstractController
                 //utilisation du service pour l'upload de bannière
                 $game->setBanner($uploadGamePhoto->uploadBanner($photo, $game));
             }
-            $this->getDoctrine()->getManager()->flush();
+            $entityManager->flush();
             $newdossier = $this->getParameter('game.album.directory') . $game->getSlug();
 
             if(file_exists($anciendossieralbum)){
@@ -203,10 +217,11 @@ class GameController extends AbstractController
 
     #[Route('/{id}/', name: 'game_delete', methods: ['POST'])]
     #[isGranted('ROLE_ADMIN')]
-    public function delete(Game $game, Request $request): Response
+    public function delete(Game $game,
+                           Request $request,
+                           EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete' . $game->getId(), $request->request->get('_token'))) {
-            $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($game);
             $dossier = $this->getParameter('game.album.directory') . $game->getSlug();
 

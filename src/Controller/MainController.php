@@ -2,17 +2,14 @@
 
 namespace App\Controller;
 
-use App\Entity\Game;
-use App\Entity\Membership;
-use App\Entity\MembershipAssociation;
-use App\Entity\News;
-use App\Entity\Order;
-use App\Entity\Presentation;
-use App\Entity\User;
 use App\Form\ContactType;
-use App\Form\MemberAssociationType;
 use App\Recaptcha\Recaptcha;
 use App\Repository\GameRepository;
+use App\Repository\MembershipAssociationRepository;
+use App\Repository\MembershipRepository;
+use App\Repository\NewsRepository;
+use App\Repository\OrderRepository;
+use App\Repository\PresentationRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -26,20 +23,22 @@ use Symfony\Component\Routing\Annotation\Route;
 class MainController extends AbstractController
 {
     #[Route('/', name: 'home')]
-    public function index(): Response
-    {
-        $repos = $this->getDoctrine()->getRepository(Game::class);
-        $reposnews = $this->getDoctrine()->getRepository(News::class);
-        $presentationRepository = $this->getDoctrine()->getRepository(Presentation::class);
-        $order = $this->getDoctrine()->getRepository(Order::class);
-        $member = $this->getDoctrine()->getRepository(MembershipAssociation::class);
-        $membership = $this->getDoctrine()->getRepository(Membership::class);
-        $orders = $order->findRefundRequestedOrder();
-        $allGames = $repos->findLast();
-        $news = $reposnews->findLast();
-        $paid = $member->findByPlayerNotPaid($this->getUser(), $membership->findOneBylast());
+    public function index(GameRepository                  $gameRepository,
+                          OrderRepository                 $orderRepository,
+                          NewsRepository                  $newsRepository,
+                          PresentationRepository          $presentationRepository,
+                          MembershipAssociationRepository $membershipAssociationRepository,
+                          MembershipRepository            $membershipRepository,
 
+
+    ): Response
+    {
+        $orders = $orderRepository->findRefundRequestedOrder();
+        $allGames = $gameRepository->findLast();
+        $news = $newsRepository->findLast();
+        $paid = $membershipAssociationRepository->findByPlayerNotPaid($this->getUser(), $membershipRepository->findOneBylast());
         $presentation = $presentationRepository->findOneBy([], ['id' => 'DESC']);
+
         return $this->render('main/index.html.twig',
             [
                 'paid' => $paid,
@@ -97,7 +96,7 @@ class MainController extends AbstractController
                 $email = (new Email())
                     ->from($form->get('Email')->getData())
                     ->to('contact@arcanlesdemonsdivoire.fr')
-                    ->subject('[contact] '.$form->get('Object')->getData())
+                    ->subject('[contact] ' . $form->get('Object')->getData())
                     ->text($form->get('Content')->getData());
                 $mailer->send($email);
                 $this->addFlash('success', 'Message envoyé avec succès');

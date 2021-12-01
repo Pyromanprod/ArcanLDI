@@ -9,6 +9,7 @@ use App\Form\ComentFormType;
 use App\Repository\ArticleRepository;
 use App\Repository\ComentRepository;
 use App\Repository\UserRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -42,14 +43,14 @@ class ArticleController extends AbstractController
 
     #[Route('/nouvelle', name: 'article_new', methods: ['GET', 'POST'])]
     #[IsGranted('ROLE_MODERATOR')]
-    public function new(Request $request,): Response
+    public function new(Request                $request,
+                        EntityManagerInterface $entityManager): Response
     {
         $article = new Article();
         $form = $this->createForm(ArticleType::class, $article);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($article);
             $entityManager->flush();
 
@@ -63,16 +64,21 @@ class ArticleController extends AbstractController
     }
 
     #[Route('/{id}', name: 'article_show', methods: ['GET', 'POST'])]
-    public function show(Article $article, UserRepository $userRepository, Request $request,PaginatorInterface $paginator,ComentRepository $comentRepository): Response
+    public function show(Article                $article,
+                         UserRepository         $userRepository,
+                         Request                $request,
+                         PaginatorInterface     $paginator,
+                         ComentRepository       $comentRepository,
+                         EntityManagerInterface $entityManager): Response
     {
         $coment = new Coment();
         $form = $this->createForm(ComentFormType::class, $coment);
         $requestedPage = $request->query->getInt('page', 1);
-        if($requestedPage < 1){
+        if ($requestedPage < 1) {
             throw new NotFoundHttpException();
         }
         $comment = $paginator->paginate(
-            $comentRepository->findByArticle($article,['createdAt' => 'DESC']),
+            $comentRepository->findByArticle($article, ['createdAt' => 'DESC']),
             $requestedPage,
             50
         );
@@ -83,14 +89,13 @@ class ArticleController extends AbstractController
                     ->setPlayer($this->getUser())
                     ->setArticle($article);
 
-                $entityManager = $this->getDoctrine()->getManager();
                 $entityManager->persist($coment);
                 $entityManager->flush();
                 unset($coment);
                 unset($form);
                 $coment = new Coment();
                 $form = $this->createForm(ComentFormType::class, $coment);
-                return $this->redirectToRoute('article_show',[
+                return $this->redirectToRoute('article_show', [
                     'id' => $article->getId()
                 ]);
             }
@@ -106,13 +111,15 @@ class ArticleController extends AbstractController
 
     #[Route('/{id}/modifier', name: 'article_edit', methods: ['GET', 'POST'])]
     #[IsGranted('ROLE_MODERATOR')]
-    public function edit(Request $request, Article $article): Response
+    public function edit(Request                $request,
+                         Article                $article,
+                         EntityManagerInterface $entityManager): Response
     {
         $form = $this->createForm(ArticleType::class, $article);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->getDoctrine()->getManager()->flush();
+            $entityManager->flush();
 
             return $this->redirectToRoute('article_index', [], Response::HTTP_SEE_OTHER);
         }
@@ -125,10 +132,11 @@ class ArticleController extends AbstractController
 
     #[Route('/{id}/supprimer', name: 'article_delete', methods: ['POST'])]
     #[IsGranted('ROLE_MODERATOR')]
-    public function delete(Request $request, Article $article): Response
+    public function delete(Request                $request,
+                           Article                $article,
+                           EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete' . $article->getId(), $request->request->get('_token'))) {
-            $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($article);
             $entityManager->flush();
         }

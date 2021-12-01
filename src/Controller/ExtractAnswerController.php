@@ -8,6 +8,7 @@ use App\Entity\Survey;
 use App\Entity\User;
 use App\Repository\AnswerRepository;
 use App\Repository\OrderRepository;
+use App\Repository\SurveyRepository;
 use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -16,7 +17,10 @@ use Symfony\Component\Routing\Annotation\Route;
 class ExtractAnswerController extends AbstractController
 {
     #[Route('/extract/answer/{id}', name: 'extract_answer')]
-    public function index(AnswerRepository $answerRepository, Game $game): Response
+    public function index(SurveyRepository $surveyRepository,
+                          UserRepository $userRepository,
+                          Game $game,
+    AnswerRepository $answerRepository): Response
     {
 
         $listeTicket = $game->getTickets();
@@ -28,14 +32,14 @@ class ExtractAnswerController extends AbstractController
             $myVariableCSV .= "\n" . str_replace(';', ',', $game->getName()) . ";\n"; //nom du jeu
             $myVariableCSV .= str_replace(';', ',', $ticket->getName()) . ";\n"; //nom du ticket en cours d'extraction
             $myVariableCSV .= "Nom; Prénom; Mail;";
-            $listeSurvey = $this->getDoctrine()->getRepository(Survey::class)->findBySurveyByTicket($ticket); //liste des questionnaire associé au ticket
+            $listeSurvey = $surveyRepository->findBySurveyByTicket($ticket); //liste des questionnaire associé au ticket
             foreach ($listeSurvey as $survey) {
                 $listeQuestion = $survey->getQuestion();
                 foreach ($listeQuestion as $key => $question) { //liste des question
 
                     $myVariableCSV .= $question->getContent() . ";"; //affichage de la question en cours d'extraction
                 }
-                $players = $this->getDoctrine()->getRepository(User::class)->findplayer($ticket); //joueur ayant acheté le ticket
+                $players = $userRepository->findplayer($ticket); //joueur ayant acheté le ticket
                 foreach ($players as $player) {
                     $myVariableCSV .= "\n";
                     // un STR_REPLACE au cas ou les gens ponctu leur pseudo ou réponse avec un ; qui poserais problème lors de l'extraction
@@ -43,8 +47,7 @@ class ExtractAnswerController extends AbstractController
                         str_replace(';', ',', $player->getFirstName()) . ";" .
                         str_replace(';', ',', $player->getEmail()) . ";";
                     foreach ($listeQuestion as $key => $question) {
-                        $answer = $this->getDoctrine()
-                            ->getRepository(Answer::class)
+                        $answer = $answerRepository
                             ->findByQuestionPlayer($question, $player);
                         $myVariableCSV .= str_replace(';', ',', $answer->getContent()) . ";";
 

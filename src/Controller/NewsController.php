@@ -8,6 +8,8 @@ use App\Form\NewsCommentType;
 use App\Form\NewsType;
 use App\Repository\NewsCommentRepository;
 use App\Repository\NewsRepository;
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -40,7 +42,7 @@ class NewsController extends AbstractController
 
     #[Route('/nouvelle', name: 'news_new', methods: ['GET','POST'])]
     #[IsGranted("ROLE_MODERATOR")]
-    public function new(Request $request): Response
+    public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
         $news = new News();
         $form = $this->createForm(NewsType::class, $news);
@@ -48,7 +50,6 @@ class NewsController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $news->setAuthor($this->getUser());
-            $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($news);
             $entityManager->flush();
 
@@ -62,7 +63,12 @@ class NewsController extends AbstractController
     }
 
     #[Route('/{slug}', name: 'news_show', methods: ['GET','POST'])]
-    public function show(News $news, Request $request,RateLimiterFactory $commentsLimiter,PaginatorInterface $paginator,NewsCommentRepository $commentRepository): Response
+    public function show(News $news,
+                         Request $request,
+                         RateLimiterFactory $commentsLimiter,
+                         PaginatorInterface $paginator,
+                         NewsCommentRepository $commentRepository,
+                         EntityManagerInterface $entityManager): Response
     {
         //déclaration limiteur de commentaire a 3/h voir ratelimiter.yaml pour modifier
         $limiter = $commentsLimiter->create($request->getClientIp());
@@ -88,7 +94,6 @@ class NewsController extends AbstractController
 
             $newsComment->setAuthor($this->getUser())
                 ->setNews($news);
-            $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($newsComment);
             $entityManager->flush();
             return $this->redirectToRoute('news_show',[
@@ -105,13 +110,13 @@ class NewsController extends AbstractController
 
     #[Route('/{id}/modifier', name: 'news_edit', methods: ['GET','POST'])]
     #[IsGranted('ROLE_MODERATOR')]
-    public function edit(Request $request, News $news): Response
+    public function edit(EntityManagerInterface $entityManager,Request $request, News $news): Response
     {
         $form = $this->createForm(NewsType::class, $news);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->getDoctrine()->getManager()->flush();
+            $entityManager->flush();
 
             return $this->redirectToRoute('news_index', [], Response::HTTP_SEE_OTHER);
         }
@@ -124,10 +129,9 @@ class NewsController extends AbstractController
 
     #[Route('/{id}/', name: 'news_delete', methods: ['POST'])]
     #[IsGranted('ROLE_MODERATOR')]
-    public function delete(Request $request, News $news): Response
+    public function delete(EntityManagerInterface $entityManager,Request $request, News $news): Response
     {
         if ($this->isCsrfTokenValid('delete'.$news->getId(), $request->request->get('_token'))) {
-            $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($news);
             $entityManager->flush();
         }
@@ -137,10 +141,9 @@ class NewsController extends AbstractController
 
     #[Route('/comment/{id}', name: 'news_comment_delete', methods: ['POST'])]
     #[IsGranted('ROLE_MODERATOR')]
-    public function deleteComment(Request $request, NewsComment $newsComment): Response
+    public function deleteComment(EntityManagerInterface $entityManager,Request $request, NewsComment $newsComment): Response
     {
         if ($this->isCsrfTokenValid('delete'.$newsComment->getId(), $request->request->get('_token'))) {
-            $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($newsComment);
             $entityManager->flush();
         }
