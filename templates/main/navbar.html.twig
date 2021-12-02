@@ -104,6 +104,11 @@
                                 <li>
                                     <hr class="dropdown-divider">
                                 </li>
+                                <li>
+                                    <a class="dropdown-item" href="{{ path('presentation_index') }}">Présentation</a></li>
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
 
                             {% endif %}
                             <li><a class="dropdown-item" href="{{ path('role_groupe_index') }}">Groupes</a>
@@ -120,10 +125,7 @@
                             <li>
                                 <hr class="dropdown-divider">
                             </li>
-                            <li><a class="dropdown-item" href="{{ path('presentation_index') }}">Présentation</a></li>
-                            <li>
-                                <hr class="dropdown-divider">
-                            </li>
+
                             <li><a class="dropdown-item" onclick="return confirm('Cette action supprimera les discussions et groupes associés à tous les jeux dont la date de fin est dépassée ')" href="{{ path('game_clear') }}">Nettoyage base de données</a></li>
                         </ul>
                         </li>

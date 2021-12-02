@@ -4,6 +4,7 @@ namespace App\Service;
 
 use App\Entity\Game;
 use App\Entity\Picture;
+use App\Entity\PictureForAdmin;
 use App\Entity\Ticket;
 use phpDocumentor\Reflection\Types\Array_;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
@@ -60,7 +61,7 @@ class uploadGamePhoto
             //on le créer
             mkdir($directory);
         }
-        
+
 
         foreach ($photos as $photo) {
             //on assure l'unicité du nom
@@ -74,6 +75,36 @@ class uploadGamePhoto
             $picture = new Picture();
             $picture->setName($nameFile)
                 ->setGame($game);
+            $listePicture[]= $picture;
+
+        }
+
+        return $listePicture;
+    }
+
+    public function uploadAdminPhoto(Array $photos): array
+    {
+        // dossier du jeu dans le game.photo.directory
+        $directory = $this->controller->get('admin.photo.directory');
+
+        //si le dossier game.photo.directory n'existe pas
+        if (!file_exists($directory)) {
+            //on le créer
+            mkdir($directory);
+        }
+
+
+        foreach ($photos as $photo) {
+            //on assure l'unicité du nom
+            do {
+                $nameFile = md5(uniqid()) . '.' . $photo->guessExtension();
+            } while (file_exists($directory . $nameFile));
+            //envoie des photos
+            $photo->move($directory,
+                $nameFile
+            );
+            $picture = new PictureForAdmin();
+            $picture->setName($nameFile);
             $listePicture[]= $picture;
 
         }

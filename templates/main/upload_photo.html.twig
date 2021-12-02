@@ -1,0 +1,70 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="container">
+        <div class="row text-center">
+            <h1>Photos sur le serveur</h1>
+        </div>
+
+
+            <div class="row my-5">
+                <div class="col-12 col-md-6 mx-auto">
+                    {{ form_start(form) }}
+                    {{ form_row(form.photos, {
+                        label: 'Photos',
+                        attr: {
+                            placeholder: '',
+                            class: 'bg-dark border-0 border-bottom border-ivoire rounded-0 text-light'
+                        },
+                        row_attr: {
+                            class: 'bg-dark text-ivoire mb-3'
+                        }
+                    }) }}
+                    {{ form_errors(form) }}
+                    <button type="submit" class="btn btn-outline-info">Envoyer</button>
+                    {{ form_end(form) }}
+                </div>
+
+            </div>
+            <div class="row">
+
+                {% for photo in pictures %}
+
+                    <div class="mb-2 col-6 col-md-4 col-xl-3">
+
+                        <a href="{{ asset(admin_photo_directory~photo.name) }}">
+                            <img src="{{ asset(admin_photo_directory~photo.name)|imagine_filter('gallery') }}"
+                                 alt="Photo de galerie" class="w-100">
+                        </a>
+                    </div>
+
+                {% else %}
+                    <div class="mb-2 col-6 col-md-4 col-xl-3">
+
+                        <div class="alert alert-warning text-dark">
+                            Pas encore de photo
+                        </div>
+                    </div>
+                {% endfor %}
+
+
+            </div>
+            <div class="my-3 text-center">
+                <div class="d-inline-block">
+                    {# Affichage du menu permettant de naviguer entre les différentes pages #}
+                    {{ knp_pagination_render(pictures) }}
+                </div>
+            </div>
+
+        </div>
+
+
+
+
+{% endblock %}
+
+{% block script %}
+
+
+{% endblock %}
+

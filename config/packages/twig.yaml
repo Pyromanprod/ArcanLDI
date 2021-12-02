@@ -5,6 +5,7 @@ twig:
         google_recaptcha_site_key: '%env(GOOGLE_RECAPTCHA_SITE_KEY)%'
         game_photo_directory: 'img/uploads/gamebanner/'
         game_album_directory: 'img/uploads/album/'
+        admin_photo_directory: 'img/uploads/photoforadmin/'
 
 when@test:
     twig:

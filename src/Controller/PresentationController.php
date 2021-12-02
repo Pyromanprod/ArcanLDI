@@ -16,8 +16,9 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route('/presentation')]
 class PresentationController extends AbstractController
 {
+
     #[Route('/', name: 'presentation_index', methods: ['GET'])]
-    #[IsGranted('ROLE_MODERATOR')]
+    #[IsGranted('ROLE_ADMIN')]
     public function index(PresentationRepository $presentationRepository): Response
     {
         //si il n'y a pas de présentation on envoie vers la création
@@ -32,7 +33,7 @@ class PresentationController extends AbstractController
     }
 
     #[Route('/nouvelle', name: 'presentation_new', methods: ['GET','POST'])]
-    #[IsGranted('ROLE_MODERATOR')]
+    #[IsGranted('ROLE_ADMIN')]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
         $presentation = new Presentation();
@@ -53,7 +54,7 @@ class PresentationController extends AbstractController
     }
 
     #[Route('/{id}', name: 'presentation_show', methods: ['GET'])]
-    #[IsGranted('ROLE_MODERATOR')]
+    #[IsGranted('ROLE_ADMIN')]
     public function show(Presentation $presentation): Response
     {
         return $this->render('presentation/show.html.twig', [
@@ -62,7 +63,7 @@ class PresentationController extends AbstractController
     }
 
     #[Route('/{id}/modifier', name: 'presentation_edit', methods: ['GET','POST'])]
-    #[IsGranted('ROLE_MODERATOR')]
+    #[IsGranted('ROLE_ADMIN')]
     public function edit(Request $request, Presentation $presentation, EntityManagerInterface $entityManager): Response
     {
         $form = $this->createForm(PresentationType::class, $presentation);

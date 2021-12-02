@@ -29,8 +29,7 @@ class PictureController extends AbstractController
     {
         $form = $this->createForm(AlbumPhotoFormType::class);
         $form->handleRequest($request);
-        // dossier du jeu dans le game.photo.directory
-        $directory = $this->getParameter('game.photo.directory') . $game->getName() . '/album_photo/';
+
         if ($form->isSubmitted()) {
 
 

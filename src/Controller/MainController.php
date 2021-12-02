@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Form\AlbumPhotoFormType;
 use App\Form\ContactType;
 use App\Recaptcha\Recaptcha;
 use App\Repository\GameRepository;
@@ -9,19 +10,24 @@ use App\Repository\MembershipAssociationRepository;
 use App\Repository\MembershipRepository;
 use App\Repository\NewsRepository;
 use App\Repository\OrderRepository;
+use App\Repository\PictureForAdminRepository;
 use App\Repository\PresentationRepository;
+use App\Service\uploadGamePhoto;
 use Doctrine\ORM\EntityManagerInterface;
+use Knp\Component\Pager\PaginatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
 use Symfony\Component\Routing\Annotation\Route;
 
 class MainController extends AbstractController
 {
+
     #[Route('/', name: 'home')]
     public function index(GameRepository                  $gameRepository,
                           OrderRepository                 $orderRepository,
@@ -50,6 +56,39 @@ class MainController extends AbstractController
         );
     }
 
+    #[Route('/upload-photo-pour-nous/', name: 'upload_photo_pour_ckeditor', methods: ['GET', 'POST'])]
+    #[IsGranted('ROLE_ADMIN')]
+    public function upload_photo(EntityManagerInterface $entityManager,uploadGamePhoto $uploadGamePhoto,Request $request, PaginatorInterface $paginator,PictureForAdminRepository $pictureForAdminRepository): Response
+    {
+
+        $form = $this->createForm(AlbumPhotoFormType::class);
+        $form->handleRequest($request);
+        if ($form->isSubmitted()) {
+
+
+            $listePhoto = $uploadGamePhoto->uploadAdminPhoto($form->get('photos')->getData());
+            foreach ($listePhoto as $photo) {
+                $entityManager->persist($photo);
+            }
+            $entityManager->flush();
+            return $this->redirectToRoute('upload_photo_pour_ckeditor');
+
+        }
+        $requestedPage = $request->query->getInt('page', 1);
+        if ($requestedPage < 1) {
+            throw new NotFoundHttpException();
+        }
+        $pictures = $paginator->paginate(
+            $pictureForAdminRepository->findAll(),
+            $requestedPage,
+            16
+        );
+
+        return $this->render('main/upload_photo.html.twig', [
+            'pictures' => $pictures,
+            'form' => $form->createView(),
+        ]);
+    }
 
     #[Route('recherche', name: 'search')]
     public function search(GameRepository $gameRepository, Request $request): Response
