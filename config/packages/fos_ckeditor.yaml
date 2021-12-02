@@ -4,9 +4,11 @@ fos_ck_editor:
         game:
             toolbar: 'toolbarGame'
             height: '500px'
+            extraPlugins: "youtube"
         comment:
             toolbar: 'toolbarComment'
             height: '150px'
+
     toolbars:
         configs:
             toolbarGame: [
@@ -41,6 +43,9 @@ fos_ck_editor:
                         '-',
                         'Blockquote',
                         '-',
+                        'Link',
+                        'Youtube',
+                        '-',
                         'JustifyLeft',
                         'JustifyCenter',
                         'JustifyRight',
@@ -71,6 +76,7 @@ fos_ck_editor:
                         'BulletedList',
                         '-',
                         'Blockquote',
+                        'embed',
                         '-',
                         'JustifyLeft',
                         'JustifyCenter',
@@ -82,6 +88,8 @@ fos_ck_editor:
                 ],
 
             ]
+
+
 
 twig:
     form_themes:

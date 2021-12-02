@@ -243,7 +243,7 @@ class GameController extends AbstractController
                 rmdir($dossier);
             }
             // dossier du jeu dans le game.photo.directory
-            $bannerDirectory = $this->controller->get('game.photo.directory'); //fail phpStorm parametre dans service.yaml
+            $bannerDirectory = $this->getParameter('game.photo.directory'); // parametre dans service.yaml
             unlink($bannerDirectory.$game->getBanner()); //on supprime la bannière
             $entityManager->flush();
         }

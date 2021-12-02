@@ -14,7 +14,8 @@ class PresentationType extends AbstractType
     {
         $builder
             ->add('content', CKEditorType::class, [
-                'purify_html' => true,
+//                'purify_html' => true,
+
 
             ])
         ;
