@@ -10,6 +10,9 @@ body{
 
     height:50vh;
 }
+.billeterie{
+    max-height: 50vh;
+}
 
 .bg-header{
 

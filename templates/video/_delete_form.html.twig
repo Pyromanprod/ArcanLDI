@@ -1,0 +1,6 @@
+<form method="post" action="{{ path('video_delete', {'id': video.id}) }}" onsubmit="return confirm('Etes-vous sûr ?');">
+    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ video.id) }}">
+    <div class="d-flex flex-column">
+        <button class="btn mb-0 mt-5 ms-auto btn-outline-danger"><i class="fas fa-trash-alt"></i></button>
+    </div>
+</form>

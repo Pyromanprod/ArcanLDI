@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Game;
 use App\Entity\Video;
 use App\Form\AlbumVideoFormType;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
@@ -24,7 +25,7 @@ class VideoController extends AbstractController
         );
     }
     #[Route('/ajouter-video/{id}', name: 'game_add_album_video', methods: ['POST', 'GET'])]
-    public function addAlbumVideo(Request $request, Game $game): Response
+    public function addAlbumVideo(EntityManagerInterface $entityManager,Request $request, Game $game): Response
     {
         $form = $this->createForm(AlbumVideoFormType::class);
         $form->handleRequest($request);
@@ -40,8 +41,8 @@ class VideoController extends AbstractController
                 $video->setGame($game)
                     ->setName($url);
 
-                $this->getDoctrine()->getManager()->persist($video);
-                $this->getDoctrine()->getManager()->flush();
+                $entityManager->persist($video);
+                $entityManager->flush();
                 $this->addFlash('success', 'Vidéo ajoutée avec succès.');
                 return $this->redirectToRoute('video_game_add_album_video', ['id'=>$game->getId()]);
             }
@@ -50,6 +51,22 @@ class VideoController extends AbstractController
         }
         return $this->renderForm('game/add_album_video.html.twig', [
             'form' => $form,
+            'game' => $game,
         ]);
+    }
+
+    #[Route('/picture/delete/{id}', name: 'delete', methods: ['POST'])]
+    public function delete(Request $request, Video $video,
+                           EntityManagerInterface $entityManager
+    ): Response
+    {
+        if ($this->isCsrfTokenValid('delete' . $video->getId(), $request->request->get('_token'))) {
+            $entityManager->remove($video);
+            $entityManager->flush();
+        }
+
+        return $this->redirectToRoute('video_see_video', [
+            'slug'=>$video->getGame()->getSlug()
+        ], Response::HTTP_SEE_OTHER);
     }
 }

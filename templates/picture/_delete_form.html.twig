@@ -1,4 +1,4 @@
-<form method="post" action="{{ path('picture_delete', {'id': picture.id}) }}" onsubmit="return confirm('Etes-vous sûr ?');">
-    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ picture.id) }}">
-    <button class="btn">Supprimer</button>
+<form method="post" action="{{ path('picture_delete', {'id': photo.id}) }}" onsubmit="return confirm('Etes-vous sûr ?');">
+    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ photo.id) }}">
+    <button class="text-danger btn"><i class="fa fa-trash-alt"></i></button>
 </form>

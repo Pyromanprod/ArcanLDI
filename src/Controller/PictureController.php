@@ -38,10 +38,11 @@ class PictureController extends AbstractController
                 $entityManager->persist($photo);
             }
             $entityManager->flush();
-            return $this->redirectToRoute('game_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('see_album', ['slug'=>$game->getSlug()], Response::HTTP_SEE_OTHER);
         }
         return $this->renderForm('game/add_album_photo.html.twig', [
             'form' => $form,
+            'game'=>$game,
         ]);
     }
 
@@ -70,7 +71,7 @@ class PictureController extends AbstractController
 
     }
 
-    #[Route('/{id}', name: 'picture_delete', methods: ['POST'])]
+    #[Route('/picture/delete/{id}', name: 'picture_delete', methods: ['POST'])]
     public function delete(Request $request, Picture $picture,EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete' . $picture->getId(), $request->request->get('_token'))) {
@@ -78,7 +79,9 @@ class PictureController extends AbstractController
             $entityManager->flush();
         }
 
-        return $this->redirectToRoute('home', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('see_album', [
+            'slug'=>$picture->getGame()->getSlug()
+        ], Response::HTTP_SEE_OTHER);
     }
 
     #[Route('/telecharger/{id}', name: 'download_album', methods: ['POST', 'GET'])]

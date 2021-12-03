@@ -1,5 +1,5 @@
 {% extends 'base.html.twig' %}
-{%  set enable = false %}
+{% set enable = false %}
 
 {% block title %}{{ game.name }}{% endblock %}
 
@@ -14,42 +14,47 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-12 col-lg-9">
+            <div class="col-12 col-lg-9 mx-auto">
 
                 <div class="row">
                     <div class="col-12 ckeditor">
                         <p class="text-center">
 
-                            {{ game.description|purify|raw }}
+                            {{ game.description|raw }}
                         </p>
                     </div>
                 </div>
 
             </div>
-            <div class="border border-ivoire rounded-3 col-12 col-lg-3 p-5">
-                <div class="align-content-center">
+            {% if game.dateStart > date() %}
 
-                    <h2 class="text-center"> Billetterie</h2>
-                    {% for ticket in game.tickets %}
-                        {% if ticket.stock %}
-                            {% set enable = true %}
-                            <p>{{ ticket.name }} : {{ ticket.price }} €</p>
-                        {% else %}
-                            <p>{{ ticket.name }} : Epuisé </p>
+                <div class="border border-ivoire rounded-3 col-12 col-lg-3 p-5 billeterie mb-5">
+                    <div class="align-content-center">
 
-                        {% endif %}
+                        <h2 class="text-center"> Billetterie</h2>
+                        {% for ticket in game.tickets %}
+                            {% if ticket.stock %}
+                                {% set enable = true %}
+                                <p>{{ ticket.name }} : {{ ticket.price }} €</p>
+                            {% else %}
+                                <p>{{ ticket.name }} : Epuisé </p>
 
-                    {% endfor %}
-                    <div class="text-center">
-                        {% if enable %}
-                        <a href="{{ path('order_new', {'slug':  game.slug }) }}" class="btn btn-warning mx-auto mt-3">
-                            Acheter un ticket</a>
-                        {% endif %}
+                            {% endif %}
 
+                        {% endfor %}
+                        <div class="text-center">
+                            {% if enable %}
+                                <a href="{{ path('order_new', {'slug':  game.slug }) }}"
+                                   class="btn btn-warning mx-auto mt-3">
+                                    Acheter un ticket</a>
+                            {% endif %}
+
+                        </div>
                     </div>
                 </div>
-            </div>
+            {% endif %}
         </div>
+
 
         <a href="{{ path('game_index') }}" class="btn btn-outline-light mb-3 me-2">Retour à la liste des jeux</a>
         <a href="{{ path('see_album', {'slug': game.slug}) }}" class="btn btn-outline-light mx-auto mb-3 me-2">Album

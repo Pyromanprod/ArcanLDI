@@ -44,7 +44,7 @@
 
 
     {% if app.session.flashBag.has('error') %}
-        <div class="container position-absolute top-0 start-50 translate-middle-x flash">
+        <div class="container position-absolute top-0 start-50 translate-middle-x mt-5 flash">
             <div class="row">
                 {% for message in app.flashes('error') %}
                     <div class="alert alert-danger alert-dismissible fade show text-center col-12 p-4 m-0"
@@ -57,7 +57,7 @@
         </div>
     {% endif %}
     {% if app.session.flashBag.has('success') %}
-        <div class="container position-absolute top-0 start-50 translate-middle-x flash">
+        <div class="container position-absolute top-0 start-50 translate-middle-x mt-5 flash">
             <div class="row">
                 {% for message in app.flashes('success') %}
                     <div class="alert alert-success alert-dismissible fade show text-center col-12 p-4 m-0"

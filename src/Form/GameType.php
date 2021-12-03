@@ -20,7 +20,6 @@ class GameType extends AbstractType
             ->add('name')
             ->add('description',CKEditorType::class, [
                 'config_name' => 'game',
-                'purify_html' => true,
             ])
             ->add('dateStart', DateType::class, [
                 'widget'=>'single_text',
