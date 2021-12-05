@@ -77,7 +77,7 @@ class ExtractAnswerController extends AbstractController
         $myVariableCSV .= "Nom; Prénom; Mail; Numéro de ticket;";
         foreach ($players as $player) {
             $order = $orderRepository->findOneorder($game, $player);
-            $myVariableCSV .= ",\n" . str_replace(';', ',', $player->getLastname()) . ',' . str_replace(';', ',', $player->getFirstName()) . ',' . str_replace(';', ',', $player->getEmail()) . ',' . $order->getTicket()->getId() . $game->getId() . $player->getId();
+            $myVariableCSV .= ";\n" . str_replace(';', ',', $player->getLastname()) . ',' . str_replace(';', ',', $player->getFirstName()) . ';' . str_replace(';', ',', $player->getEmail()) . ';' . $order->getTicket()->getId() . $game->getId() . $player->getId();
         }
         return new Response(
             $myVariableCSV,

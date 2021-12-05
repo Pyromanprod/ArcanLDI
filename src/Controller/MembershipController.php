@@ -140,7 +140,6 @@ class MembershipController extends AbstractController
     public function show(Membership $membership, UserRepository $userRepository): Response
     {
 
-
         return $this->render('membership/show.html.twig', [
             'members' => $userRepository->findByPlayersNotPaid($membership),
             'membership' => $membership->getId()
