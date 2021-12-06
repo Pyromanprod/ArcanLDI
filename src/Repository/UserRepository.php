@@ -133,7 +133,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             ->getResult();
     }
 
-
+    //ressort les compte utilisateur qui n'ont pas payer leur cotisation
     public function findByPlayersNotPaid($membership)
     {
         return $this->createQueryBuilder('a')
@@ -162,8 +162,6 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
 
             return $qb->getQuery()->getResult();
             }
-
-
 
     }
 
