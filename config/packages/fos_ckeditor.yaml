@@ -58,6 +58,7 @@ fos_ck_editor:
                 ],
 
             ]
+
             toolbarComment: [
                 [
                         'Bold',

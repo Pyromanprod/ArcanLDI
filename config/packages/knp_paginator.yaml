@@ -8,8 +8,7 @@ knp_paginator:
     filter_field_name: filterField  # filter field query parameter name
     filter_value_name: filterValue  # filter value query parameter name
   template:
-    # On peut activer le visuel de Bootstrap 4 avec :
-    pagination: '@KnpPaginator/Pagination/bootstrap_v5_pagination.html.twig'
+    pagination: 'paginator/pagination.html.twig'
 #    pagination: '@KnpPaginator/Pagination/sliding.html.twig'     # sliding pagination controls template
     sortable: '@KnpPaginator/Pagination/sortable_link.html.twig' # sort link template
     filtration: '@KnpPaginator/Pagination/filtration.html.twig'  # filters template
