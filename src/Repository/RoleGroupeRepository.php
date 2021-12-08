@@ -60,16 +60,18 @@ class RoleGroupeRepository extends ServiceEntityRepository
     }
 
 
-    /*
-    public function findOneBySomeField($value): ?RoleGroupe
+
+    public function findOneByGame($game): ?RoleGroupe
     {
         return $this->createQueryBuilder('r')
-            ->andWhere('r.exampleField = :val')
-            ->setParameter('val', $value)
+            ->join('r.game','g')
+            ->andWhere('r.name = :public')
+            ->andWhere('r.game = :game')
+            ->setParameter('game', $game)
+            ->setParameter('public', 'public')
             ->getQuery()
             ->getOneOrNullResult()
         ;
     }
-    */
 
 }

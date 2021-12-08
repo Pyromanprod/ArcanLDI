@@ -169,5 +169,6 @@
     <orderEntry type="library" name="debug.addIndicators" level="application" />
     <orderEntry type="library" name="gsap" level="application" />
     <orderEntry type="library" name="ScrollTrigger" level="application" />
+    <orderEntry type="library" name="gsap" level="application" />
   </component>
 </module>

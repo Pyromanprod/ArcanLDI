@@ -272,22 +272,27 @@ class OrderController extends AbstractController
 
     #[Route('-reussite/{id}/', name: 'success', methods: ['GET', 'POST'])]
     #[IsGranted('ROLE_USER')]
-    public function success(Request $request, Order $order, $stripeSK, EntityManagerInterface $entityManager, RoleGroupeRepository $groupeRepository, MailerInterface $mailer): Response
+    public function success(Request $request,
+                            Order $order,
+                            $stripeSK,
+                            EntityManagerInterface $entityManager,
+                            RoleGroupeRepository $groupeRepository,
+                            MailerInterface $mailer): Response
     {
         //déclaration de la clé stripe
         Stripe::setApiKey($stripeSK);
         //ouverture de la session stripe ainsi que la recuperation des informations de l'achat
         $session = Session::retrieve($request->query->get('session_id'));
 
-        //si la commande est bien payer
+        //si la commande est bien payée
         if ($session->payment_status == 'paid') {
-            $this->getUser()->addRoleGroupe($groupeRepository->findOneByName('public'));
+            $this->getUser()->addRoleGroupe($groupeRepository->findOneByGame($order->getTicket()->getGame()));
             $order->getTicket()->setStock($order->getTicket()->getStock() - 1);
             $order->setDatePaid(new \DateTime());
             $order->setReference($session->id);
             $order->setPaymentIntent($session->payment_intent);
             $entityManager->flush();
-            //envoie de mail a l'utilisateur et a l'admin du site
+            //Envoi de mail a l'utilisateur et a l'admin du site
             $emailsold = (new TemplatedEmail())
                 ->from('contact@arcanlesdemonsdivoire.fr')
                 ->to($order->getPlayer()->getEmail())
